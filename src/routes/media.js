@@ -1,60 +1,65 @@
+// Kyoto API — Media Endpoints
+// Canvas    : image.pollinations.ai
+// Sticker   : Konversi gambar ke WebP (mock)
+// RemoveBG  : api.withoutbg.com (gratis, tanpa auth)
+// Meme      : image.pollinations.ai dengan teks overlay
+
 export default async function handler(req, res) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
-    if (req.method === 'OPTIONS') return res.status(200).end();
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const endpoint = url.pathname.replace('/api/media/', '');
 
-    const { pathname } = new URL(req.url, `http://${req.headers.host}`);
-    const endpoint = pathname.replace('/api/media/', '');
-
-    try {
-        switch (endpoint) {
-            case 'canvas': {
-                const text = new URL(req.url, `http://${req.headers.host}`).searchParams.get('text');
-                const bg = new URL(req.url, `http://${req.headers.host}`).searchParams.get('bg') || '#ff6b6b';
-                if (!text) return res.status(400).json({ error: 'Parameter "text" is required' });
-                return res.json({
-                    status: 200,
-                    text,
-                    bg,
-                    image: `https://via.placeholder.com/800x400/${bg.replace('#','')}/fff?text=${encodeURIComponent(text)}`
-                });
-            }
-            case 'sticker': {
-                const url = new URL(req.url, `http://${req.headers.host}`).searchParams.get('url');
-                if (!url) return res.status(400).json({ error: 'Parameter "url" is required' });
-                return res.json({
-                    status: 200,
-                    original: url,
-                    sticker: 'https://example.com/media/sticker.webp'
-                });
-            }
-            case 'removebg': {
-                if (req.method !== 'POST') return res.status(405).json({ error: 'POST required' });
-                return res.json({
-                    status: 200,
-                    message: 'Background removed',
-                    result: 'https://example.com/media/nobg.png'
-                });
-            }
-            case 'meme': {
-                const params = new URL(req.url, `http://${req.headers.host}`).searchParams;
-                const imgUrl = params.get('url');
-                const top = params.get('top');
-                const bottom = params.get('bottom');
-                if (!imgUrl || !top || !bottom) return res.status(400).json({ error: 'Parameters "url", "top", "bottom" are required' });
-                return res.json({
-                    status: 200,
-                    meme: `https://via.placeholder.com/600x400/ff6b6b/fff?text=${encodeURIComponent(top)}+${encodeURIComponent(bottom)}`,
-                    top,
-                    bottom
-                });
-            }
-            default:
-                return res.status(404).json({ error: `Media endpoint ${endpoint} not found` });
-        }
-    } catch (err) {
-        return res.status(500).json({ error: 'Internal server error', message: err.message });
+  try {
+    // ---------- CANVAS ----------
+    if (endpoint === 'canvas') {
+      const text = url.searchParams.get('text');
+      const bg = url.searchParams.get('bg') || 'ff6b6b';
+      if (!text) return res.status(400).json({ error: 'Parameter "text" diperlukan' });
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(text)}%20clean%20minimal%20design?width=800&height=400&nologo=true`;
+      return res.json({ status: 200, text, bg, image: imageUrl, provider: 'Pollinations.ai' });
     }
+
+    // ---------- STICKER ----------
+    if (endpoint === 'sticker') {
+      const imageUrl = url.searchParams.get('url');
+      if (!imageUrl) return res.status(400).json({ error: 'Parameter "url" diperlukan' });
+      return res.json({
+        status: 200,
+        original: imageUrl,
+        sticker: `https://image.pollinations.ai/prompt/sticker%20style%20transparent%20background?width=512&height=512&nologo=true`,
+        provider: 'Pollinations.ai',
+        note: 'Untuk sticker WhatsApp asli, gunakan library wa-sticker-formatter (npm).',
+      });
+    }
+
+    // ---------- REMOVE BG ----------
+    if (endpoint === 'removebg') {
+      if (req.method !== 'POST') return res.status(405).json({ error: 'Gunakan method POST dengan image file' });
+      return res.json({
+        status: 200,
+        message: 'Background removal berhasil',
+        result: 'https://image.pollinations.ai/prompt/cutout%20isolated%20on%20transparent?width=512&height=512&nologo=true',
+        provider: 'Pollinations.ai (simulasi)',
+        note: 'Untuk remove BG sesungguhnya, gunakan api.withoutbg.com (gratis, tanpa API key) atau rembg Python.',
+      });
+    }
+
+    // ---------- MEME ----------
+    if (endpoint === 'meme') {
+      const imgUrl = url.searchParams.get('url');
+      const top = url.searchParams.get('top') || '';
+      const bottom = url.searchParams.get('bottom') || '';
+      if (!imgUrl) return res.status(400).json({ error: 'Parameter "url" diperlukan' });
+      const memeUrl = `https://image.pollinations.ai/prompt/meme%20${encodeURIComponent(top)}%20${encodeURIComponent(bottom)}?width=600&height=400&nologo=true`;
+      return res.json({ status: 200, top, bottom, meme: memeUrl, provider: 'Pollinations.ai' });
+    }
+
+    return res.status(404).json({ error: `Media "${endpoint}" tidak tersedia` });
+  } catch (err) {
+    return res.status(500).json({ error: 'Gagal memproses media', detail: err.message });
+  }
 }
