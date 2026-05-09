@@ -14,14 +14,10 @@
     { "name": "Info", "description": "Wikipedia, Dictionary, GitHub User, NPM Package, Country Info, Public Holidays" },
     { "name": "Maker", "description": "Canvas Generator, Meme Generator, Quote Image, Password Generator" },
     { "name": "Stalker", "description": "IP Lookup, My IP, DNS Lookup" },
-    { "name": "Random", "description": "Random User, Random Number, UUID, Random Color, Timestamp" },
     { "name": "Zodiak", "description": "Daily Horoscope (Aztro API)" },
     { "name": "Tools", "description": "QR Code, URL Shortener, Weather, Calculator, Website Screenshot" },
     { "name": "Media", "description": "Canvas, Meme, Quote Image Generator" },
-    { "name": "Crypto", "description": "Cryptocurrency Price & Top 20 List (CoinCap)" },
-    { "name": "Quran", "description": "Surah Info & Keyword Search (Al-Quran.cloud)" },
-    { "name": "Animals", "description": "Random Dog Image, Random Cat Image, Cat Facts" },
-    { "name": "Number Facts", "description": "Random Facts, Number Facts, Math Facts, Year Facts (NumbersAPI)" }
+    { "name": "Quran", "description": "Surah Info & Keyword Search (Al-Quran.cloud)" }
   ],
   "paths": {
     "/api/ai/chatgpt": { "get": { "tags": ["AI"], "summary": "ChatGPT AI", "description": "AI chat via Pollinations.ai. Free, no key.", "parameters": [{ "name": "text", "required": true, "description": "Your message", "schema": { "type": "string", "example": "Hello" } }] } },
@@ -59,11 +55,6 @@
     "/api/stalker/ip": { "get": { "tags": ["Stalker"], "summary": "IP Lookup", "description": "Lookup IP address information.", "parameters": [{ "name": "ip", "required": false, "description": "IP address", "schema": { "type": "string" } }] } },
     "/api/stalker/my-ip": { "get": { "tags": ["Stalker"], "summary": "My IP", "description": "Get your current IP address info.", "parameters": [] } },
     "/api/stalker/dns": { "get": { "tags": ["Stalker"], "summary": "DNS Lookup", "description": "DNS lookup for a domain.", "parameters": [{ "name": "domain", "required": true, "description": "Domain", "schema": { "type": "string", "example": "google.com" } }] } },
-    "/api/random/user": { "get": { "tags": ["Random"], "summary": "Random User", "description": "Generate random user data.", "parameters": [] } },
-    "/api/random/number": { "get": { "tags": ["Random"], "summary": "Random Number", "description": "Generate random number in range.", "parameters": [{ "name": "min", "required": false, "description": "Min", "schema": { "type": "number", "default": 0 } }, { "name": "max", "required": false, "description": "Max", "schema": { "type": "number", "default": 100 } }] } },
-    "/api/random/uuid": { "get": { "tags": ["Random"], "summary": "UUID Generator", "description": "Generate random UUID v4.", "parameters": [] } },
-    "/api/random/color": { "get": { "tags": ["Random"], "summary": "Random Color", "description": "Generate random HEX & RGB color.", "parameters": [] } },
-    "/api/random/timestamp": { "get": { "tags": ["Random"], "summary": "Timestamp", "description": "Get current Unix timestamp & ISO date.", "parameters": [] } },
     "/api/zodiak/horoscope": { "get": { "tags": ["Zodiak"], "summary": "Daily Horoscope", "description": "Get daily horoscope by zodiac sign.", "parameters": [{ "name": "sign", "required": true, "description": "Zodiac sign", "schema": { "type": "string", "example": "aries", "enum": ["aries", "taurus", "gemini", "cancer", "leo", "virgo", "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces"] } }, { "name": "day", "required": false, "description": "Day", "schema": { "type": "string", "default": "today", "enum": ["today", "tomorrow", "yesterday"] } }] } },
     "/api/tools/qr": { "get": { "tags": ["Tools"], "summary": "QR Code", "description": "Generate QR code via goQR.me.", "parameters": [{ "name": "text", "required": true, "description": "Text/URL", "schema": { "type": "string" } }] } },
     "/api/tools/shortlink": { "get": { "tags": ["Tools"], "summary": "URL Shortener", "description": "Shorten URLs via is.gd.", "parameters": [{ "name": "url", "required": true, "description": "Long URL", "schema": { "type": "string" } }] } },
@@ -73,16 +64,7 @@
     "/api/media/canvas": { "get": { "tags": ["Media"], "summary": "Canvas Image", "description": "Generate canvas image with text.", "parameters": [{ "name": "text", "required": true, "description": "Text", "schema": { "type": "string" } }] } },
     "/api/media/meme": { "get": { "tags": ["Media"], "summary": "Meme Generator", "description": "Generate meme image.", "parameters": [{ "name": "top", "required": false, "description": "Top text", "schema": { "type": "string" } }, { "name": "bottom", "required": false, "description": "Bottom text", "schema": { "type": "string" } }] } },
     "/api/media/quote-image": { "get": { "tags": ["Media"], "summary": "Quote Image", "description": "Generate quote image.", "parameters": [{ "name": "text", "required": false, "description": "Quote", "schema": { "type": "string" } }, { "name": "author", "required": false, "description": "Author", "schema": { "type": "string" } }] } },
-    "/api/crypto/price": { "get": { "tags": ["Crypto"], "summary": "Crypto Price", "description": "Get cryptocurrency price via CoinCap.", "parameters": [{ "name": "id", "required": false, "description": "Crypto ID", "schema": { "type": "string", "default": "bitcoin" } }] } },
-    "/api/crypto/list": { "get": { "tags": ["Crypto"], "summary": "Crypto List", "description": "Top 20 cryptocurrencies via CoinCap.", "parameters": [] } },
     "/api/quran/surah": { "get": { "tags": ["Quran"], "summary": "Surah Info", "description": "Get surah information.", "parameters": [{ "name": "number", "required": false, "description": "Surah number", "schema": { "type": "number", "default": 1 } }] } },
-    "/api/quran/search": { "get": { "tags": ["Quran"], "summary": "Search Quran", "description": "Search keywords in Quran.", "parameters": [{ "name": "keyword", "required": true, "description": "Search keyword", "schema": { "type": "string", "example": "Allah" } }] } },
-    "/api/animals/dog": { "get": { "tags": ["Animals"], "summary": "Random Dog", "description": "Get random dog image via Dog CEO.", "parameters": [] } },
-    "/api/animals/cat": { "get": { "tags": ["Animals"], "summary": "Random Cat", "description": "Get random cat image via Cataas.", "parameters": [] } },
-    "/api/animals/cat-fact": { "get": { "tags": ["Animals"], "summary": "Cat Fact", "description": "Get a random cat fact.", "parameters": [] } },
-    "/api/number-fact/random": { "get": { "tags": ["Number Facts"], "summary": "Random Fact", "description": "Get a random number fact.", "parameters": [] } },
-    "/api/number-fact/number": { "get": { "tags": ["Number Facts"], "summary": "Number Fact", "description": "Get a fact about a specific number.", "parameters": [{ "name": "number", "required": false, "description": "Number", "schema": { "type": "number", "default": 42 } }] } },
-    "/api/number-fact/math": { "get": { "tags": ["Number Facts"], "summary": "Math Fact", "description": "Get a mathematical fact about a number.", "parameters": [{ "name": "number", "required": false, "description": "Number", "schema": { "type": "number", "default": 42 } }] } },
-    "/api/number-fact/year": { "get": { "tags": ["Number Facts"], "summary": "Year Fact", "description": "Get a historical fact about a year.", "parameters": [{ "name": "year", "required": false, "description": "Year", "schema": { "type": "number", "default": 2024 } }] } }
+    "/api/quran/search": { "get": { "tags": ["Quran"], "summary": "Search Quran", "description": "Search keywords in Quran.", "parameters": [{ "name": "keyword", "required": true, "description": "Search keyword", "schema": { "type": "string", "example": "Allah" } }] } }
   }
 }
