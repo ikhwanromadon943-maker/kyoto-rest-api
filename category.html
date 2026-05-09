@@ -68,6 +68,19 @@
       }
       .fade-in { animation: fadeIn 0.4s ease-out forwards; opacity: 0; }
       @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+      .endpoint-method {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .method-get { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+      .method-post { background-color: rgba(16, 185, 129, 0.2); color: #34d399; }
+      .method-put { background-color: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+      .method-delete { background-color: rgba(239, 68, 68, 0.2); color: #f87171; }
     </style>
   </head>
   <body class="bg-[#181818] text-gray-200 antialiased font-sans min-h-screen">
@@ -81,7 +94,7 @@
         <nav>
           <p class="font-medium text-sm text-gray-300 mb-4 px-4">Get Started</p>
           <div class="space-y-1">
-            <a href="/category" class="flex items-center justify-between py-1 px-4 text-sm text-white bg-[#222222] rounded-xl">
+            <a href="/category" class="flex items-center justify-between py-1 px-4 text-sm text-white bg-[#222222] rounded-xl" id="sidebar-category-link">
               <span>Category</span>
               <i class="material-icons text-lg ml-3">keyboard_arrow_right</i>
             </a>
@@ -103,6 +116,13 @@
     </header>
     <div class="flex flex-col min-h-screen">
       <main class="max-w-2xl mx-auto px-8 pt-4 pb-8 flex-1 w-full">
+        <!-- Breadcrumb untuk halaman detail kategori -->
+        <div id="breadcrumb" class="mb-6 hidden">
+          <a href="/category" class="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-1">
+            <i class="material-icons text-base">arrow_back</i>
+            <span>Back to Categories</span>
+          </a>
+        </div>
         <div id="content" class="space-y-3"></div>
       </main>
       <footer class="bg-[#212121] relative z-10 border-t border-[#2E2E2E] w-full">
@@ -148,61 +168,157 @@
       sidebarClose.addEventListener('click', closeSidebar);
       overlay.addEventListener('click', closeSidebar);
 
-      async function loadCategories() {
+      async function loadContent() {
         const content = document.getElementById('content');
         const sideList = document.getElementById('sidebar-dynamic-list');
+        const breadcrumb = document.getElementById('breadcrumb');
+        const sidebarCatLink = document.getElementById('sidebar-category-link');
+        
+        const path = window.location.pathname;
+        const categoryMatch = path.match(/^\/category\/(.+)$/);
+        
         try {
           const res = await fetch('/src/openapi.json');
+          if (!res.ok) throw new Error('Failed to fetch API data');
           const data = await res.json();
 
           // Kumpulin kategori + hitung endpoint
           const categories = {};
           if (data.tags) {
-            data.tags.forEach(t => { categories[t.name] = { name: t.name, count: 0 }; });
+            data.tags.forEach(t => { categories[t.name] = { name: t.name, count: 0, endpoints: [] }; });
           }
-          Object.keys(data.paths || {}).forEach(path => {
-            const pi = data.paths[path];
+          Object.keys(data.paths || {}).forEach(pathItem => {
+            const pi = data.paths[pathItem];
             Object.keys(pi).forEach(method => {
               const ep = pi[method];
+              if (!ep) return;
               const tag = ep.tags?.[0] || 'Other';
-              if (!categories[tag]) categories[tag] = { name: tag, count: 0 };
+              if (!categories[tag]) categories[tag] = { name: tag, count: 0, endpoints: [] };
               categories[tag].count++;
+              categories[tag].endpoints.push({
+                path: pathItem,
+                method: method.toUpperCase(),
+                summary: ep.summary || 'No description',
+                description: ep.description || ''
+              });
             });
           });
 
           const cats = Object.values(categories).filter(c => c.count > 0);
-
-          // URL slug: lowercase nama tag, e.g. "AI" -> "ai", "Zodiak" -> "zodiak"
           const toSlug = name => name.toLowerCase().replace(/\s+/g, '-');
 
-          // Render cards — URL /category/:slug sama kayak Nexray
-          content.innerHTML = cats.map((cat, i) => `
-            <a href="/category/${toSlug(cat.name)}" class="block bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 hover:border-[#383838] group fade-in" style="animation-delay: ${i * 100}ms">
-              <div class="flex items-center justify-between">
-                <div class="flex-1">
-                  <div class="flex items-center gap-3 mb-2">
-                    <h4 class="text-lg font-semibold text-white">${cat.name}</h4>
-                    <span class="px-2 py-1 bg-[#2a2a2a] text-gray-400 text-xs font-medium rounded">${cat.count} endpoint${cat.count !== 1 ? 's' : ''}</span>
-                  </div>
-                  <p class="text-sm text-gray-400">Explore ${cat.name} related endpoints and features.</p>
-                </div>
-                <div class="ml-4"><span class="material-icons text-white group-hover:text-white">arrow_forward</span></div>
-              </div>
-            </a>`).join('');
-
           // Render sidebar
-          sideList.innerHTML = cats.map(cat => `
-            <a href="/category/${toSlug(cat.name)}" class="flex items-center justify-between py-1 px-4 text-sm text-gray-400 hover:text-white hover:bg-[#222222] rounded-xl">
+          sideList.innerHTML = cats.map(cat => {
+            const slug = toSlug(cat.name);
+            const isActive = categoryMatch && categoryMatch[1] === slug;
+            return `
+            <a href="/category/${slug}" class="flex items-center justify-between py-1 px-4 text-sm rounded-xl ${isActive ? 'text-white bg-[#222222]' : 'text-gray-400 hover:text-white hover:bg-[#222222]'}">
               <span>${cat.name}</span>
               <i class="material-icons text-lg ml-3">keyboard_arrow_right</i>
-            </a>`).join('');
+            </a>`;
+          }).join('');
+
+          // Update sidebar category link active state
+          if (!categoryMatch) {
+            sidebarCatLink.classList.add('text-white', 'bg-[#222222]');
+          } else {
+            sidebarCatLink.classList.remove('text-white', 'bg-[#222222]');
+            sidebarCatLink.classList.add('text-gray-400', 'hover:text-white', 'hover:bg-[#222222]');
+          }
+
+          if (categoryMatch) {
+            // Tampilkan halaman detail kategori
+            const slug = categoryMatch[1];
+            const category = cats.find(c => toSlug(c.name) === slug);
+            
+            if (category) {
+              breadcrumb.classList.remove('hidden');
+              document.title = `${category.name} - Category.`;
+              
+              content.innerHTML = `
+                <div class="fade-in">
+                  <h2 class="text-2xl font-bold text-white mb-2">${category.name}</h2>
+                  <p class="text-sm text-gray-400 mb-6">${category.count} endpoint${category.count !== 1 ? 's' : ''} available in this category</p>
+                  
+                  <div class="space-y-3">
+                    ${category.endpoints.map((ep, i) => `
+                      <div class="bg-[#212121] border border-[#2E2E2E] rounded-xl p-5 hover:border-[#383838] transition-colors fade-in" style="animation-delay: ${i * 50}ms">
+                        <div class="flex items-start justify-between gap-4">
+                          <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-3 mb-2 flex-wrap">
+                              <span class="endpoint-method method-${ep.method.toLowerCase()}">${ep.method}</span>
+                              <code class="text-sm text-white font-mono break-all">${ep.path}</code>
+                            </div>
+                            <p class="text-sm text-gray-300 font-medium mb-1">${ep.summary}</p>
+                            ${ep.description ? `<p class="text-xs text-gray-500">${ep.description}</p>` : ''}
+                          </div>
+                          <a href="${ep.path}" class="flex-shrink-0 text-gray-500 hover:text-white transition-colors" title="Open endpoint">
+                            <i class="material-icons text-lg">open_in_new</i>
+                          </a>
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              `;
+            } else {
+              // Kategori tidak ditemukan
+              breadcrumb.classList.remove('hidden');
+              document.title = 'Category Not Found.';
+              content.innerHTML = `
+                <div class="fade-in text-center py-12">
+                  <i class="material-icons text-5xl text-gray-600 mb-4">folder_off</i>
+                  <h2 class="text-xl font-semibold text-white mb-2">Category Not Found</h2>
+                  <p class="text-sm text-gray-400 mb-6">The category "${slug}" does not exist.</p>
+                  <a href="/category" class="inline-flex items-center gap-2 px-4 py-2 bg-[#2a2a2a] text-white rounded-lg hover:bg-[#333] transition-colors text-sm">
+                    <i class="material-icons text-base">arrow_back</i>
+                    Back to Categories
+                  </a>
+                </div>
+              `;
+            }
+          } else {
+            // Tampilkan halaman list kategori (default)
+            breadcrumb.classList.add('hidden');
+            document.title = 'Category.';
+            
+            content.innerHTML = cats.map((cat, i) => `
+              <a href="/category/${toSlug(cat.name)}" class="block bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 hover:border-[#383838] group fade-in transition-all" style="animation-delay: ${i * 100}ms">
+                <div class="flex items-center justify-between">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                      <h4 class="text-lg font-semibold text-white">${cat.name}</h4>
+                      <span class="px-2 py-1 bg-[#2a2a2a] text-gray-400 text-xs font-medium rounded">${cat.count} endpoint${cat.count !== 1 ? 's' : ''}</span>
+                    </div>
+                    <p class="text-sm text-gray-400">Explore ${cat.name} related endpoints and features.</p>
+                  </div>
+                  <div class="ml-4"><span class="material-icons text-gray-500 group-hover:text-white transition-colors">arrow_forward</span></div>
+                </div>
+              </a>`).join('');
+          }
 
         } catch (err) {
-          content.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Failed to load categories.</p>';
+          console.error('Error loading categories:', err);
+          content.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Failed to load categories. Please try again later.</p>';
         }
       }
 
-      document.addEventListener('DOMContentLoaded', loadCategories);
+      // Handle browser back/forward navigation
+      window.addEventListener('popstate', loadContent);
+      
+      // Handle klik link internal (SPA-like navigation)
+      document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (link && link.href && link.href.startsWith(window.location.origin + '/category')) {
+          e.preventDefault();
+          const newPath = new URL(link.href).pathname;
+          window.history.pushState({}, '', newPath);
+          loadContent();
+          closeSidebar();
+        }
+      });
+
+      document.addEventListener('DOMContentLoaded', loadContent);
     </script>
   </body>
 </html>
