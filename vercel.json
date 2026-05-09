@@ -23,10 +23,16 @@
         { "key": "Access-Control-Allow-Origin", "value": "*" },
         { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS, TRACE" },
         { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, X-API-Key" },
-        { "key": "Access-Control-Max-Age", "value": "86400" },
-        { "key": "X-RateLimit-Limit", "value": "100" },
-        { "key": "X-RateLimit-Remaining", "value": "99" },
-        { "key": "X-RateLimit-Reset", "value": "60" }
+        { "key": "Access-Control-Max-Age", "value": "86400" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
       ]
     }
   ]
