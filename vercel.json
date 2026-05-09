@@ -2,8 +2,8 @@
   "version": 2,
   "cleanUrls": true,
   "rewrites": [
+    { "source": "/category/(.*)", "destination": "/category.html" },
     { "source": "/category", "destination": "/category.html" },
-    { "source": "/category/:name", "destination": "/category.html" },
     { "source": "/status", "destination": "/status.html" },
     { "source": "/pricing", "destination": "/pricing.html" },
     { "source": "/changelog", "destination": "/changelog.html" },
