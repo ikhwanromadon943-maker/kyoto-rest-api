@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Kyoto API Pricing — Choose the right plan for your needs." />
+    <title>Pricing — Kyoto API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        :root{--bg:#09090e;--card:rgba(255,255,255,0.03);--card-h:rgba(255,255,255,0.055);--border:rgba(255,255,255,0.07);--border-h:rgba(255,107,107,0.35);--text:#e2e0f0;--muted:rgba(226,224,240,0.42);--accent:#ff6b6b;--accent2:#ff8e53;--green:#4ade80}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;-webkit-font-smoothing:antialiased}
+        ::-webkit-scrollbar{display:none}
+        body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.7}
+        header{position:sticky;top:0;z-index:50;background:rgba(9,9,14,.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:16px 0}
+        .hdr{max-width:960px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between}
+        .logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+        .logo-mark{width:26px;height:26px;border:1px solid rgba(255,107,107,.4);display:flex;align-items:center;justify-content:center;position:relative}
+        .logo-mark i{font-size:9px;color:var(--accent);position:relative;z-index:1}
+        .logo-txt{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:.18em;color:var(--text);text-transform:uppercase}
+        .vpill{font-size:8px;letter-spacing:.22em;color:var(--accent);border:1px solid rgba(255,107,107,.25);padding:3px 8px;text-transform:uppercase}
+        .nav-links{display:flex;gap:22px}
+        .nav-links a{font-size:9px;letter-spacing:.15em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .2s}
+        .nav-links a:hover{color:var(--accent)}
+        main{max-width:960px;margin:0 auto;padding:48px 32px;position:relative;z-index:1}
+
+        .page-title{font-family:'Syne',sans-serif;font-size:clamp(28px,5vw,40px);font-weight:800;text-align:center;margin-bottom:8px}
+        .page-sub{font-size:10px;color:var(--muted);text-align:center;margin-bottom:48px;line-height:1.7}
+
+        .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:56px}
+        @media(max-width:768px){.pricing-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto 56px}}
+        .plan{border:1px solid var(--border);background:var(--card);padding:28px 22px;display:flex;flex-direction:column;transition:all .3s;position:relative}
+        .plan:hover{border-color:var(--border-h);background:var(--card-h);transform:translateY(-4px)}
+        .plan.featured{border-color:var(--accent);background:rgba(255,107,107,.04)}
+        .plan-badge{position:absolute;top:-10px;right:20px;background:var(--accent);color:#fff;font-size:7px;letter-spacing:.15em;text-transform:uppercase;padding:3px 10px}
+        .plan-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:16px;color:var(--text)}
+        .plan-price{margin-bottom:20px}
+        .plan-amount{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;line-height:1}
+        .plan-amount.free{color:var(--green)}
+        .plan-amount.pro{color:var(--accent)}
+        .plan-amount.enterprise{color:var(--accent2)}
+        .plan-period{font-size:9px;color:var(--muted);margin-top:4px}
+        .plan-desc{font-size:9px;color:var(--muted);line-height:1.7;margin-bottom:24px}
+        .plan-features{list-style:none;margin-bottom:28px;flex:1}
+        .plan-features li{font-size:9px;color:var(--text);padding:7px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+        .plan-features li i{font-size:8px;color:var(--green)}
+        .plan-features li i.fa-times{color:var(--muted)}
+        .plan-features li.disabled{color:var(--muted)}
+        .btn-plan{display:block;text-align:center;padding:12px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:all .3s;border:1px solid}
+        .btn-free{color:var(--green);border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.06)}
+        .btn-free:hover{background:rgba(74,222,128,.15);color:#fff}
+        .btn-pro{color:#fff;border-color:var(--accent);background:var(--accent)}
+        .btn-pro:hover{background:var(--accent2);border-color:var(--accent2);box-shadow:0 8px 28px rgba(255,107,107,.25)}
+        .btn-ent{color:var(--accent2);border-color:rgba(255,142,83,.25);background:rgba(255,142,83,.06)}
+        .btn-ent:hover{background:rgba(255,142,83,.15);color:#fff}
+
+        .faq{border:1px solid var(--border);padding:28px 24px}
+        .faq-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;margin-bottom:20px;color:var(--text)}
+        .faq-item{padding:14px 0;border-bottom:1px solid var(--border)}
+        .faq-item:last-child{border-bottom:none;padding-bottom:0}
+        .faq-q{font-size:10px;font-weight:500;color:var(--text);margin-bottom:6px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+        .faq-q i{font-size:8px;color:var(--muted);transition:transform .3s}
+        .faq-a{font-size:9px;color:var(--muted);line-height:1.8;display:none}
+        .faq-a.open{display:block}
+
+        footer{max-width:960px;margin:0 auto;padding:22px 32px 40px;border-top:1px solid var(--border);position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between}
+        .fcopy{font-size:9px;color:var(--muted);letter-spacing:.05em}
+        .flinks{display:flex;gap:18px}
+        .flinks a{font-size:9px;color:var(--muted);text-decoration:none;transition:color .2s}
+        .flinks a:hover{color:var(--accent)}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="hdr">
+            <a href="/" class="logo">
+                <div class="logo-mark"><i class="fas fa-torii-gate"></i></div>
+                <span class="logo-txt">Kyoto</span>
+            </a>
+            <div style="display:flex;align-items:center;gap:14px">
+                <span class="vpill">v1.0</span>
+                <nav class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/docs">Docs</a>
+                    <a href="/pricing" style="color:var(--accent)">Pricing</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <main>
+        <h1 class="page-title">Simple, Transparent Pricing</h1>
+        <p class="page-sub">Start free, scale as you grow. No hidden fees, no surprises.</p>
+        <div class="pricing-grid">
+            <!-- Free Tier -->
+            <div class="plan">
+                <div class="plan-name">Free</div>
+                <div class="plan-price">
+                    <div class="plan-amount free">$0</div>
+                    <div class="plan-period">forever</div>
+                </div>
+                <p class="plan-desc">For personal projects and testing. No credit card required.</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> 100 requests/minute</li>
+                    <li><i class="fas fa-check"></i> All endpoints access</li>
+                    <li><i class="fas fa-check"></i> Standard support</li>
+                    <li><i class="fas fa-check"></i> 50MB file upload</li>
+                    <li class="disabled"><i class="fas fa-times"></i> Priority queue</li>
+                    <li class="disabled"><i class="fas fa-times"></i> Custom rate limits</li>
+                    <li class="disabled"><i class="fas fa-times"></i> SLA guarantee</li>
+                </ul>
+                <a href="/docs" class="btn-plan btn-free">Get Started</a>
+            </div>
+            <!-- Pro Tier (Featured) -->
+            <div class="plan featured">
+                <div class="plan-badge">Popular</div>
+                <div class="plan-name">Pro</div>
+                <div class="plan-price">
+                    <div class="plan-amount pro">$15</div>
+                    <div class="plan-period">/month</div>
+                </div>
+                <p class="plan-desc">For developers and startups building production applications.</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> 1,000 requests/minute</li>
+                    <li><i class="fas fa-check"></i> All endpoints access</li>
+                    <li><i class="fas fa-check"></i> Priority support</li>
+                    <li><i class="fas fa-check"></i> 250MB file upload</li>
+                    <li><i class="fas fa-check"></i> Priority queue</li>
+                    <li><i class="fas fa-check"></i> API key authentication</li>
+                    <li class="disabled"><i class="fas fa-times"></i> SLA guarantee</li>
+                </ul>
+                <a href="/docs" class="btn-plan btn-pro">Upgrade to Pro</a>
+            </div>
+            <!-- Enterprise Tier -->
+            <div class="plan">
+                <div class="plan-name">Enterprise</div>
+                <div class="plan-price">
+                    <div class="plan-amount enterprise">Custom</div>
+                    <div class="plan-period">contact us</div>
+                </div>
+                <p class="plan-desc">For large teams and organizations with custom requirements.</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Unlimited requests</li>
+                    <li><i class="fas fa-check"></i> All endpoints access</li>
+                    <li><i class="fas fa-check"></i> Dedicated support</li>
+                    <li><i class="fas fa-check"></i> Unlimited file upload</li>
+                    <li><i class="fas fa-check"></i> Priority queue</li>
+                    <li><i class="fas fa-check"></i> Custom rate limits</li>
+                    <li><i class="fas fa-check"></i> 99.9% SLA guarantee</li>
+                </ul>
+                <a href="https://wa.me/6283181644868" target="_blank" class="btn-plan btn-ent">Contact Sales</a>
+            </div>
+        </div>
+        <div class="faq">
+            <div class="faq-title">Frequently Asked Questions</div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('i').classList.toggle('fa-chevron-up')">
+                    Can I upgrade or downgrade anytime? <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">Yes, you can change your plan at any time. Upgrades take effect immediately. Downgrades apply at the end of your billing cycle.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('i').classList.toggle('fa-chevron-up')">
+                    What payment methods do you accept? <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">We accept credit/debit cards (Visa, Mastercard), PayPal, and bank transfers for Enterprise plans.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('i').classList.toggle('fa-chevron-up')">
+                    Is there a free trial for Pro? <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">Yes! New Pro subscribers get a 7-day free trial. No charges until the trial ends.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('i').classList.toggle('fa-chevron-up')">
+                    What happens if I exceed my rate limit? <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">You'll receive a 429 Too Many Requests response. Upgrade to a higher tier to increase your limit.</div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <span class="fcopy">&copy; <span id="year"></span> Kyoto API</span>
+        <div class="flinks">
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+            <a href="/pricing">Pricing</a>
+        </div>
+    </footer>
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

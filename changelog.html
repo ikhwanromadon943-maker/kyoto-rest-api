@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Kyoto API Changelog — Release notes and version history." />
+    <title>Changelog — Kyoto API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        :root{--bg:#09090e;--card:rgba(255,255,255,0.03);--card-h:rgba(255,255,255,0.055);--border:rgba(255,255,255,0.07);--text:#e2e0f0;--muted:rgba(226,224,240,0.42);--accent:#ff6b6b;--accent2:#ff8e53;--green:#4ade80;--yellow:#facc15;--red:#f87171;--purple:#a78bfa}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;-webkit-font-smoothing:antialiased}
+        ::-webkit-scrollbar{display:none}
+        body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.7}
+        header{position:sticky;top:0;z-index:50;background:rgba(9,9,14,.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:16px 0}
+        .hdr{max-width:760px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between}
+        .logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+        .logo-mark{width:26px;height:26px;border:1px solid rgba(255,107,107,.4);display:flex;align-items:center;justify-content:center;position:relative}
+        .logo-mark i{font-size:9px;color:var(--accent);position:relative;z-index:1}
+        .logo-txt{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:.18em;color:var(--text);text-transform:uppercase}
+        .vpill{font-size:8px;letter-spacing:.22em;color:var(--accent);border:1px solid rgba(255,107,107,.25);padding:3px 8px;text-transform:uppercase}
+        .nav-links{display:flex;gap:22px}
+        .nav-links a{font-size:9px;letter-spacing:.15em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .2s}
+        .nav-links a:hover{color:var(--accent)}
+        main{max-width:760px;margin:0 auto;padding:48px 32px;position:relative;z-index:1}
+
+        .page-title{font-family:'Syne',sans-serif;font-size:clamp(28px,5vw,40px);font-weight:800;margin-bottom:8px}
+        .page-sub{font-size:10px;color:var(--muted);margin-bottom:48px;line-height:1.7}
+
+        .timeline{position:relative;padding-left:28px}
+        .timeline::before{content:'';position:absolute;left:7px;top:8px;bottom:0;width:1px;background:var(--border)}
+        .release{margin-bottom:40px;position:relative}
+        .release:last-child{margin-bottom:0}
+        .release-dot{position:absolute;left:-28px;top:6px;width:15px;height:15px;border-radius:50%;border:2px solid;background:var(--bg);z-index:1}
+        .release-dot.major{border-color:var(--accent);box-shadow:0 0 0 4px rgba(255,107,107,.15)}
+        .release-dot.minor{border-color:var(--accent2);box-shadow:0 0 0 4px rgba(255,142,83,.15)}
+        .release-dot.patch{border-color:var(--green);box-shadow:0 0 0 4px rgba(74,222,128,.15)}
+        .release-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+        .release-version{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text)}
+        .release-badge{font-size:7px;letter-spacing:.15em;text-transform:uppercase;padding:3px 8px;border:1px solid}
+        .rb-major{color:var(--accent);border-color:rgba(255,107,107,.3);background:rgba(255,107,107,.08)}
+        .rb-minor{color:var(--accent2);border-color:rgba(255,142,83,.3);background:rgba(255,142,83,.08)}
+        .rb-patch{color:var(--green);border-color:rgba(74,222,128,.3);background:rgba(74,222,128,.08)}
+        .release-date{font-size:8px;color:var(--muted)}
+        .release-changes{list-style:none}
+        .release-changes li{font-size:9px;color:var(--muted);line-height:1.9;padding:3px 0;display:flex;gap:8px}
+        .change-tag{font-size:7px;letter-spacing:.12em;text-transform:uppercase;padding:2px 6px;border:1px solid;flex-shrink:0;white-space:nowrap}
+        .ct-feature{color:var(--green);border-color:rgba(74,222,128,.25)}
+        .ct-improve{color:var(--purple);border-color:rgba(167,139,250,.25)}
+        .ct-fix{color:var(--yellow);border-color:rgba(250,204,21,.25)}
+        .ct-breaking{color:var(--red);border-color:rgba(248,113,113,.25)}
+
+        footer{max-width:760px;margin:0 auto;padding:22px 32px 40px;border-top:1px solid var(--border);position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between}
+        .fcopy{font-size:9px;color:var(--muted);letter-spacing:.05em}
+        .flinks{display:flex;gap:18px}
+        .flinks a{font-size:9px;color:var(--muted);text-decoration:none;transition:color .2s}
+        .flinks a:hover{color:var(--accent)}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="hdr">
+            <a href="/" class="logo">
+                <div class="logo-mark"><i class="fas fa-torii-gate"></i></div>
+                <span class="logo-txt">Kyoto</span>
+            </a>
+            <div style="display:flex;align-items:center;gap:14px">
+                <span class="vpill">v1.0.0</span>
+                <nav class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/docs">Docs</a>
+                    <a href="/changelog" style="color:var(--accent)">Changelog</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <main>
+        <h1 class="page-title">Changelog</h1>
+        <p class="page-sub">All notable changes to Kyoto API. Versioning follows <span style="color:var(--accent)">Semantic Versioning</span>.</p>
+        <div class="timeline" id="changelog">
+            <!-- Filled by JS -->
+        </div>
+    </main>
+    <footer>
+        <span class="fcopy">&copy; <span id="year"></span> Kyoto API</span>
+        <div class="flinks">
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+            <a href="/changelog">Changelog</a>
+        </div>
+    </footer>
+    <script>
+        const releases = [
+            {
+                version: 'v1.0.0',
+                type: 'major',
+                date: 'May 9, 2026',
+                changes: [
+                    { tag: 'feature', text: 'Initial release — 30+ endpoints across 6 categories' },
+                    { tag: 'feature', text: 'Interactive API documentation with live tester' },
+                    { tag: 'feature', text: 'Full CRUD support: GET, POST, PUT, DELETE, PATCH' },
+                    { tag: 'feature', text: 'CORS headers for all endpoints including OPTIONS preflight' },
+                    { tag: 'feature', text: 'Rate limiting at 100 req/min with informative headers' },
+                    { tag: 'improve', text: 'Average response time under 100ms' },
+                    { tag: 'improve', text: 'Dark-themed UI with Kyoto-inspired design language' }
+                ]
+            },
+            {
+                version: 'v0.9.0-beta',
+                type: 'minor',
+                date: 'May 5, 2026',
+                changes: [
+                    { tag: 'feature', text: 'Added Manga category with search, chapters, anime info' },
+                    { tag: 'feature', text: 'Added Storage category with upload, list, and delete' },
+                    { tag: 'feature', text: 'Built-in notification system for real-time updates' },
+                    { tag: 'improve', text: 'Refined error responses with consistent JSON format' },
+                    { tag: 'fix', text: 'Fixed CORS preflight for custom headers' }
+                ]
+            },
+            {
+                version: 'v0.8.0-beta',
+                type: 'minor',
+                date: 'May 1, 2026',
+                changes: [
+                    { tag: 'feature', text: 'AI endpoints: ChatGPT, DALL-E, Translate, OCR' },
+                    { tag: 'feature', text: 'Downloader endpoints: TikTok, Instagram, YouTube, Twitter, Spotify' },
+                    { tag: 'feature', text: 'Tools endpoints: Screenshot, QR, Shortlink, Weather, Calculator' },
+                    { tag: 'feature', text: 'Media endpoints: Canvas, Sticker, Remove BG, Meme' },
+                    { tag: 'breaking', text: 'API base path changed from /v1/ to /api/ for cleaner structure' }
+                ]
+            },
+            {
+                version: 'v0.5.0-alpha',
+                type: 'patch',
+                date: 'April 25, 2026',
+                changes: [
+                    { tag: 'feature', text: 'Project scaffolding and architecture design' },
+                    { tag: 'feature', text: 'OpenAPI 3.0 specification created' },
+                    { tag: 'improve', text: 'Set up Vercel serverless functions for all routes' }
+                ]
+            }
+        ];
+
+        function renderChangelog() {
+            const container = document.getElementById('changelog');
+            container.innerHTML = releases.map(r => `
+                <div class="release">
+                    <div class="release-dot ${r.type}"></div>
+                    <div class="release-header">
+                        <span class="release-version">${r.version}</span>
+                        <span class="release-badge rb-${r.type}">${r.type}</span>
+                        <span class="release-date">${r.date}</span>
+                    </div>
+                    <ul class="release-changes">
+                        ${r.changes.map(c => `
+                            <li>
+                                <span class="change-tag ct-${c.tag}">${c.tag}</span>
+                                ${c.text}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('year').textContent = new Date().getFullYear();
+            renderChangelog();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Disallow API endpoints from crawling (they return JSON, not HTML)
+Disallow: /api/
+
+# Disallow source files
+Disallow: /src/
+
+# Sitemap location
+Sitemap: https://kyoto-api.vercel.app/sitemap.xml
+
+# Crawl delay (polite crawling)
+Crawl-delay: 10

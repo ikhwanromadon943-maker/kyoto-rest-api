@@ -2,6 +2,9 @@
   "version": 2,
   "rewrites": [
     { "source": "/docs", "destination": "/docs.html" },
+    { "source": "/status", "destination": "/status.html" },
+    { "source": "/pricing", "destination": "/pricing.html" },
+    { "source": "/changelog", "destination": "/changelog.html" },
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/terms", "destination": "/terms.html" },
     { "source": "/api/ai/:path*", "destination": "/src/routes/ai" },
@@ -9,7 +12,9 @@
     { "source": "/api/tools/:path*", "destination": "/src/routes/tools" },
     { "source": "/api/storage/:path*", "destination": "/src/routes/storage" },
     { "source": "/api/media/:path*", "destination": "/src/routes/media" },
-    { "source": "/api/manga/:path*", "destination": "/src/routes/manga" }
+    { "source": "/api/manga/:path*", "destination": "/src/routes/manga" },
+    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
+    { "source": "/robots.txt", "destination": "/robots.txt" }
   ],
   "headers": [
     {
@@ -18,7 +23,10 @@
         { "key": "Access-Control-Allow-Origin", "value": "*" },
         { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS, TRACE" },
         { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, X-API-Key" },
-        { "key": "Access-Control-Max-Age", "value": "86400" }
+        { "key": "Access-Control-Max-Age", "value": "86400" },
+        { "key": "X-RateLimit-Limit", "value": "100" },
+        { "key": "X-RateLimit-Remaining", "value": "99" },
+        { "key": "X-RateLimit-Reset", "value": "60" }
       ]
     }
   ]

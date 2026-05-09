@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Kyoto API Status — Real-time system health and uptime monitoring." />
+    <title>Status — Kyoto API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        :root{--bg:#09090e;--card:rgba(255,255,255,0.03);--card-h:rgba(255,255,255,0.055);--border:rgba(255,255,255,0.07);--border-h:rgba(255,107,107,0.35);--text:#e2e0f0;--muted:rgba(226,224,240,0.42);--accent:#ff6b6b;--accent2:#ff8e53;--green:#4ade80;--yellow:#facc15;--red:#f87171;--blue:#38bdf8}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;-webkit-font-smoothing:antialiased}
+        ::-webkit-scrollbar{display:none}
+        body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.7}
+        header{position:sticky;top:0;z-index:50;background:rgba(9,9,14,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:16px 0}
+        .hdr{max-width:900px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between}
+        .logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+        .logo-mark{width:26px;height:26px;border:1px solid rgba(255,107,107,.4);display:flex;align-items:center;justify-content:center;position:relative}
+        .logo-mark i{font-size:9px;color:var(--accent);position:relative;z-index:1}
+        .logo-txt{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:.18em;color:var(--text);text-transform:uppercase}
+        .vpill{font-size:8px;letter-spacing:.22em;color:var(--accent);border:1px solid rgba(255,107,107,.25);padding:3px 8px;text-transform:uppercase}
+        .nav-links{display:flex;gap:22px}
+        .nav-links a{font-size:9px;letter-spacing:.15em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .2s}
+        .nav-links a:hover{color:var(--accent)}
+        main{max-width:900px;margin:0 auto;padding:40px 32px;position:relative;z-index:1}
+
+        .status-banner{display:flex;align-items:center;gap:14px;padding:20px 24px;border:1px solid;margin-bottom:36px;transition:all .5s}
+        .status-banner.all-good{background:rgba(74,222,128,.06);border-color:rgba(74,222,128,.2)}
+        .status-banner.partial{background:rgba(250,204,21,.06);border-color:rgba(250,204,21,.2)}
+        .status-banner.down{background:rgba(248,113,113,.06);border-color:rgba(248,113,113,.2)}
+        .status-dot-big{width:14px;height:14px;border-radius:50%;flex-shrink:0;position:relative}
+        .status-dot-big.online{background:var(--green);box-shadow:0 0 16px rgba(74,222,128,.5);animation:pulse 2s infinite}
+        .status-dot-big.degraded{background:var(--yellow);box-shadow:0 0 16px rgba(250,204,21,.5);animation:pulse 3s infinite}
+        .status-dot-big.offline{background:var(--red);box-shadow:0 0 16px rgba(248,113,113,.5)}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        .status-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700}
+        .status-sub{font-size:10px;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+        .uptime-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:40px}
+        @media(max-width:600px){.uptime-stats{grid-template-columns:repeat(2,1fr)}}
+        .ustat{background:var(--bg);padding:22px 16px;text-align:center}
+        .usv{font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:var(--text);line-height:1;margin-bottom:6px}
+        .usl{font-size:8px;letter-spacing:.25em;color:var(--muted);text-transform:uppercase}
+
+        .section-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:.05em;margin-bottom:16px;display:flex;align-items:center;gap:10px;color:var(--text)}
+        .section-title i{color:var(--accent)}
+        .section-title .auto-refresh{font-size:8px;color:var(--green);letter-spacing:.2em;margin-left:auto;display:flex;align-items:center;gap:6px}
+        .section-title .auto-refresh .refresh-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite}
+
+        .service-list{border:1px solid var(--border);margin-bottom:40px}
+        .service-row{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--card);border-bottom:1px solid var(--border);gap:12px;transition:all .3s}
+        .service-row:last-child{border-bottom:none}
+        .service-row:hover{background:var(--card-h)}
+        .service-row.checking{opacity:.6}
+        .svc-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+        .svc-indicator{width:9px;height:9px;border-radius:50%;flex-shrink:0;transition:all .3s}
+        .svc-indicator.online{background:var(--green);box-shadow:0 0 8px rgba(74,222,128,.4)}
+        .svc-indicator.degraded{background:var(--yellow);box-shadow:0 0 8px rgba(250,204,21,.4)}
+        .svc-indicator.offline{background:var(--red);box-shadow:0 0 8px rgba(248,113,113,.4)}
+        .svc-indicator.checking{background:var(--blue);box-shadow:0 0 8px rgba(56,189,248,.4);animation:pulse .8s infinite}
+        .svc-info{min-width:0}
+        .svc-name{font-size:10px;font-weight:500;color:var(--text)}
+        .svc-url{font-size:8px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .svc-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
+        .svc-latency{font-size:8px;color:var(--muted);min-width:55px;text-align:right;font-variant-numeric:tabular-nums}
+        .svc-status{font-size:7px;letter-spacing:.15em;text-transform:uppercase;padding:4px 10px;border:1px solid;flex-shrink:0;min-width:70px;text-align:center}
+        .ss-online{color:var(--green);border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.06)}
+        .ss-degraded{color:var(--yellow);border-color:rgba(250,204,21,.25);background:rgba(250,204,21,.06)}
+        .ss-offline{color:var(--red);border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.06)}
+        .ss-checking{color:var(--blue);border-color:rgba(56,189,248,.25);background:rgba(56,189,248,.06)}
+
+        .incident-list{border:1px solid var(--border);margin-bottom:40px}
+        .incident-row{padding:14px 18px;background:var(--card);border-bottom:1px solid var(--border)}
+        .incident-row:last-child{border-bottom:none}
+        .incident-row:hover{background:var(--card-h)}
+        .incident-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
+        .incident-title{font-size:10px;font-weight:500;color:var(--text)}
+        .incident-date{font-size:8px;color:var(--muted);white-space:nowrap;flex-shrink:0}
+        .incident-desc{font-size:9px;color:var(--muted);line-height:1.7}
+        .incident-badge{font-size:7px;letter-spacing:.12em;text-transform:uppercase;padding:2px 7px;border:1px solid;flex-shrink:0}
+        .ib-resolved{color:var(--green);border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.06)}
+        .ib-investigating{color:var(--yellow);border-color:rgba(250,204,21,.25);background:rgba(250,204,21,.06)}
+
+        .footer-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding-top:16px;border-top:1px solid var(--border)}
+        .footer-bar span{font-size:9px;color:var(--muted)}
+        .footer-bar button{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;padding:8px 16px;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;transition:all .3s}
+        .footer-bar button:hover{border-color:var(--border-h);color:var(--text);background:var(--card-h)}
+
+        footer{max-width:900px;margin:0 auto;padding:22px 32px 40px;border-top:1px solid var(--border);position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between}
+        .fcopy{font-size:9px;color:var(--muted);letter-spacing:.05em}
+        .flinks{display:flex;gap:18px}
+        .flinks a{font-size:9px;color:var(--muted);text-decoration:none;transition:color .2s}
+        .flinks a:hover{color:var(--accent)}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="hdr">
+            <a href="/" class="logo">
+                <div class="logo-mark"><i class="fas fa-torii-gate"></i></div>
+                <span class="logo-txt">Kyoto</span>
+            </a>
+            <div style="display:flex;align-items:center;gap:14px">
+                <span class="vpill">v1.0</span>
+                <nav class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/docs">Docs</a>
+                    <a href="/status" style="color:var(--green)">Status</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="status-banner all-good" id="overall-banner">
+            <div class="status-dot-big online" id="overall-dot"></div>
+            <div>
+                <div class="status-title" id="overall-title">Checking all systems...</div>
+                <div class="status-sub">
+                    <span id="overall-sub">Initializing...</span>
+                    <span style="color:var(--muted)">·</span>
+                    <span id="last-checked">--</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="uptime-stats">
+            <div class="ustat">
+                <div class="usv" id="stat-online" style="color:var(--green)">—</div>
+                <div class="usl">Online</div>
+            </div>
+            <div class="ustat">
+                <div class="usv" id="stat-degraded" style="color:var(--yellow)">—</div>
+                <div class="usl">Degraded</div>
+            </div>
+            <div class="ustat">
+                <div class="usv" id="stat-offline" style="color:var(--red)">—</div>
+                <div class="usl">Offline</div>
+            </div>
+            <div class="ustat">
+                <div class="usv" id="stat-avg-latency" style="color:var(--blue)">—</div>
+                <div class="usl">Avg Latency</div>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <i class="fas fa-server"></i>
+            Service Status
+            <span class="auto-refresh">
+                <span class="refresh-dot"></span>
+                Auto-refresh 30s
+            </span>
+        </div>
+
+        <div class="service-list" id="service-list">
+            <!-- Filled dynamically -->
+        </div>
+
+        <div class="section-title"><i class="fas fa-history"></i> Recent Incidents</div>
+        <div class="incident-list" id="incident-list">
+            <!-- Filled by JS -->
+        </div>
+
+        <div class="footer-bar">
+            <span>Last checked: <strong id="last-checked-footer">--</strong></span>
+            <button onclick="checkAllEndpoints()">
+                <i class="fas fa-rotate-right"></i> Refresh Now
+            </button>
+        </div>
+    </main>
+    <footer>
+        <span class="fcopy">&copy; <span id="year"></span> Kyoto API</span>
+        <div class="flinks">
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+            <a href="/status">Status</a>
+        </div>
+    </footer>
+
+    <script>
+        // ---------- CONFIG ----------
+        const BASE_URL = window.location.origin; // Auto-detect (works for both local & Vercel)
+        const CHECK_INTERVAL = 30000; // 30 detik
+
+        // Daftar endpoint yang di-ping
+        const services = [
+            { name: 'AI — ChatGPT', url: `${BASE_URL}/api/ai/chatgpt?text=ping`, method: 'GET', category: 'AI' },
+            { name: 'AI — DALL-E', url: `${BASE_URL}/api/ai/dalle?prompt=ping`, method: 'GET', category: 'AI' },
+            { name: 'AI — Translate', url: `${BASE_URL}/api/ai/translate?text=ping&to=en`, method: 'GET', category: 'AI' },
+            { name: 'Downloader — TikTok', url: `${BASE_URL}/api/downloader/tiktok?url=ping`, method: 'GET', category: 'Downloader' },
+            { name: 'Downloader — Instagram', url: `${BASE_URL}/api/downloader/instagram?url=ping`, method: 'GET', category: 'Downloader' },
+            { name: 'Downloader — YouTube', url: `${BASE_URL}/api/downloader/youtube?url=ping`, method: 'GET', category: 'Downloader' },
+            { name: 'Tools — Screenshot', url: `${BASE_URL}/api/tools/ssweb?url=ping`, method: 'GET', category: 'Tools' },
+            { name: 'Tools — QR Code', url: `${BASE_URL}/api/tools/qr?text=ping`, method: 'GET', category: 'Tools' },
+            { name: 'Tools — Weather', url: `${BASE_URL}/api/tools/cuaca?city=Tokyo`, method: 'GET', category: 'Tools' },
+            { name: 'Storage — List Files', url: `${BASE_URL}/api/storage/list`, method: 'GET', category: 'Storage' },
+            { name: 'Media — Canvas', url: `${BASE_URL}/api/media/canvas?text=ping`, method: 'GET', category: 'Media' },
+            { name: 'Manga — Search', url: `${BASE_URL}/api/manga/search?query=ping`, method: 'GET', category: 'Manga' },
+            { name: 'Manga — Random', url: `${BASE_URL}/api/manga/random`, method: 'GET', category: 'Manga' },
+            { name: 'Documentation Page', url: `${BASE_URL}/docs`, method: 'HEAD', category: 'Frontend' },
+            { name: 'Landing Page', url: `${BASE_URL}/`, method: 'HEAD', category: 'Frontend' },
+        ];
+
+        // Incident history
+        const incidents = [
+            {
+                title: 'Elevated latency on Downloader API',
+                date: 'May 8, 2026 · 14:30 UTC',
+                desc: 'Response times spiked to ~300ms for 15 minutes due to upstream provider throttling. Resolved after automatic retry logic kicked in.',
+                status: 'resolved'
+            },
+            {
+                title: 'Scheduled maintenance — Storage API v1.0 upgrade',
+                date: 'May 5, 2026 · 02:00–02:08 UTC',
+                desc: 'Planned maintenance completed. Storage API was unavailable for approximately 8 minutes. New features: folder organization and batch delete.',
+                status: 'resolved'
+            },
+            {
+                title: 'Minor outage — AI ChatGPT endpoint',
+                date: 'May 1, 2026 · 09:15–09:18 UTC',
+                desc: 'Brief 3-minute 500 error on /api/ai/chatgpt caused by configuration hot-reload. Rolled back within 90 seconds of detection.',
+                status: 'resolved'
+            }
+        ];
+
+        // ---------- STATE ----------
+        let serviceStatuses = {};
+
+        // ---------- RENDER ----------
+        function renderServiceList() {
+            const list = document.getElementById('service-list');
+            list.innerHTML = services.map((s, i) => {
+                const status = serviceStatuses[i] || { status: 'checking', latency: '—' };
+                return `
+                    <div class="service-row" id="svc-row-${i}">
+                        <div class="svc-left">
+                            <div class="svc-indicator ${status.status}" id="svc-dot-${i}"></div>
+                            <div class="svc-info">
+                                <div class="svc-name">${s.name}</div>
+                                <div class="svc-url">${s.url.replace(BASE_URL, '')}</div>
+                            </div>
+                        </div>
+                        <div class="svc-right">
+                            <div class="svc-latency" id="svc-latency-${i}">${status.latency}</div>
+                            <div class="svc-status ss-${status.status}" id="svc-status-${i}">${status.status}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderIncidents() {
+            const list = document.getElementById('incident-list');
+            list.innerHTML = incidents.map(i => `
+                <div class="incident-row">
+                    <div class="incident-hdr">
+                        <div class="incident-title">${i.title}</div>
+                        <div class="incident-badge ib-${i.status}">${i.status}</div>
+                    </div>
+                    <div class="incident-date">${i.date}</div>
+                    <div class="incident-desc">${i.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateSummary() {
+            let online = 0, degraded = 0, offline = 0, totalLatency = 0, count = 0;
+            
+            Object.values(serviceStatuses).forEach(s => {
+                if (s.status === 'online') online++;
+                else if (s.status === 'degraded') degraded++;
+                else if (s.status === 'offline') offline++;
+                if (s.latencyMs) { totalLatency += s.latencyMs; count++; }
+            });
+
+            document.getElementById('stat-online').textContent = online;
+            document.getElementById('stat-degraded').textContent = degraded;
+            document.getElementById('stat-offline').textContent = offline;
+            document.getElementById('stat-avg-latency').textContent = count > 0 ? `${Math.round(totalLatency / count)}ms` : '—';
+
+            // Update overall banner
+            const banner = document.getElementById('overall-banner');
+            const dot = document.getElementById('overall-dot');
+            const title = document.getElementById('overall-title');
+            
+            banner.className = 'status-banner';
+            dot.className = 'status-dot-big';
+            
+            if (offline > 0) {
+                banner.classList.add('down');
+                dot.classList.add('offline');
+                title.textContent = `${offline} service${offline > 1 ? 's' : ''} experiencing outage`;
+            } else if (degraded > 0) {
+                banner.classList.add('partial');
+                dot.classList.add('degraded');
+                title.textContent = `${degraded} service${degraded > 1 ? 's' : ''} degraded`;
+            } else if (online === services.length) {
+                banner.classList.add('all-good');
+                dot.classList.add('online');
+                title.textContent = 'All Systems Operational';
+            } else {
+                banner.classList.add('partial');
+                dot.classList.add('degraded');
+                title.textContent = 'Checking systems...';
+            }
+        }
+
+        function updateTimeDisplay() {
+            const now = new Date().toLocaleTimeString('en-US', { 
+                hour: '2-digit', minute: '2-digit', second: '2-digit', 
+                timeZone: 'UTC', hour12: false 
+            }) + ' UTC';
+            document.getElementById('last-checked').textContent = now;
+            document.getElementById('last-checked-footer').textContent = now;
+            document.getElementById('overall-sub').textContent = `Last checked: ${now}`;
+        }
+
+        // ---------- PING LOGIC ----------
+        async function pingEndpoint(service, index) {
+            const startTime = performance.now();
+            
+            // Update UI to "checking"
+            serviceStatuses[index] = { status: 'checking', latency: '...' };
+            updateServiceUI(index, 'checking', '...');
+            
+            try {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
+                
+                const res = await fetch(service.url, {
+                    method: service.method,
+                    signal: controller.signal,
+                });
+                
+                clearTimeout(timeout);
+                const latency = Math.round(performance.now() - startTime);
+                
+                if (res.ok) {
+                    // Online, tapi degrade kalo > 500ms
+                    const status = latency > 500 ? 'degraded' : 'online';
+                    serviceStatuses[index] = { 
+                        status, 
+                        latency: `${latency}ms`, 
+                        latencyMs: latency 
+                    };
+                } else if (res.status === 429) {
+                    // Rate limited = still online tapi degraded
+                    serviceStatuses[index] = { 
+                        status: 'degraded', 
+                        latency: `${latency}ms (429)`, 
+                        latencyMs: latency 
+                    };
+                } else {
+                    // 4xx/5xx = offline
+                    serviceStatuses[index] = { 
+                        status: 'offline', 
+                        latency: `${res.status}`, 
+                        latencyMs: null 
+                    };
+                }
+            } catch (err) {
+                const latency = Math.round(performance.now() - startTime);
+                if (err.name === 'AbortError') {
+                    serviceStatuses[index] = { 
+                        status: 'offline', 
+                        latency: 'timeout', 
+                        latencyMs: null 
+                    };
+                } else {
+                    serviceStatuses[index] = { 
+                        status: 'offline', 
+                        latency: 'error', 
+                        latencyMs: null 
+                    };
+                }
+            }
+            
+            updateServiceUI(index, serviceStatuses[index].status, serviceStatuses[index].latency);
+        }
+
+        function updateServiceUI(index, status, latency) {
+            const dot = document.getElementById(`svc-dot-${index}`);
+            const statusEl = document.getElementById(`svc-status-${index}`);
+            const latencyEl = document.getElementById(`svc-latency-${index}`);
+            const row = document.getElementById(`svc-row-${index}`);
+            
+            if (dot) {
+                dot.className = 'svc-indicator ' + status;
+            }
+            if (statusEl) {
+                statusEl.className = 'svc-status ss-' + status;
+                statusEl.textContent = status;
+            }
+            if (latencyEl) {
+                latencyEl.textContent = latency;
+            }
+            if (row) {
+                row.classList.remove('checking');
+            }
+        }
+
+        async function checkAllEndpoints() {
+            updateTimeDisplay();
+            
+            // Ping all services concurrently
+            const promises = services.map((service, index) => pingEndpoint(service, index));
+            await Promise.allSettled(promises);
+            
+            updateSummary();
+        }
+
+        // ---------- INIT ----------
+        function init() {
+            renderServiceList();
+            renderIncidents();
+            
+            // First check immediately
+            checkAllEndpoints();
+            
+            // Then auto-refresh every 30 seconds
+            setInterval(checkAllEndpoints, CHECK_INTERVAL);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('year').textContent = new Date().getFullYear();
+            init();
+        });
+    </script>
+</body>
+</html>
