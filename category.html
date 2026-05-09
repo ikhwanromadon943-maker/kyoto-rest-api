@@ -47,7 +47,7 @@
       body { position: relative; scroll-behavior: smooth; letter-spacing: 0.025em; background-color: #181818; }
       body::before {
         content: '';
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%; min-height: 100vh; z-index: -1;
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
         background-image: linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
         background-size: 40px 40px; pointer-events: none;
       }
@@ -60,7 +60,6 @@
       }
       @media (min-width: 768px) {
         body { padding-left: 16rem; }
-        body > div { padding-left: 0 !important; }
         #sidebar { transform: translateX(0) !important; }
         #overlay { display: none !important; }
         #sidebarToggle { display: none !important; }
@@ -68,19 +67,83 @@
       }
       .fade-in { animation: fadeIn 0.4s ease-out forwards; opacity: 0; }
       @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-      .endpoint-method {
-        display: inline-block;
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+
+      .method-badge {
+        display: inline-block; padding: 3px 10px; border-radius: 6px;
+        font-size: 11px; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 0.5px; font-family: 'Ubuntu Mono', monospace;
       }
-      .method-get { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-      .method-post { background-color: rgba(16, 185, 129, 0.2); color: #34d399; }
-      .method-put { background-color: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-      .method-delete { background-color: rgba(239, 68, 68, 0.2); color: #f87171; }
+      .method-get { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
+
+      .status-ready { color: #4ade80; background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.2); font-size: 10px; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Ubuntu Mono', monospace; }
+      .status-depr { color: #facc15; background: rgba(250,204,21,0.08); border: 1px solid rgba(250,204,21,0.2); font-size: 10px; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Ubuntu Mono', monospace; }
+
+      .ep-detail-panel { background: #141414; border: 1px solid #2E2E2E; border-top: none; border-radius: 0 0 12px 12px; padding: 24px; display: none; }
+      .ep-detail-panel.open { display: block; animation: fadeIn 0.3s ease-out; }
+
+      .ep-toggle-btn {
+        width: 100%; background: transparent; border: 1px solid #2E2E2E; color: #e2e0f0;
+        padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
+        cursor: pointer; font-family: 'Space Grotesk', sans-serif; font-size: 13px;
+        text-align: left; transition: all 0.2s; gap: 12px; border-radius: 12px;
+      }
+      .ep-item { margin-bottom: 4px; }
+      .ep-item.active .ep-toggle-btn { border-radius: 12px 12px 0 0; border-bottom: none; background: #1c1c1c; }
+      .ep-toggle-btn:hover { background: #1c1c1c; border-color: #383838; }
+
+      .cat-toggle-btn {
+        width: 100%; background: #212121; border: 1px solid #2E2E2E; color: #fff;
+        padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;
+        cursor: pointer; font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600;
+        text-align: left; transition: all 0.2s; gap: 12px; border-radius: 12px; margin-bottom: 1px;
+      }
+      .cat-toggle-btn:hover { background: #262626; border-color: #383838; }
+      .cat-body { display: none; padding: 4px 0 12px 0; }
+      .cat-body.show { display: block; }
+
+      input[type="text"], input[type="number"], select, textarea {
+        width: 100%; background: #181818; border: 1px solid #2E2E2E; color: #e2e0f0;
+        font-family: 'Ubuntu Mono', monospace; font-size: 13px; padding: 10px 14px;
+        border-radius: 8px; outline: none; transition: border-color 0.2s;
+      }
+      input:focus, select:focus, textarea:focus { border-color: #555; }
+      input::placeholder, textarea::placeholder { color: #555; }
+      textarea { resize: vertical; min-height: 80px; }
+
+      .btn-exec {
+        background: #ffffff; color: #181818; border: none; padding: 10px 24px;
+        font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
+        letter-spacing: 0.3px; border-radius: 10px; cursor: pointer; transition: all 0.2s;
+        display: inline-flex; align-items: center; gap: 6px;
+      }
+      .btn-exec:hover { background: #e0e0e0; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+      .btn-exec:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+      .btn-clear {
+        background: transparent; color: #999; border: 1px solid #2E2E2E; padding: 10px 20px;
+        font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.3px;
+        border-radius: 10px; cursor: pointer; transition: all 0.2s; display: none;
+      }
+      .btn-clear:hover { color: #fff; border-color: #555; }
+
+      .code-block {
+        background: #111; border: 1px solid #2E2E2E; border-radius: 8px;
+        padding: 14px; font-family: 'Ubuntu Mono', monospace; font-size: 12px;
+        color: #e2e0f0; overflow-x: auto; white-space: pre-wrap; word-break: break-all;
+        max-height: 400px; overflow-y: auto; line-height: 1.7;
+      }
+      .code-block img { max-width: 100%; height: auto; border-radius: 4px; }
+      .section-label {
+        font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #777;
+        margin-bottom: 10px; font-family: 'Ubuntu Mono', monospace; font-weight: 500;
+      }
+      .param-group { margin-bottom: 14px; }
+      .param-label { font-size: 13px; color: #ccc; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; font-weight: 500; }
+      .req-star { color: #f87171; font-size: 14px; }
+      .param-desc { font-size: 11px; color: #666; margin-top: 4px; }
+      .chevron { transition: transform 0.25s; }
+      .chevron.open { transform: rotate(180deg); }
+      .resp-wrap { display: none; margin-top: 20px; }
+      .resp-wrap.show { display: block; }
     </style>
   </head>
   <body class="bg-[#181818] text-gray-200 antialiased font-sans min-h-screen">
@@ -106,7 +169,7 @@
     </aside>
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-60 opacity-0 invisible z-[90] md:hidden"></div>
     <header id="navbar" class="top-0 z-50">
-      <div class="max-w-2xl mx-auto px-8 py-7 flex items-center justify-between">
+      <div class="max-w-3xl mx-auto px-8 py-7 flex items-center justify-between">
         <div class="flex items-center gap-6">
           <button id="sidebarToggle" class="text-sm text-white flex items-center justify-center md:hidden">
             <i class="material-icons text-2xl">notes</i>
@@ -115,22 +178,25 @@
       </div>
     </header>
     <div class="flex flex-col min-h-screen">
-      <main class="max-w-2xl mx-auto px-8 pt-4 pb-8 flex-1 w-full">
-        <!-- Breadcrumb untuk halaman detail kategori -->
+      <main class="max-w-3xl mx-auto px-8 pt-4 pb-8 flex-1 w-full">
         <div id="breadcrumb" class="mb-6 hidden">
           <a href="/category" class="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-1">
             <i class="material-icons text-base">arrow_back</i>
             <span>Back to Categories</span>
           </a>
         </div>
+        <div id="search-wrap" class="mb-6 relative">
+          <i class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-lg">search</i>
+          <input type="text" id="searchInput" placeholder="Search endpoints..." class="w-full bg-[#212121] border border-[#2E2E2E] text-white font-mono text-sm py-3 pl-12 pr-4 rounded-xl outline-none focus:border-[#444] transition-colors" />
+        </div>
         <div id="content" class="space-y-3"></div>
       </main>
       <footer class="bg-[#212121] relative z-10 border-t border-[#2E2E2E] w-full">
-        <div class="max-w-2xl mx-auto px-8 py-12">
+        <div class="max-w-3xl mx-auto px-8 py-12">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div>
               <h3 class="font-semibold text-white mb-3">About</h3>
-              <p class="text-sm text-gray-400 leading-relaxed">This interactive interface allows you to explore and test our comprehensive collection of API endpoints in real-time.</p>
+              <p class="text-sm text-gray-400 leading-relaxed">Interactive API explorer — browse endpoints and test them directly from this page.</p>
             </div>
             <div>
               <h3 class="font-semibold text-white mb-3">Quick Links</h3>
@@ -168,27 +234,134 @@
       sidebarClose.addEventListener('click', closeSidebar);
       overlay.addEventListener('click', closeSidebar);
 
+      const _epStore = {};
+
+      function buildFormFields(item, ci, ei) {
+        let html = '';
+        if (item.parameters && item.parameters.length > 0) {
+          item.parameters.forEach(param => {
+            const s = param.schema || {};
+            const req = !!param.required;
+            const lbl = `${param.name}${req ? ' <span class="req-star">*</span>' : ''}`;
+            const desc = param.description ? `<div class="param-desc">${param.description}</div>` : '';
+            const ph = (s.example ?? s.default ?? '') + '';
+            if (Array.isArray(s.enum) && s.enum.length) {
+              html += `<div class="param-group"><label class="param-label">${lbl}</label><select name="${param.name}"${req?' required':''}>${s.enum.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>${desc}</div>`;
+            } else if (s.type === 'boolean') {
+              html += `<div class="param-group"><label class="param-label">${lbl}</label><select name="${param.name}"${req?' required':''}><option value="true">true</option><option value="false">false</option></select>${desc}</div>`;
+            } else if (s.type === 'number' || s.type === 'integer') {
+              html += `<div class="param-group"><label class="param-label">${lbl}</label><input type="number" name="${param.name}" placeholder="${ph}"${req?' required':''}>${desc}</div>`;
+            } else {
+              html += `<div class="param-group"><label class="param-label">${lbl}</label><input type="text" name="${param.name}" placeholder="${ph.replace(/"/g,'&quot;')}"${req?' required':''}>${desc}</div>`;
+            }
+          });
+        }
+        return html;
+      }
+
+      function buildDetailHTML(ci, ei, item) {
+        const formFields = buildFormFields(item);
+        return `
+          ${item.desc ? `<p class="text-sm text-gray-400 mb-5 leading-relaxed">${item.desc}</p>` : ''}
+          <div class="section-label">Try It Out</div>
+          <form id="form-${ci}-${ei}" onsubmit="executeRequest(event,${ci},${ei},'${item.method}','${item.path}')">
+            ${formFields || '<p class="text-sm text-gray-600 mb-4">No parameters needed.</p>'}
+            <div class="flex items-center gap-3 mt-4">
+              <button type="submit" class="btn-exec" id="exec-btn-${ci}-${ei}"><i class="material-icons text-base">play_arrow</i> Execute</button>
+              <button type="button" id="clear-${ci}-${ei}" class="btn-clear" onclick="clearResponse(${ci},${ei})">Clear</button>
+            </div>
+          </form>
+          <div class="resp-wrap" id="resp-${ci}-${ei}">
+            <div class="section-label mt-6">Response</div>
+            <div class="code-block" id="resp-body-${ci}-${ei}"></div>
+          </div>`;
+      }
+
+      async function executeRequest(event, ci, ei, method, path) {
+        event.preventDefault();
+        const form = document.getElementById(`form-${ci}-${ei}`);
+        const respWrap = document.getElementById(`resp-${ci}-${ei}`);
+        const clearBtn = document.getElementById(`clear-${ci}-${ei}`);
+        const execBtn = document.getElementById(`exec-btn-${ci}-${ei}`);
+        const bodyDiv = document.getElementById(`resp-body-${ci}-${ei}`);
+
+        respWrap.classList.add('show');
+        clearBtn.style.display = 'inline-flex';
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+        for (const [k, v] of formData.entries()) { if (typeof v === 'string' && v) params.append(k, v); }
+        const qs = params.toString();
+        const fullPath = qs ? (path.includes('?') ? path + '&' + qs : path + '?' + qs) : path;
+
+        bodyDiv.innerHTML = '<span style="color:#666;font-size:13px">Loading...</span>';
+        execBtn.disabled = true;
+
+        try {
+          const res = await fetch(fullPath);
+          const ct = res.headers.get('content-type') || '';
+          if (!res.ok) {
+            const t = await res.text().catch(() => '');
+            throw new Error(`${res.status} ${res.statusText}\n${t}`);
+          }
+          if (ct.includes('application/json')) {
+            const data = await res.json();
+            bodyDiv.textContent = JSON.stringify(data, null, 2);
+          } else if (ct.startsWith('image/')) {
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            bodyDiv.innerHTML = `<img src="${url}" alt="response image"><br><a href="${url}" download style="color:#60a5fa;font-size:12px;margin-top:8px;display:inline-block">Download Image</a>`;
+          } else {
+            bodyDiv.textContent = await res.text();
+          }
+        } catch(err) {
+          bodyDiv.innerHTML = `<span style="color:#f87171">${err.message}</span>`;
+        }
+        execBtn.disabled = false;
+      }
+
+      function clearResponse(ci, ei) {
+        document.getElementById(`resp-${ci}-${ei}`).classList.remove('show');
+        document.getElementById(`clear-${ci}-${ei}`).style.display = 'none';
+      }
+
+      function toggleCategory(ci) {
+        const body = document.getElementById(`cat-body-${ci}`);
+        const chev = document.getElementById(`cat-chev-${ci}`);
+        body.classList.toggle('show');
+        chev.classList.toggle('open');
+      }
+
+      function toggleEndpoint(ci, ei) {
+        const panel = document.getElementById(`ep-detail-${ci}-${ei}`);
+        const chev = document.getElementById(`ep-chev-${ci}-${ei}`);
+        const itemEl = document.getElementById(`ep-item-${ci}-${ei}`);
+        if (!panel.dataset.rendered) {
+          const item = _epStore[`${ci}-${ei}`];
+          if (item) panel.innerHTML = buildDetailHTML(ci, ei, item);
+          panel.dataset.rendered = '1';
+        }
+        panel.classList.toggle('open');
+        chev.classList.toggle('open');
+        itemEl.classList.toggle('active');
+      }
+
       async function loadContent() {
         const content = document.getElementById('content');
         const sideList = document.getElementById('sidebar-dynamic-list');
         const breadcrumb = document.getElementById('breadcrumb');
         const sidebarCatLink = document.getElementById('sidebar-category-link');
-        
-        const path = window.location.pathname;
-        const categoryMatch = path.match(/^\/category\/(.+)$/);
-        
+        const pathname = window.location.pathname;
+        const categoryMatch = pathname.match(/^\/category\/(.+)$/);
+
         try {
           const res = await fetch('/src/openapi.json');
-          if (!res.ok) throw new Error('Failed to fetch API data');
+          if (!res.ok) throw new Error('Failed to fetch');
           const data = await res.json();
 
-          // Kumpulin kategori + hitung endpoint
           const categories = {};
-          if (data.tags) {
-            data.tags.forEach(t => { categories[t.name] = { name: t.name, count: 0, endpoints: [] }; });
-          }
-          Object.keys(data.paths || {}).forEach(pathItem => {
-            const pi = data.paths[pathItem];
+          if (data.tags) data.tags.forEach(t => { categories[t.name] = { name: t.name, count: 0, endpoints: [] }; });
+          Object.keys(data.paths || {}).forEach(p => {
+            const pi = data.paths[p];
             Object.keys(pi).forEach(method => {
               const ep = pi[method];
               if (!ep) return;
@@ -196,10 +369,12 @@
               if (!categories[tag]) categories[tag] = { name: tag, count: 0, endpoints: [] };
               categories[tag].count++;
               categories[tag].endpoints.push({
-                path: pathItem,
+                path: p,
                 method: method.toUpperCase(),
                 summary: ep.summary || 'No description',
-                description: ep.description || ''
+                description: ep.description || '',
+                parameters: ep.parameters || [],
+                deprecated: !!ep.deprecated
               });
             });
           });
@@ -207,18 +382,12 @@
           const cats = Object.values(categories).filter(c => c.count > 0);
           const toSlug = name => name.toLowerCase().replace(/\s+/g, '-');
 
-          // Render sidebar
           sideList.innerHTML = cats.map(cat => {
             const slug = toSlug(cat.name);
             const isActive = categoryMatch && categoryMatch[1] === slug;
-            return `
-            <a href="/category/${slug}" class="flex items-center justify-between py-1 px-4 text-sm rounded-xl ${isActive ? 'text-white bg-[#222222]' : 'text-gray-400 hover:text-white hover:bg-[#222222]'}">
-              <span>${cat.name}</span>
-              <i class="material-icons text-lg ml-3">keyboard_arrow_right</i>
-            </a>`;
+            return `<a href="/category/${slug}" class="flex items-center justify-between py-1 px-4 text-sm rounded-xl ${isActive ? 'text-white bg-[#222222]' : 'text-gray-400 hover:text-white hover:bg-[#222222]'}"><span>${cat.name}</span><i class="material-icons text-lg ml-3">keyboard_arrow_right</i></a>`;
           }).join('');
 
-          // Update sidebar category link active state
           if (!categoryMatch) {
             sidebarCatLink.classList.add('text-white', 'bg-[#222222]');
           } else {
@@ -227,86 +396,73 @@
           }
 
           if (categoryMatch) {
-            // Tampilkan halaman detail kategori
             const slug = categoryMatch[1];
             const category = cats.find(c => toSlug(c.name) === slug);
-            
             if (category) {
               breadcrumb.classList.remove('hidden');
               document.title = `${category.name} - Category.`;
-              
-              content.innerHTML = `
-                <div class="fade-in">
-                  <h2 class="text-2xl font-bold text-white mb-2">${category.name}</h2>
-                  <p class="text-sm text-gray-400 mb-6">${category.count} endpoint${category.count !== 1 ? 's' : ''} available in this category</p>
-                  
-                  <div class="space-y-3">
-                    ${category.endpoints.map((ep, i) => `
-                      <div class="bg-[#212121] border border-[#2E2E2E] rounded-xl p-5 hover:border-[#383838] transition-colors fade-in" style="animation-delay: ${i * 50}ms">
-                        <div class="flex items-start justify-between gap-4">
-                          <div class="flex-1 min-w-0">
-                            <div class="flex items-center gap-3 mb-2 flex-wrap">
-                              <span class="endpoint-method method-${ep.method.toLowerCase()}">${ep.method}</span>
-                              <code class="text-sm text-white font-mono break-all">${ep.path}</code>
-                            </div>
-                            <p class="text-sm text-gray-300 font-medium mb-1">${ep.summary}</p>
-                            ${ep.description ? `<p class="text-xs text-gray-500">${ep.description}</p>` : ''}
-                          </div>
-                          <a href="${ep.path}" class="flex-shrink-0 text-gray-500 hover:text-white transition-colors" title="Open endpoint">
-                            <i class="material-icons text-lg">open_in_new</i>
-                          </a>
-                        </div>
+              let html = `<div class="fade-in"><h2 class="text-2xl font-bold text-white mb-1">${category.name}</h2><p class="text-sm text-gray-400 mb-6">${category.count} endpoint${category.count !== 1 ? 's' : ''}</p>`;
+              category.endpoints.forEach((ep, ei) => {
+                const ci = cats.indexOf(category);
+                _epStore[`${ci}-${ei}`] = ep;
+                const statCls = ep.deprecated ? 'status-depr' : 'status-ready';
+                html += `
+                  <div class="ep-item" id="ep-item-${ci}-${ei}" data-path="${ep.path}" data-summary="${ep.summary}">
+                    <button class="ep-toggle-btn" onclick="toggleEndpoint(${ci},${ei})">
+                      <div class="flex items-center gap-3 flex-1 min-w-0">
+                        <span class="method-badge method-get">${ep.method}</span>
+                        <span class="font-mono text-sm text-white truncate">${ep.path}</span>
+                        <span class="${statCls} ml-auto flex-shrink-0">${ep.deprecated ? 'depr' : 'ready'}</span>
                       </div>
-                    `).join('')}
-                  </div>
-                </div>
-              `;
+                      <i class="material-icons chevron text-gray-500 flex-shrink-0" id="ep-chev-${ci}-${ei}">expand_more</i>
+                    </button>
+                    <div class="ep-detail-panel" id="ep-detail-${ci}-${ei}"></div>
+                  </div>`;
+              });
+              html += '</div>';
+              content.innerHTML = html;
             } else {
-              // Kategori tidak ditemukan
               breadcrumb.classList.remove('hidden');
               document.title = 'Category Not Found.';
-              content.innerHTML = `
-                <div class="fade-in text-center py-12">
-                  <i class="material-icons text-5xl text-gray-600 mb-4">folder_off</i>
-                  <h2 class="text-xl font-semibold text-white mb-2">Category Not Found</h2>
-                  <p class="text-sm text-gray-400 mb-6">The category "${slug}" does not exist.</p>
-                  <a href="/category" class="inline-flex items-center gap-2 px-4 py-2 bg-[#2a2a2a] text-white rounded-lg hover:bg-[#333] transition-colors text-sm">
-                    <i class="material-icons text-base">arrow_back</i>
-                    Back to Categories
-                  </a>
-                </div>
-              `;
+              content.innerHTML = `<div class="fade-in text-center py-12"><i class="material-icons text-5xl text-gray-600 mb-4">folder_off</i><h2 class="text-xl font-semibold text-white mb-2">Category Not Found</h2><a href="/category" class="inline-flex items-center gap-2 px-4 py-2 bg-[#2a2a2a] text-white rounded-lg hover:bg-[#333] transition-colors text-sm"><i class="material-icons text-base">arrow_back</i>Back</a></div>`;
             }
           } else {
-            // Tampilkan halaman list kategori (default)
             breadcrumb.classList.add('hidden');
             document.title = 'Category.';
-            
-            content.innerHTML = cats.map((cat, i) => `
-              <a href="/category/${toSlug(cat.name)}" class="block bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 hover:border-[#383838] group fade-in transition-all" style="animation-delay: ${i * 100}ms">
-                <div class="flex items-center justify-between">
-                  <div class="flex-1">
-                    <div class="flex items-center gap-3 mb-2">
-                      <h4 class="text-lg font-semibold text-white">${cat.name}</h4>
-                      <span class="px-2 py-1 bg-[#2a2a2a] text-gray-400 text-xs font-medium rounded">${cat.count} endpoint${cat.count !== 1 ? 's' : ''}</span>
-                    </div>
-                    <p class="text-sm text-gray-400">Explore ${cat.name} related endpoints and features.</p>
-                  </div>
-                  <div class="ml-4"><span class="material-icons text-gray-500 group-hover:text-white transition-colors">arrow_forward</span></div>
-                </div>
-              </a>`).join('');
+            content.innerHTML = cats.map((cat, i) => {
+              const slug = toSlug(cat.name);
+              return `<a href="/category/${slug}" class="block bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 hover:border-[#383838] group fade-in transition-all" style="animation-delay:${i*100}ms"><div class="flex items-center justify-between"><div class="flex-1"><div class="flex items-center gap-3 mb-2"><h4 class="text-lg font-semibold text-white">${cat.name}</h4><span class="px-2 py-1 bg-[#2a2a2a] text-gray-400 text-xs font-medium rounded">${cat.count} endpoint${cat.count!==1?'s':''}</span></div><p class="text-sm text-gray-400">Explore ${cat.name} related endpoints.</p></div><div class="ml-4"><span class="material-icons text-gray-500 group-hover:text-white transition-colors">arrow_forward</span></div></div></a>`;
+            }).join('');
           }
-
-        } catch (err) {
-          console.error('Error loading categories:', err);
-          content.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Failed to load categories. Please try again later.</p>';
+        } catch(err) {
+          content.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Failed to load data.</p>';
         }
       }
 
-      // Handle browser back/forward navigation
+      document.getElementById('searchInput').addEventListener('input', function() {
+        const q = this.value.toLowerCase();
+        let any = false;
+        document.querySelectorAll('.ep-item').forEach(el => {
+          const show = el.dataset.path.toLowerCase().includes(q) || el.dataset.summary.toLowerCase().includes(q);
+          el.style.display = show ? '' : 'none';
+          if (show) any = true;
+        });
+        document.querySelectorAll('.cat-body').forEach(b => b.style.display = 'none');
+        document.querySelectorAll('.cat-chevron').forEach(c => c.classList.remove('open'));
+        if (!q) {
+          document.querySelectorAll('.cat-body.show').forEach(b => b.style.display = 'block');
+          document.querySelectorAll('.cat-chevron.open').forEach(c => c.classList.add('open'));
+        } else {
+          document.querySelectorAll('.cat-body').forEach(b => b.style.display = 'block');
+          document.querySelectorAll('.cat-chevron').forEach(c => c.classList.add('open'));
+          document.querySelectorAll('.cat-group').forEach(g => {
+            const has = [...g.querySelectorAll('.ep-item')].some(e => e.style.display !== 'none');
+            g.style.display = has ? '' : 'none';
+          });
+        }
+      });
+
       window.addEventListener('popstate', loadContent);
-      
-      // Handle klik link internal (SPA-like navigation)
       document.addEventListener('click', function(e) {
         const link = e.target.closest('a');
         if (link && link.href && link.href.startsWith(window.location.origin + '/category')) {
