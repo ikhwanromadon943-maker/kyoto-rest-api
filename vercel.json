@@ -16,14 +16,10 @@
     { "source": "/api/info/:path*", "destination": "/api/info" },
     { "source": "/api/maker/:path*", "destination": "/api/maker" },
     { "source": "/api/stalker/:path*", "destination": "/api/stalker" },
-    { "source": "/api/random/:path*", "destination": "/api/random" },
     { "source": "/api/zodiak/:path*", "destination": "/api/zodiak" },
     { "source": "/api/tools/:path*", "destination": "/api/tools" },
     { "source": "/api/media/:path*", "destination": "/api/media" },
-    { "source": "/api/crypto/:path*", "destination": "/api/crypto" },
-    { "source": "/api/quran/:path*", "destination": "/api/quran" },
-    { "source": "/api/animals/:path*", "destination": "/api/animals" },
-    { "source": "/api/number-fact/:path*", "destination": "/api/number-fact" }
+    { "source": "/api/quran/:path*", "destination": "/api/quran" }
   ],
   "headers": [
     {
