@@ -1,32 +1,6 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "functions": {
-    "api/ai.js": {
-      "memory": 512,
-      "maxDuration": 10
-    },
-    "api/downloader.js": {
-      "memory": 512,
-      "maxDuration": 10
-    },
-    "api/tools.js": {
-      "memory": 512,
-      "maxDuration": 10
-    },
-    "api/storage.js": {
-      "memory": 512,
-      "maxDuration": 10
-    },
-    "api/media.js": {
-      "memory": 512,
-      "maxDuration": 10
-    },
-    "api/manga.js": {
-      "memory": 512,
-      "maxDuration": 10
-    }
-  },
   "rewrites": [
     { "source": "/docs", "destination": "/docs.html" },
     { "source": "/status", "destination": "/status.html" },
