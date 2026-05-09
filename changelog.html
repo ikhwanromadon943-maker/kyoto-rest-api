@@ -1,166 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Kyoto API Changelog — Release notes and version history." />
-    <title>Changelog — Kyoto API</title>
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://kyoto-rest-api.vercel.app/changelog" />
+    <meta property="og:title" content="Changelog — Kyoto API." />
+    <meta property="og:description" content="Release notes and version history for Kyoto API." />
+    <meta property="og:image" content="https://kyoto-rest-api.vercel.app/og-image.jpg" />
+    <meta property="og:image:width" content="1440" />
+    <meta property="og:image:height" content="600" />
+    <meta property="og:site_name" content="Kyoto API." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://kyoto-rest-api.vercel.app/changelog" />
+    <meta name="twitter:title" content="Changelog — Kyoto API." />
+    <meta name="twitter:description" content="Release notes and version history for Kyoto API." />
+    <meta name="twitter:image" content="https://kyoto-rest-api.vercel.app/og-image.jpg" />
+    <meta name="twitter:creator" content="@kyotodev" />
+    <meta name="author" content="KyotoDev." />
+    <meta name="keywords" content="API, changelog, releases, version, Kyoto, updates" />
+    <link rel="canonical" href="https://kyoto-rest-api.vercel.app/changelog" />
+    <title>Changelog — Kyoto API.</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <style>
-        :root{--bg:#09090e;--card:rgba(255,255,255,0.03);--card-h:rgba(255,255,255,0.055);--border:rgba(255,255,255,0.07);--text:#e2e0f0;--muted:rgba(226,224,240,0.42);--accent:#ff6b6b;--accent2:#ff8e53;--green:#4ade80;--yellow:#facc15;--red:#f87171;--purple:#a78bfa}
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;-webkit-font-smoothing:antialiased}
-        ::-webkit-scrollbar{display:none}
-        body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.7}
-        header{position:sticky;top:0;z-index:50;background:rgba(9,9,14,.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:16px 0}
-        .hdr{max-width:760px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between}
-        .logo{display:flex;align-items:center;gap:11px;text-decoration:none}
-        .logo-mark{width:26px;height:26px;border:1px solid rgba(255,107,107,.4);display:flex;align-items:center;justify-content:center;position:relative}
-        .logo-mark i{font-size:9px;color:var(--accent);position:relative;z-index:1}
-        .logo-txt{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:.18em;color:var(--text);text-transform:uppercase}
-        .vpill{font-size:8px;letter-spacing:.22em;color:var(--accent);border:1px solid rgba(255,107,107,.25);padding:3px 8px;text-transform:uppercase}
-        .nav-links{display:flex;gap:22px}
-        .nav-links a{font-size:9px;letter-spacing:.15em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .2s}
-        .nav-links a:hover{color:var(--accent)}
-        main{max-width:760px;margin:0 auto;padding:48px 32px;position:relative;z-index:1}
-
-        .page-title{font-family:'Syne',sans-serif;font-size:clamp(28px,5vw,40px);font-weight:800;margin-bottom:8px}
-        .page-sub{font-size:10px;color:var(--muted);margin-bottom:48px;line-height:1.7}
-
-        .timeline{position:relative;padding-left:28px}
-        .timeline::before{content:'';position:absolute;left:7px;top:8px;bottom:0;width:1px;background:var(--border)}
-        .release{margin-bottom:40px;position:relative}
-        .release:last-child{margin-bottom:0}
-        .release-dot{position:absolute;left:-28px;top:6px;width:15px;height:15px;border-radius:50%;border:2px solid;background:var(--bg);z-index:1}
-        .release-dot.major{border-color:var(--accent);box-shadow:0 0 0 4px rgba(255,107,107,.15)}
-        .release-dot.minor{border-color:var(--accent2);box-shadow:0 0 0 4px rgba(255,142,83,.15)}
-        .release-dot.patch{border-color:var(--green);box-shadow:0 0 0 4px rgba(74,222,128,.15)}
-        .release-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
-        .release-version{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text)}
-        .release-badge{font-size:7px;letter-spacing:.15em;text-transform:uppercase;padding:3px 8px;border:1px solid}
-        .rb-major{color:var(--accent);border-color:rgba(255,107,107,.3);background:rgba(255,107,107,.08)}
-        .rb-minor{color:var(--accent2);border-color:rgba(255,142,83,.3);background:rgba(255,142,83,.08)}
-        .rb-patch{color:var(--green);border-color:rgba(74,222,128,.3);background:rgba(74,222,128,.08)}
-        .release-date{font-size:8px;color:var(--muted)}
-        .release-changes{list-style:none}
-        .release-changes li{font-size:9px;color:var(--muted);line-height:1.9;padding:3px 0;display:flex;gap:8px}
-        .change-tag{font-size:7px;letter-spacing:.12em;text-transform:uppercase;padding:2px 6px;border:1px solid;flex-shrink:0;white-space:nowrap}
-        .ct-feature{color:var(--green);border-color:rgba(74,222,128,.25)}
-        .ct-improve{color:var(--purple);border-color:rgba(167,139,250,.25)}
-        .ct-fix{color:var(--yellow);border-color:rgba(250,204,21,.25)}
-        .ct-breaking{color:var(--red);border-color:rgba(248,113,113,.25)}
-        .ct-removed{color:var(--muted);border-color:rgba(255,255,255,.15);text-decoration:line-through}
-
-        footer{max-width:760px;margin:0 auto;padding:22px 32px 40px;border-top:1px solid var(--border);position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between}
-        .fcopy{font-size:9px;color:var(--muted);letter-spacing:.05em}
-        .flinks{display:flex;gap:18px}
-        .flinks a{font-size:9px;color:var(--muted);text-decoration:none;transition:color .2s}
-        .flinks a:hover{color:var(--accent)}
-    </style>
-</head>
-<body>
-    <header>
-        <div class="hdr">
-            <a href="/" class="logo"><div class="logo-mark"><i class="fas fa-torii-gate"></i></div><span class="logo-txt">Kyoto</span></a>
-            <div style="display:flex;align-items:center;gap:14px">
-                <span class="vpill">v2.0.0</span>
-                <nav class="nav-links">
-                    <a href="/">Home</a>
-                    <a href="/docs">Docs</a>
-                    <a href="/changelog" style="color:var(--accent)">Changelog</a>
-                </nav>
-            </div>
-        </div>
-    </header>
-    <main>
-        <h1 class="page-title">Changelog</h1>
-        <p class="page-sub">All notable changes to Kyoto API. Versioning follows <span style="color:var(--accent)">Semantic Versioning</span>.</p>
-        <div class="timeline" id="changelog"></div>
-    </main>
-    <footer>
-        <span class="fcopy">&copy; <span id="year"></span> Kyoto API</span>
-        <div class="flinks"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/changelog">Changelog</a></div>
-    </footer>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&amp;family=Inter:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet" />
     <script>
-        const releases = [
-            {
-                version: 'v2.0.0',
-                type: 'major',
-                date: 'May 10, 2026',
-                changes: [
-                    { tag: 'feature', text: '55+ live endpoints across 16 categories — all free, no API key, GET only' },
-                    { tag: 'feature', text: 'New categories: News, Fun, Games, Info, Maker, Stalker, Random, Zodiak, Crypto, Quran, Animals, Number Facts' },
-                    { tag: 'feature', text: 'AI: Added Text-to-Speech & Image Variation endpoints' },
-                    { tag: 'feature', text: 'Anime: Added Waifu images & Character search' },
-                    { tag: 'feature', text: 'Brand new interactive landing page with category grid & code examples' },
-                    { tag: 'feature', text: 'Redesigned Status Page — now monitors all 55+ endpoints in real-time' },
-                    { tag: 'feature', text: 'Streamlined Documentation — GET only, clean UI, faster loading' },
-                    { tag: 'improve', text: 'All response formats standardized: { status, author, provider, result, timestamp, response_time }' },
-                    { tag: 'improve', text: 'Complete rewrite of all API handlers for better error handling & performance' },
-                    { tag: 'improve', text: 'CORS headers added to all endpoints with proper OPTIONS preflight' },
-                    { tag: 'removed', text: 'Downloader category (TikTok, Instagram, YouTube, Twitter, Spotify) — requires self-hosted scraper' },
-                    { tag: 'removed', text: 'Storage category (Upload, List, Delete) — Vercel read-only filesystem limitation' },
-                    { tag: 'removed', text: 'POST, PUT, DELETE, PATCH methods — simplified to GET only for 100% Vercel compatibility' },
-                    { tag: 'breaking', text: 'API path structure changed — categories moved from /api/manga to /api/anime, new paths added' },
-                ]
-            },
-            {
-                version: 'v1.0.0',
-                type: 'major',
-                date: 'May 9, 2026',
-                changes: [
-                    { tag: 'feature', text: 'Initial release — 12 endpoints across 4 categories (AI, Tools, Media, Manga)' },
-                    { tag: 'feature', text: 'Interactive API documentation with live tester' },
-                    { tag: 'feature', text: 'CORS headers for all endpoints' },
-                    { tag: 'feature', text: 'Dark-themed UI with Kyoto-inspired design language' },
-                    { tag: 'improve', text: 'Average response time under 100ms' },
-                ]
-            },
-            {
-                version: 'v0.9.0-beta',
-                type: 'minor',
-                date: 'May 5, 2026',
-                changes: [
-                    { tag: 'feature', text: 'Added Manga category with search, anime info, and random' },
-                    { tag: 'feature', text: 'Added Waifu images via Waifu.pics' },
-                    { tag: 'feature', text: 'Built-in notification system' },
-                    { tag: 'improve', text: 'Refined error responses with consistent JSON format' },
-                    { tag: 'fix', text: 'Fixed CORS preflight for custom headers' }
-                ]
-            },
-            {
-                version: 'v0.5.0-alpha',
-                type: 'patch',
-                date: 'May 1, 2026',
-                changes: [
-                    { tag: 'feature', text: 'AI endpoints: ChatGPT, DALL·E, Translate' },
-                    { tag: 'feature', text: 'Tools endpoints: QR, Shortlink, Weather, Calculator' },
-                    { tag: 'feature', text: 'Media endpoints: Canvas, Meme' },
-                    { tag: 'feature', text: 'Project scaffolding & OpenAPI 3.0 specification' },
-                ]
-            },
-        ];
-
-        function renderChangelog() {
-            document.getElementById('changelog').innerHTML = releases.map(r => `
-                <div class="release">
-                    <div class="release-dot ${r.type}"></div>
-                    <div class="release-header">
-                        <span class="release-version">${r.version}</span>
-                        <span class="release-badge rb-${r.type}">${r.type}</span>
-                        <span class="release-date">${r.date}</span>
-                    </div>
-                    <ul class="release-changes">${r.changes.map(c => `<li><span class="change-tag ct-${c.tag}">${c.tag}</span>${c.text}</li>`).join('')}</ul>
-                </div>
-            `).join('');
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              'mono': ['Ubuntu Mono', 'monospace'],
+              'sans': ['Space Grotesk', 'system-ui', 'sans-serif']
+            }
+          }
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('year').textContent = new Date().getFullYear();
-            renderChangelog();
-        });
+      }
     </script>
-</body>
+    <style>
+      ::-webkit-scrollbar { display: none !important; }
+      body { position: relative; scroll-behavior: smooth; letter-spacing: 0.025em; background-color: #181818; }
+      body::before {
+        content: '';
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; min-height: 100vh; z-index: -1;
+        background-image: linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+        background-size: 40px 40px; pointer-events: none;
+      }
+      .fade-in { animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+  </head>
+  <body class="bg-[#181818] text-gray-200 antialiased font-sans min-h-screen">
+    <header id="navbar" class="sticky top-0 z-50 bg-[#181818] border-b border-[#2E2E2E]">
+      <div class="max-w-3xl mx-auto px-8 py-4 flex items-center justify-between">
+        <a href="/" class="font-bold text-white text-lg" style="font-family: 'Space Grotesk', sans-serif;">Kyoto API</a>
+        <div class="flex items-center gap-6 text-sm">
+          <a href="/" class="text-gray-400 hover:text-white transition-colors">Home</a>
+          <a href="/docs" class="text-gray-400 hover:text-white transition-colors">Docs</a>
+          <a href="/changelog" class="text-white transition-colors">Changelog</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-8 py-12">
+      <div class="mb-12 fade-in">
+        <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">Changelog</h1>
+        <p class="text-sm text-gray-400">All notable changes to Kyoto API. Versioning follows <span class="text-white font-semibold">Semantic Versioning</span>.</p>
+      </div>
+
+      <!-- Timeline -->
+      <div class="relative pl-8" id="changelog">
+        <!-- Timeline line -->
+        <div class="absolute left-[11px] top-2 bottom-0 w-px bg-[#2E2E2E]"></div>
+      </div>
+    </main>
+
+    <footer class="bg-[#212121] relative z-10 border-t border-[#2E2E2E] w-full mt-12">
+      <div class="max-w-3xl mx-auto px-8 py-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+          <p class="text-sm text-gray-400">&copy; <span id="year"></span> Kyoto API, All rights reserved.</p>
+          <div class="flex gap-6">
+            <a href="/privacy" class="text-sm text-gray-400 hover:text-white transition-colors">Privacy</a>
+            <a href="/terms" class="text-sm text-gray-400 hover:text-white transition-colors">Terms</a>
+            <a href="/changelog" class="text-sm text-white transition-colors">Changelog</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const releases = [
+        {
+          version: 'v2.0.0',
+          type: 'major',
+          date: 'May 10, 2026',
+          changes: [
+            { tag: 'feature', text: '55+ live endpoints across 16 categories — all free, no API key, GET only' },
+            { tag: 'feature', text: 'New categories: News, Fun, Games, Info, Maker, Stalker, Random, Zodiak, Crypto, Quran, Animals, Number Facts' },
+            { tag: 'feature', text: 'AI: Added Text-to-Speech & Image Variation endpoints' },
+            { tag: 'feature', text: 'Anime: Added Waifu images & Character search' },
+            { tag: 'feature', text: 'Brand new interactive landing page with category grid & code examples' },
+            { tag: 'feature', text: 'Redesigned Status Page — now monitors all endpoints in real-time' },
+            { tag: 'feature', text: 'Streamlined Documentation — clean UI, faster loading' },
+            { tag: 'improve', text: 'All response formats standardized for consistency' },
+            { tag: 'improve', text: 'Complete rewrite of all API handlers for better performance' },
+            { tag: 'improve', text: 'CORS headers added to all endpoints with proper preflight' },
+          ]
+        },
+        {
+          version: 'v1.0.0',
+          type: 'major',
+          date: 'May 9, 2026',
+          changes: [
+            { tag: 'feature', text: 'Initial release — endpoints across AI, Tools, Media, Anime categories' },
+            { tag: 'feature', text: 'Interactive API documentation with live tester' },
+            { tag: 'feature', text: 'CORS headers for all endpoints' },
+            { tag: 'feature', text: 'Dark-themed UI with modern design language' },
+            { tag: 'improve', text: 'Average response time under 100ms' },
+          ]
+        },
+        {
+          version: 'v0.9.0-beta',
+          type: 'minor',
+          date: 'May 5, 2026',
+          changes: [
+            { tag: 'feature', text: 'Added Anime category with search, info, and random' },
+            { tag: 'feature', text: 'Added Waifu images via Waifu.pics' },
+            { tag: 'improve', text: 'Refined error responses with consistent JSON format' },
+            { tag: 'fix', text: 'Fixed CORS preflight for custom headers' }
+          ]
+        },
+        {
+          version: 'v0.5.0-alpha',
+          type: 'patch',
+          date: 'May 1, 2026',
+          changes: [
+            { tag: 'feature', text: 'AI endpoints: ChatGPT, DALL·E, Translate' },
+            { tag: 'feature', text: 'Tools endpoints: QR, Shortlink, Weather, Calculator' },
+            { tag: 'feature', text: 'Media endpoints: Canvas, Meme' },
+            { tag: 'feature', text: 'Project scaffolding & OpenAPI 3.0 specification' },
+          ]
+        },
+      ];
+
+      function getBadgeClasses(type) {
+        const map = {
+          major: 'text-red-400 border-red-400/30 bg-red-400/10',
+          minor: 'text-orange-400 border-orange-400/30 bg-orange-400/10',
+          patch: 'text-green-400 border-green-400/30 bg-green-400/10',
+        };
+        return map[type] || map.patch;
+      }
+
+      function getDotClasses(type) {
+        const map = {
+          major: 'border-red-400 shadow-[0_0_0_4px_rgba(248,113,113,0.15)]',
+          minor: 'border-orange-400 shadow-[0_0_0_4px_rgba(251,146,60,0.15)]',
+          patch: 'border-green-400 shadow-[0_0_0_4px_rgba(74,222,128,0.15)]',
+        };
+        return map[type] || map.patch;
+      }
+
+      function getTagClasses(tag) {
+        const map = {
+          feature: 'text-green-400 border-green-400/25 bg-green-400/10',
+          improve: 'text-purple-400 border-purple-400/25 bg-purple-400/10',
+          fix: 'text-yellow-400 border-yellow-400/25 bg-yellow-400/10',
+        };
+        return map[tag] || 'text-gray-400 border-gray-400/25 bg-gray-400/10';
+      }
+
+      function renderChangelog() {
+        document.getElementById('changelog').innerHTML = releases.map((r, i) => `
+          <div class="relative mb-12 last:mb-0 fade-in" style="animation-delay: ${i * 100}ms">
+            <div class="absolute -left-8 top-1.5 w-[22px] h-[22px] rounded-full border-2 bg-[#181818] z-10 ${getDotClasses(r.type)}"></div>
+            <div class="flex items-center gap-3 mb-3 flex-wrap">
+              <span class="text-lg font-bold text-white">${r.version}</span>
+              <span class="text-xs uppercase tracking-wider px-2 py-0.5 rounded border ${getBadgeClasses(r.type)}">${r.type}</span>
+              <span class="text-xs text-gray-500">${r.date}</span>
+            </div>
+            <div class="bg-[#212121] border border-[#2E2E2E] rounded-xl p-5 hover:border-[#383838] transition-colors">
+              <ul class="space-y-2">
+                ${r.changes.map(c => `
+                  <li class="flex items-start gap-3 text-sm">
+                    <span class="text-xs uppercase tracking-wider px-2 py-0.5 rounded border flex-shrink-0 mt-0.5 ${getTagClasses(c.tag)}">${c.tag}</span>
+                    <span class="text-gray-400 leading-relaxed">${c.text}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('year').textContent = new Date().getFullYear();
+        renderChangelog();
+      });
+    </script>
+  </body>
 </html>

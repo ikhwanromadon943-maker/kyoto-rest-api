@@ -1,243 +1,516 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
+<html lang="en">
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Kyoto API v2.0 — 55+ Live REST API Endpoints. Free, no API key, all real-time." />
-    <meta name="author" content="KyotoDev" />
-    <title>Kyoto API v2.0</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com/" />
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
+    <meta name="description" content="Infrastructure for text generation, image processing, translation, and machine learning tasks with global edge network performance." />
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://kyoto-rest-api.vercel.app" />
+    <meta property="og:title" content="Kyoto API." />
+    <meta property="og:description" content="Infrastructure for text generation, image processing, translation, and machine learning tasks with global edge network performance." />
+    <meta property="og:image" content="https://kyoto-rest-api.vercel.app/og-image.jpg" />
+    <meta property="og:image:width" content="1440" />
+    <meta property="og:image:height" content="600" />
+    <meta property="og:site_name" content="Kyoto API." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://kyoto-rest-api.vercel.app" />
+    <meta name="twitter:title" content="Kyoto API." />
+    <meta name="twitter:description" content="Infrastructure for text generation, image processing, translation, and machine learning tasks with global edge network performance." />
+    <meta name="twitter:image" content="https://kyoto-rest-api.vercel.app/og-image.jpg" />
+    <meta name="twitter:creator" content="@wtf.w4n_" />
+    <meta name="author" content="wtf.w4n_" />
+    <meta name="keywords" content="API, endpoints, documentation, Kyoto, REST, free API" />
+    <link rel="canonical" href="https://kyoto-rest-api.vercel.app" />
+    <title>Kyoto API.</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <style>
-        :root{--bg:#09090e;--card:rgba(255,255,255,0.03);--card-h:rgba(255,255,255,0.06);--border:rgba(255,255,255,0.07);--border-h:rgba(255,107,107,0.35);--text:#e2e0f0;--muted:rgba(226,224,240,0.42);--accent:#ff6b6b;--accent2:#ff8e53;--green:#4ade80;--blue:#38bdf8;--purple:#a78bfa}
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        html{scroll-behavior:smooth}
-        body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-        ::-webkit-scrollbar{display:none}
-        body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.7}
-        .blob{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0}
-        .blob-1{width:480px;height:480px;background:radial-gradient(circle,rgba(255,107,107,.07) 0%,transparent 70%);top:-180px;left:-120px;animation:b1 22s ease-in-out infinite}
-        .blob-2{width:380px;height:380px;background:radial-gradient(circle,rgba(255,142,83,.05) 0%,transparent 70%);bottom:-80px;right:-80px;animation:b2 28s ease-in-out infinite}
-        @keyframes b1{0%,100%{transform:translate(0,0)}50%{transform:translate(50px,35px)}}
-        @keyframes b2{0%,100%{transform:translate(0,0)}50%{transform:translate(-35px,-55px)}}
-        #cursor-glow{position:fixed;top:0;left:0;width:280px;height:280px;margin:-140px 0 0 -140px;background:radial-gradient(circle,rgba(255,107,107,.055) 0%,transparent 70%);pointer-events:none;z-index:0;border-radius:50%;will-change:transform}
-        #loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:18px;transition:opacity .6s,visibility .6s}
-        #loader.hidden{opacity:0;visibility:hidden}
-        .loader-ring{width:36px;height:36px;border:1px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite}
-        .loader-txt{font-size:9px;letter-spacing:.35em;color:var(--muted);text-transform:uppercase}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        header{position:sticky;top:0;z-index:50;background:rgba(9,9,14,.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:16px 0}
-        .hdr{max-width:800px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between}
-        .logo{display:flex;align-items:center;gap:11px;text-decoration:none}
-        .logo-mark{width:26px;height:26px;border:1px solid rgba(255,107,107,.4);display:flex;align-items:center;justify-content:center;position:relative}
-        .logo-mark::before{content:'';position:absolute;inset:3px;background:var(--accent);opacity:.12}
-        .logo-mark i{font-size:9px;color:var(--accent);position:relative;z-index:1}
-        .logo-txt{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:.18em;color:var(--text);text-transform:uppercase}
-        .vpill{font-size:8px;letter-spacing:.22em;color:var(--accent);border:1px solid rgba(255,107,107,.25);padding:3px 8px;text-transform:uppercase}
-        .nav-links{display:flex;gap:22px}
-        .nav-links a{font-size:9px;letter-spacing:.15em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .2s}
-        .nav-links a:hover{color:var(--accent)}
-        main{max-width:800px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
-        .hero{padding:72px 0 48px}
-        .eyebrow{font-size:9px;letter-spacing:.35em;color:var(--accent);text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:12px;opacity:0;animation:up .6s .2s forwards}
-        .eyebrow::before{content:'';width:22px;height:1px;background:var(--accent)}
-        .hero-title{font-family:'Syne',sans-serif;font-size:clamp(38px,9vw,56px);font-weight:800;line-height:.95;letter-spacing:-.025em;margin-bottom:20px;opacity:0;animation:up .6s .3s forwards}
-        .hi{background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-        .hero-sub{font-size:11px;line-height:1.9;color:var(--muted);margin-bottom:32px;max-width:450px;opacity:0;animation:up .6s .4s forwards}
-        .actions{display:flex;gap:10px;flex-wrap:wrap;opacity:0;animation:up .6s .5s forwards}
-        @keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-        .btn-p{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;text-decoration:none;font-size:9px;letter-spacing:.22em;text-transform:uppercase;padding:11px 22px;font-family:'DM Mono',monospace;font-weight:500;transition:all .3s;position:relative;overflow:hidden}
-        .btn-p::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent),var(--accent2));opacity:0;transition:opacity .3s}
-        .btn-p:hover::before{opacity:1}
-        .btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(255,107,107,.28)}
-        .btn-p span,.btn-p i{position:relative;z-index:1}
-        .btn-g{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--muted);text-decoration:none;font-size:9px;letter-spacing:.22em;text-transform:uppercase;padding:10px 22px;border:1px solid var(--border);font-family:'DM Mono',monospace;transition:all .3s}
-        .btn-g:hover{color:var(--text);border-color:var(--border-h);background:var(--card-h)}
-        .sdiv{display:flex;align-items:center;gap:14px;margin:40px 0 24px;opacity:0;transform:translateY(10px);transition:opacity .6s,transform .6s}
-        .sdiv.sv{opacity:1;transform:none}
-        .sdiv-lbl{font-size:8px;letter-spacing:.35em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
-        .sdiv-line{flex:1;height:1px;background:var(--border)}
-        .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:40px;opacity:0;transform:translateY(10px);transition:opacity .6s .1s,transform .6s .1s}
-        .stats.sv{opacity:1;transform:none}
-        @media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
-        .stat{background:var(--bg);padding:22px 16px;text-align:center;transition:background .3s}
-        .stat:hover{background:var(--card-h)}
-        .sv{font-family:'Syne',sans-serif;font-size:30px;font-weight:700;color:var(--text);line-height:1;margin-bottom:6px}
-        .sl{font-size:8px;letter-spacing:.25em;color:var(--muted);text-transform:uppercase}
-
-        .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:40px;opacity:0;transform:translateY(10px);transition:opacity .6s .15s,transform .6s .15s}
-        .cat-grid.sv{opacity:1;transform:none}
-        @media(max-width:768px){.cat-grid{grid-template-columns:repeat(3,1fr)}}
-        @media(max-width:500px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
-        .cat-card{background:var(--bg);padding:16px 12px;text-align:center;transition:all .3s;text-decoration:none;color:var(--text);border:1px solid transparent}
-        .cat-card:hover{background:var(--card-h);border-color:var(--accent);transform:translateY(-2px)}
-        .cat-card i{font-size:16px;color:var(--accent);margin-bottom:8px;display:block}
-        .cat-card .cn{font-size:9px;font-weight:500;margin-bottom:2px}
-        .cat-card .ce{font-size:7px;color:var(--muted)}
-
-        .feats{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border)}
-        .fc{background:var(--bg);padding:16px 20px;display:flex;align-items:center;gap:16px;opacity:0;transform:translateY(10px);transition:opacity .5s,transform .5s,background .3s,padding-left .25s}
-        .fc.sv{opacity:1;transform:none}
-        .fc:hover{background:var(--card-h);padding-left:26px}
-        .ficon{width:30px;height:30px;flex-shrink:0;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:border-color .3s}
-        .fc:hover .ficon{border-color:var(--accent)}
-        .ficon i{font-size:11px;color:var(--accent)}
-        .fn{font-size:10px;font-weight:500;color:var(--text);margin-bottom:2px}
-        .fd{font-size:8px;color:var(--muted);line-height:1.65}
-
-        .steps{border:1px solid var(--border);padding:24px 20px;background:var(--bg);opacity:0;transform:translateY(10px);transition:opacity .6s,transform .6s}
-        .steps.sv{opacity:1;transform:none}
-        .steps-hdr{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:.05em;margin-bottom:20px;display:flex;align-items:center;gap:10px;color:var(--text)}
-        .steps-hdr i{color:var(--accent)}
-        .srow{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);transition:padding-left .2s}
-        .srow:last-child{border-bottom:none;padding-bottom:0}
-        .srow:hover{padding-left:8px}
-        .snum{width:24px;height:24px;flex-shrink:0;border:1px solid rgba(255,107,107,.3);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:var(--accent);transition:all .25s}
-        .srow:hover .snum{background:var(--accent);color:#fff;border-color:var(--accent)}
-        .stitle{font-size:10px;font-weight:500;color:var(--text);margin-bottom:2px}
-        .sdesc{font-size:8px;color:var(--muted);line-height:1.7}
-
-        .code-block{background:rgba(0,0,0,.3);border:1px solid var(--border);padding:16px 20px;margin-bottom:40px;opacity:0;transform:translateY(10px);transition:opacity .6s .2s,transform .6s .2s}
-        .code-block.sv{opacity:1;transform:none}
-        .code-block pre{font-size:9px;color:var(--green);line-height:1.8;overflow-x:auto}
-        .code-block .prompt{color:var(--accent)}
-        .code-block .comment{color:var(--muted)}
-
-        footer{position:relative;z-index:1;max-width:800px;margin:56px auto 0;padding:20px 32px 36px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-        .fcopy{font-size:9px;color:var(--muted);letter-spacing:.05em}
-        .flinks{display:flex;gap:18px}
-        .flinks a{font-size:9px;color:var(--muted);text-decoration:none;transition:color .2s}
-        .flinks a:hover{color:var(--accent)}
-    </style>
-</head>
-<body>
-    <div class="blob blob-1"></div><div class="blob blob-2"></div><div id="cursor-glow"></div>
-    <div id="loader"><div class="loader-ring"></div><span class="loader-txt">Initializing</span></div>
-    <header>
-        <div class="hdr">
-            <a href="/" class="logo"><div class="logo-mark"><i class="fas fa-torii-gate"></i></div><span class="logo-txt">Kyoto</span></a>
-            <div style="display:flex;align-items:center;gap:14px">
-                <span class="vpill">v2.0</span>
-                <nav class="nav-links">
-                    <a href="#categories">Categories</a>
-                    <a href="/docs">Docs</a>
-                    <a href="/status">Status</a>
-                </nav>
-            </div>
-        </div>
-    </header>
-    <main>
-        <section class="hero">
-            <p class="eyebrow">REST API Platform — v2.0</p>
-            <h1 class="hero-title"><span class="hi">Kyoto</span><br />API</h1>
-            <p class="hero-sub">55+ live REST API endpoints across 16 categories. All free, no API key, no self-host, real-time responses.</p>
-            <div class="actions">
-                <a href="/docs" class="btn-p"><i class="fas fa-rocket"></i><span>Explore Docs</span></a>
-                <a href="/status" class="btn-g"><i class="fas fa-server"></i><span>System Status</span></a>
-            </div>
-        </section>
-
-        <div class="stats animate-scroll">
-            <div class="stat"><div id="total-endpoints" class="sv">—</div><div class="sl">Endpoints</div></div>
-            <div class="stat"><div id="total-categories" class="sv">—</div><div class="sl">Categories</div></div>
-            <div class="stat"><div class="sv" style="color:var(--green)">99.9%</div><div class="sl">Uptime</div></div>
-            <div class="stat"><div class="sv" style="color:var(--blue)">0 Key</div><div class="sl">API Key</div></div>
-        </div>
-
-        <div class="sdiv animate-scroll" id="categories"><span class="sdiv-lbl">API Categories</span><div class="sdiv-line"></div></div>
-        <div class="cat-grid animate-scroll" id="cat-grid"></div>
-
-        <div class="sdiv animate-scroll"><span class="sdiv-lbl">Why Kyoto API</span><div class="sdiv-line"></div></div>
-        <div class="feats">
-            <div class="fc animate-scroll"><div class="ficon"><i class="fas fa-bolt"></i></div><div><div class="fn">Lightning Fast</div><div class="fd">Sub-100ms average response. Deployed on Vercel Edge Network worldwide.</div></div></div>
-            <div class="fc animate-scroll" style="transition-delay:.07s"><div class="ficon"><i class="fas fa-lock-open"></i></div><div><div class="fn">No API Key Required</div><div class="fd">100% free and open. No registration, no authentication, no rate limits for normal use.</div></div></div>
-            <div class="fc animate-scroll" style="transition-delay:.14s"><div class="ficon"><i class="fas fa-plug"></i></div><div><div class="fn">Easy Integration</div><div class="fd">Simple GET requests with clean JSON responses. Works with cURL, fetch, axios, Python, any language.</div></div></div>
-            <div class="fc animate-scroll" style="transition-delay:.21s"><div class="ficon"><i class="fas fa-check-circle"></i></div><div><div class="fn">All Live, Real Data</div><div class="fd">Every endpoint fetches real data from trusted providers. No mock data, no simulations.</div></div></div>
-        </div>
-
-        <div class="sdiv animate-scroll"><span class="sdiv-lbl">Quick Start</span><div class="sdiv-line"></div></div>
-        <div class="code-block animate-scroll">
-            <pre><span class="comment"># AI Chat</span>
-<span class="prompt">curl</span> https://kyoto-rest-api.vercel.app/api/ai/chatgpt?text=Hello
-
-<span class="comment"># Translate</span>
-<span class="prompt">curl</span> https://kyoto-rest-api.vercel.app/api/ai/translate?text=Good+morning&to=id
-
-<span class="comment"># Weather</span>
-<span class="prompt">curl</span> https://kyoto-rest-api.vercel.app/api/tools/cuaca?city=Tokyo
-
-<span class="comment"># Crypto Price</span>
-<span class="prompt">curl</span> https://kyoto-rest-api.vercel.app/api/crypto/price?id=bitcoin</pre>
-        </div>
-
-        <div class="sdiv animate-scroll"><span class="sdiv-lbl">Example Response</span><div class="sdiv-line"></div></div>
-        <div class="code-block animate-scroll">
-            <pre>{
-  <span class="comment">"status"</span>: true,
-  <span class="comment">"author"</span>: <span class="comment">"Kyoto API"</span>,
-  <span class="comment">"provider"</span>: <span class="comment">"Open-Meteo"</span>,
-  <span class="comment">"city"</span>: <span class="comment">"Tokyo"</span>,
-  <span class="comment">"temperature"</span>: <span class="comment">"22°C"</span>,
-  <span class="comment">"condition"</span>: <span class="comment">"Clear"</span>
-}</pre>
-        </div>
-    </main>
-    <footer>
-        <span class="fcopy">&copy; <span id="year"></span> Kyoto API</span>
-        <div class="flinks"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/status">Status</a><a href="/docs">Docs</a></div>
-    </footer>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0&icon_names=verified" />
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300;400;500;600;700&family=Stack+Sans+Notch:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" />
     <script>
-        const categories = [
-            { name:'AI', icon:'fa-brain', endpoints:5 },
-            { name:'Anime', icon:'fa-dragon', endpoints:5 },
-            { name:'News', icon:'fa-newspaper', endpoints:3 },
-            { name:'Fun', icon:'fa-face-laugh', endpoints:7 },
-            { name:'Games', icon:'fa-gamepad', endpoints:2 },
-            { name:'Info', icon:'fa-circle-info', endpoints:6 },
-            { name:'Maker', icon:'fa-wand-magic-sparkles', endpoints:4 },
-            { name:'Stalker', icon:'fa-magnifying-glass', endpoints:3 },
-            { name:'Zodiak', icon:'fa-moon', endpoints:1 },
-            { name:'Tools', icon:'fa-screwdriver-wrench', endpoints:5 },
-            { name:'Media', icon:'fa-image', endpoints:3 },
-            { name:'Quran', icon:'fa-book', endpoints:2 },
-        ];
-
-        document.getElementById('cat-grid').innerHTML = categories.map(c => `
-            <a href="/docs" class="cat-card">
-                <i class="fas ${c.icon}"></i>
-                <div class="cn">${c.name}</div>
-                <div class="ce">${c.endpoints} endpoints</div>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              'mono': ['Ubuntu Mono', 'monospace'],
+              'sans': ['Space Grotesk', 'system-ui', 'sans-serif']
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      ::-webkit-scrollbar { display: none !important; }
+      body { position: relative; scroll-behavior: smooth; letter-spacing: 0.025em; background-color: #181818; }
+      body::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; min-height: 100vh; z-index: -1;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 40px 40px; pointer-events: none;
+      }
+      #sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        height: 100dvh;
+      }
+      #sidebar.open { transform: translateX(0); }
+      .faq-answer {
+        transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+      }
+      .faq-answer.active { opacity: 1; }
+      .faq-icon { transition: transform 0.3s ease; }
+      .faq-btn[aria-expanded="true"] .faq-icon { transform: rotate(180deg); }
+      [data-aos] { transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94) !important; will-change: transform, opacity; }
+      [data-aos].aos-animate { transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important; }
+    </style>
+  </head>
+  <body class="bg-[#181818] text-gray-200 antialiased font-sans min-h-screen">
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-[#181818] transition-all duration-300 border-b border-transparent md:border-[#2E2E2E]">
+      <div class="max-w-3xl md:max-w-5xl mx-auto px-8 md:px-16 py-4 md:py-6 flex items-center justify-between">
+        <a href="/" class="font-bold text-white text-xl md:text-1xl" style="font-family: 'Stack Sans Notch', sans-serif;">Kyoto API</a>
+        <div class="hidden md:flex items-center gap-8 text-sm text-gray-400">
+          <a href="/category" class="hover:text-white transition-colors">Category</a>
+          <a href="#statistic" class="hover:text-white transition-colors">Statistic</a>
+          <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
+        </div>
+        <button id="sidebarToggle" class="md:hidden text-white flex items-center justify-center">
+          <i class="bi bi-three-dots text-3xl"></i>
+        </button>
+      </div>
+    </nav>
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-60 opacity-0 invisible z-[90] md:hidden"></div>
+    <aside id="sidebar" class="fixed top-0 left-0 w-64 bg-[#181818] border-r border-[#2E2E2E] z-[100] flex flex-col md:hidden">
+      <div class="flex items-center justify-between px-6 pt-5 pb-4">
+        <div>
+          <h2 class="font-bold text-white text-2md" style="font-family: 'Stack Sans Notch', sans-serif;">Kyoto API</h2>
+          <p class="text-[13px] text-gray-500 mt-0.7">Free API Service</p>
+        </div>
+        <button id="sidebarClose" class="text-gray-400 hover:text-white transition-colors">
+          <i class="bi bi-x-lg text-lg"></i>
+        </button>
+      </div>
+      <div class="mx-6 border-b border-[#2E2E2E]"></div>
+      <div class="flex-1 min-h-0 px-5 pt-12 pb-6 overflow-y-auto">
+        <nav>
+          <div class="space-y-1">
+            <a href="/category" class="flex items-center justify-between py-2 px-4 text-md text-gray-400 hover:bg-[#222222] hover:text-white rounded-xl transition-colors">
+              <span>Category</span>
+              <i class="bi bi-chevron-right text-sm ml-3"></i>
             </a>
-        `).join('');
+            <a href="#statistic" class="flex items-center justify-between py-2 px-4 text-md text-gray-400 hover:bg-[#222222] hover:text-white rounded-xl transition-colors">
+              <span>Statistic</span>
+              <i class="bi bi-chevron-right text-sm ml-3"></i>
+            </a>
+            <a href="#pricing" class="flex items-center justify-between py-2 px-4 text-md text-gray-400 hover:bg-[#222222] hover:text-white rounded-xl transition-colors">
+              <span>Pricing</span>
+              <i class="bi bi-chevron-right text-sm ml-3"></i>
+            </a>
+          </div>
+        </nav>
+      </div>
+      <div class="px-4 pb-6 border-t border-[#2E2E2E] pt-4 shrink-0">
+        <a href="https://www.instagram.com/elrayyxml" target="_blank" class="flex items-center justify-between bg-[#212121] border border-[#2E2E2E] transition-colors rounded-2xl px-5 py-5 relative overflow-hidden">
+          <div class="absolute right-8 w-16 h-16 rounded-full border-2 border-[#383838] opacity-40"></div>
+          <div>
+            <p class="font-semibold text-white text-base">Follow Us</p>
+            <p class="text-xs text-gray-500 mt-0.5">@wtf.w4n_</p>
+          </div>
+          <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center flex-shrink-0 relative z-10">
+            <i class="bi bi-arrow-right text-black text-base"></i>
+          </div>
+        </a>
+      </div>
+    </aside>
 
-        async function updateStats() {
-            try {
-                const r = await fetch('/src/openapi.json');
-                const d = await r.json();
-                let epCount = 0;
-                const cats = new Set();
-                Object.keys(d.paths||{}).forEach(path => {
-                    Object.keys(d.paths[path]).forEach(() => epCount++);
-                });
-                (d.tags||[]).forEach(t => cats.add(t.name));
-                document.getElementById('total-endpoints').textContent = epCount || '—';
-                document.getElementById('total-categories').textContent = cats.size || '—';
-            } catch(e) {}
+    <main class="flex-1 w-full max-w-3xl md:max-w-5xl mx-auto px-8 md:px-16 pt-8 pb-8 overflow-x-hidden">
+      <section class="text-center md:text-left pt-20 pb-2 md:pt-20 md:pb-6" data-aos="fade-down" data-aos-duration="1500" data-aos-easing="ease-in-out-cubic">
+        <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+          <div class="md:flex-1">
+            <div class="inline-flex items-center gap-1 px-4 py-1.5 mb-6 text-sm font-semibold text-gray-400 border border-[#2E2E2E] bg-[#212121] rounded-full">
+              <i class="bi bi-patch-check-fill text-white text-[12px] align-middle"></i>
+              <span>#1 Unlimited Free API Service</span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
+              Next-Gen API Platform for Web, Mobile, and Automation
+            </h1>
+            <p class="text-base md:text-base text-gray-400 mb-10 max-w-2xl leading-relaxed">
+              The complete solution for API integration. Send notifications, process data, and build powerful applications with ease and reliability using our platform.
+            </p>
+            <div class="flex flex-row items-center md:items-start justify-center md:justify-start gap-3 max-w-sm" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="450" data-aos-easing="ease-in-out-cubic">
+              <a href="/category" class="w-52 md:w-40 py-2 bg-white border border-[#383838] text-black font-bold text-base rounded-lg transition-all flex items-center justify-center whitespace-nowrap">Get Started</a>
+              <a href="#statistic" class="w-12 md:w-40 py-2 bg-[#212121] border border-[#383838] text-gray-400 hover:text-black font-bold hover:bg-white text-base rounded-lg transition-all flex items-center justify-center gap-2 whitespace-nowrap">
+                <i class="bi bi-activity text-base"></i>
+                <span class="hidden md:inline">Statistic</span>
+              </a>
+            </div>
+          </div>
+          <div class="hidden md:flex lg:flex-1 items-center justify-center">
+            <i class="bi bi-lightning-charge-fill text-white" style="font-size: 12rem;"></i>
+          </div>
+        </div>
+      </section>
+
+      <section id="statistic" class="py-24">
+        <div class="text-center mb-10" data-aos="fade-up" data-aos-duration="1500">
+          <h2 class="text-2xl font-bold text-white mb-2">API Statistics</h2>
+          <div class="w-24 h-0.5 bg-white mx-auto rounded-full mt-2 mb-4"></div>
+          <p class="text-gray-400 text-sm">Here's a snapshot of our performance.</p>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-[#212121] border border-[#2E2E2E] hover:border-[#383838] transition-colors p-6 relative overflow-hidden rounded-xl group" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="100">
+            <div class="relative z-10">
+              <div class="text-2xl font-semibold text-white mb-1">100K</div>
+              <div class="text-xs text-gray-400 uppercase">Total Requests</div>
+            </div>
+            <i class="fa-solid fa-server absolute -bottom-2 -right-2 text-6xl text-[#1a1a1a] opacity-50 group-hover:scale-110 group-hover:text-[#2a2a2a] transition-transform duration-500"></i>
+          </div>
+          <div class="bg-[#212121] border border-[#2E2E2E] hover:border-[#383838] transition-colors p-6 relative overflow-hidden rounded-xl group" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="200">
+            <div class="relative z-10">
+              <div class="text-2xl font-semibold text-white mb-1">99.99%</div>
+              <div class="text-xs text-gray-400 uppercase">System Uptime</div>
+            </div>
+            <i class="fa-solid fa-clock absolute -bottom-2 -right-2 text-6xl text-[#1a1a1a] opacity-50 group-hover:scale-110 group-hover:text-[#2a2a2a] transition-transform duration-500"></i>
+          </div>
+          <div class="bg-[#212121] border border-[#2E2E2E] hover:border-[#383838] transition-colors p-6 relative overflow-hidden rounded-xl group" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="300">
+            <div class="relative z-10">
+              <div class="text-2xl font-semibold text-white mb-1">&lt; 100ms</div>
+              <div class="text-xs text-gray-400 uppercase">Avg. Latency</div>
+            </div>
+            <i class="fa-solid fa-bolt absolute -bottom-2 -right-2 text-6xl text-[#1a1a1a] opacity-50 group-hover:scale-110 group-hover:text-[#2a2a2a] transition-transform duration-500"></i>
+          </div>
+          <div class="bg-[#212121] border border-[#2E2E2E] hover:border-[#383838] transition-colors p-6 relative overflow-hidden rounded-xl group" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="400">
+            <div class="relative z-10">
+              <div class="text-2xl font-semibold text-white mb-1">357+</div>
+              <div class="text-xs text-gray-400 uppercase">Endpoints Ready</div>
+            </div>
+            <i class="fa-solid fa-code absolute -bottom-2 -right-2 text-6xl text-[#1a1a1a] opacity-50 group-hover:scale-110 group-hover:text-[#2a2a2a] transition-transform duration-500"></i>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div data-aos="fade-right" data-aos-duration="1500">
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">Seamless Integration</h2>
+            <p class="text-gray-400 mb-8 leading-relaxed">
+              Integrate Kyoto API into your applications with just a few lines of code. We support multiple languages and frameworks to ensure a smooth development experience.
+            </p>
+            <div class="mb-8">
+              <p class="text-sm font-semibold text-gray-300 mb-2">Example cURL request:</p>
+              <div class="bg-[#111] border border-[#2E2E2E] text-white px-4 py-3 rounded-xl font-mono text-sm flex items-center justify-between w-full max-w-md">
+                <span id="npm-command">curl https://kyoto-rest-api.vercel.app/api/ai/chatgpt?text=Hello</span>
+                <button onclick="copyNpmCommand()" class="text-gray-400 hover:text-white transition-colors focus:outline-none">
+                  <i class="bi bi-copy text-sm" id="copy-icon"></i>
+                </button>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex items-start gap-4">
+                <div class="w-8 h-8 rounded-full bg-[#2a2a2a] text-white flex items-center justify-center flex-shrink-0">
+                  <span class="font-mono text-sm">1</span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-white">Pick an Endpoint</h4>
+                  <p class="text-sm text-gray-500">Browse 357+ endpoints across 16 categories.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="w-8 h-8 rounded-full bg-[#2a2a2a] text-white flex items-center justify-center flex-shrink-0">
+                  <span class="font-mono text-sm">2</span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-white">Make a Request</h4>
+                  <p class="text-sm text-gray-500">Simple GET request, no API key needed.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="w-full" data-aos="fade-left" data-aos-duration="1500">
+            <div class="rounded-xl overflow-hidden border border-[#2E2E2E]">
+              <div class="flex items-center justify-between bg-[#111] px-6 py-4 border-b border-[#2E2E2E]">
+                <div class="flex items-center space-x-4 flex-1 min-w-0">
+                  <div class="flex items-center space-x-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                  </div>
+                  <div class="h-4 w-px bg-gray-700"></div>
+                  <span class="text-gray-300 text-sm font-medium font-mono">terminal</span>
+                </div>
+              </div>
+              <div class="bg-[#1a1a1a] min-h-36 relative overflow-hidden">
+                <div class="p-4">
+                  <div class="overflow-x-auto">
+                    <pre class="font-mono text-sm text-gray-300 whitespace-pre"><span class="text-purple-400">curl</span> https://kyoto-rest-api.vercel.app/api/ai/chatgpt?text=Hello
+
+<span class="text-purple-400">curl</span> https://kyoto-rest-api.vercel.app/api/ai/translate?text=Good+morning&to=id
+
+<span class="text-purple-400">curl</span> https://kyoto-rest-api.vercel.app/api/tools/cuaca?city=Tokyo</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="py-16">
+        <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="1500">
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">Why Choose Kyoto API?</h2>
+          <div class="w-24 h-0.5 bg-white mx-auto rounded-full mt-2 mb-4"></div>
+          <p class="text-gray-400 max-w-2xl mx-auto">Discover the powerful features that make our service the best choice for your development needs.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="bg-[#212121] p-8 rounded-2xl border border-[#2E2E2E] text-center hover:border-[#383838] transition-colors group" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="100">
+            <div class="w-16 h-16 bg-[#2a2a2a] text-white rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <i class="bi bi-code text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-3">Complete REST API</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">Easily integrate with your existing systems using our clear API documentation and ready-to-use JSON responses.</p>
+          </div>
+          <div class="bg-[#212121] p-8 rounded-2xl border border-[#2E2E2E] text-center hover:border-[#383838] transition-colors group" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="200">
+            <div class="w-16 h-16 bg-[#2a2a2a] text-white rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <i class="bi bi-rocket text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-3">Fast &amp; Reliable</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">Our robust infrastructure ensures your requests are processed instantly with a high success rate and low latency.</p>
+          </div>
+          <div class="bg-[#212121] p-8 rounded-2xl border border-[#2E2E2E] text-center hover:border-[#383838] transition-colors group" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="300">
+            <div class="w-16 h-16 bg-[#2a2a2a] text-white rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <i class="bi bi-shield-shaded text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-3">Secure &amp; Scalable</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">Built with security in mind. Scalable servers to handle your growing traffic without bottlenecks.</p>
+          </div>
+          <div class="bg-[#212121] p-8 rounded-2xl border border-[#2E2E2E] text-center hover:border-[#383838] transition-colors group" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="400">
+            <div class="w-16 h-16 bg-[#2a2a2a] text-white rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <i class="bi bi-headset text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-3">24/7 Support</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">Round-the-clock technical support with dedicated managers for enterprise customers.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing" class="py-16">
+        <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="1500">
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">Pricing Plans</h2>
+          <div class="w-24 h-0.5 bg-white mx-auto rounded-full mt-2 mb-4"></div>
+          <p class="text-gray-400 max-w-2xl mx-auto">Choose a plan that fits your needs. No hidden fees.</p>
+        </div>
+        <div class="max-w-md mx-auto" data-aos="flip-up" data-aos-duration="1500">
+          <div class="bg-[#212121] p-8 rounded-2xl border border-[#2E2E2E] hover:border-[#383838] transition-all duration-300 shadow-sm relative overflow-hidden">
+            <div class="absolute top-0 right-0 bg-white text-black text-[10px] font-bold px-3 py-1 rounded-bl-xl">RECOMMENDED</div>
+            <div class="text-center mb-6">
+              <h3 class="text-xl font-bold text-white">Free Forever</h3>
+              <p class="text-sm text-gray-400 mt-2">Everything you need to build amazing apps</p>
+            </div>
+            <div class="text-center mb-8">
+              <span class="text-4xl font-bold text-white">$0</span>
+              <span class="text-gray-500">/month</span>
+            </div>
+            <ul class="space-y-4 mb-8 text-sm text-gray-400">
+              <li class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-[#2a2a2a] flex items-center justify-center"><i class="bi bi-check-lg text-green-500"></i></div>
+                <span class="font-semibold text-white">Unlimited Requests</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-[#2a2a2a] flex items-center justify-center"><i class="bi bi-check-lg text-green-500"></i></div>
+                <span>Access All Endpoints</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-[#2a2a2a] flex items-center justify-center"><i class="bi bi-check-lg text-green-500"></i></div>
+                <span>No API Key Required</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-[#2a2a2a] flex items-center justify-center"><i class="bi bi-check-lg text-green-500"></i></div>
+                <span>Community Support</span>
+              </li>
+            </ul>
+            <a href="/category" class="block text-center w-full py-3 rounded-xl bg-white text-black font-semibold hover:bg-gray-200 transition-colors">Start Building Now</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-16 mb-8">
+        <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="1500">
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+          <div class="w-24 h-0.5 bg-white mx-auto rounded-full mt-2 mb-4"></div>
+          <p class="text-gray-400 max-w-xl mx-auto">Find answers to common questions about our service.</p>
+        </div>
+        <div class="max-w-3xl mx-auto space-y-4">
+          <div class="faq-item border border-[#2E2E2E] rounded-xl overflow-hidden bg-[#212121] hover:border-[#383838] transition-colors duration-300" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="100">
+            <button class="faq-btn w-full px-6 py-4 flex items-center justify-between hover:bg-[#2a2a2a] text-left" aria-expanded="false">
+              <span class="font-medium text-white text-sm">What is Kyoto API?</span>
+              <i class="bi bi-chevron-down text-white faq-icon"></i>
+            </button>
+            <div class="faq-answer bg-[#1a1a1a] border-t border-[#2E2E2E]">
+              <div class="px-6 py-4 text-sm text-gray-400 leading-relaxed">Kyoto API is a comprehensive REST API service providing tools for AI text generation, image manipulation, data scraping, and utility functions designed to speed up development.</div>
+            </div>
+          </div>
+          <div class="faq-item border border-[#2E2E2E] rounded-xl overflow-hidden bg-[#212121] hover:border-[#383838] transition-colors duration-300" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="200">
+            <button class="faq-btn w-full px-6 py-4 flex items-center justify-between hover:bg-[#2a2a2a] text-left" aria-expanded="false">
+              <span class="font-medium text-white text-sm">Is this service free to use?</span>
+              <i class="bi bi-chevron-down text-white faq-icon"></i>
+            </button>
+            <div class="faq-answer bg-[#1a1a1a] border-t border-[#2E2E2E]">
+              <div class="px-6 py-4 text-sm text-gray-400 leading-relaxed">Yes, we offer a generous Free Tier for developers. Most endpoints are public and do not require authentication for basic usage.</div>
+            </div>
+          </div>
+          <div class="faq-item border border-[#2E2E2E] rounded-xl overflow-hidden bg-[#212121] hover:border-[#383838] transition-colors duration-300" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="300">
+            <button class="faq-btn w-full px-6 py-4 flex items-center justify-between hover:bg-[#2a2a2a] text-left" aria-expanded="false">
+              <span class="font-medium text-white text-sm">What programming languages are supported?</span>
+              <i class="bi bi-chevron-down text-white faq-icon"></i>
+            </button>
+            <div class="faq-answer bg-[#1a1a1a] border-t border-[#2E2E2E]">
+              <div class="px-6 py-4 text-sm text-gray-400 leading-relaxed">As a RESTful API, Kyoto works with any programming language that supports HTTP requests, including JavaScript, Python, and cURL.</div>
+            </div>
+          </div>
+          <div class="faq-item border border-[#2E2E2E] rounded-xl overflow-hidden bg-[#212121] hover:border-[#383838] transition-colors duration-300" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="400">
+            <button class="faq-btn w-full px-6 py-4 flex items-center justify-between hover:bg-[#2a2a2a] text-left" aria-expanded="false">
+              <span class="font-medium text-white text-sm">Are there rate limits?</span>
+              <i class="bi bi-chevron-down text-white faq-icon"></i>
+            </button>
+            <div class="faq-answer bg-[#1a1a1a] border-t border-[#2E2E2E]">
+              <div class="px-6 py-4 text-sm text-gray-400 leading-relaxed">Yes, to ensure fair usage and system stability, we implement rate limiting. Please refer to specific documentation for limit details.</div>
+            </div>
+          </div>
+          <div class="faq-item border border-[#2E2E2E] rounded-xl overflow-hidden bg-[#212121] hover:border-[#383838] transition-colors duration-300" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="500">
+            <button class="faq-btn w-full px-6 py-4 flex items-center justify-between hover:bg-[#2a2a2a] text-left" aria-expanded="false">
+              <span class="font-medium text-white text-sm">How often is the service updated?</span>
+              <i class="bi bi-chevron-down text-white faq-icon"></i>
+            </button>
+            <div class="faq-answer bg-[#1a1a1a] border-t border-[#2E2E2E]">
+              <div class="px-6 py-4 text-sm text-gray-400 leading-relaxed">We update our endpoints and add new features regularly. Join our community channel to stay updated with the latest changelogs.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-[#212121] relative z-10 border-t border-[#2E2E2E] w-full">
+      <div class="max-w-4xl mx-auto px-8 md:px-16 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <div>
+            <h3 class="font-semibold text-white mb-3">About</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">This interactive interface allows you to explore and test our comprehensive collection of API endpoints in real-time.</p>
+          </div>
+          <div>
+            <h3 class="font-semibold text-white mb-3">Quick Links</h3>
+            <div class="flex flex-col items-start space-y-2">
+              <a href="/introduction" class="text-sm text-gray-400 hover:text-white transition-colors">Documentation</a>
+              <a href="/category" class="text-sm text-gray-400 hover:text-white transition-colors">All Categories</a>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-semibold text-white mb-3">Connect</h3>
+            <div class="flex gap-3">
+              <a href="" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#1a1a1a] hover:bg-[#2a2a2a] text-gray-400 hover:text-white transition-colors">
+                <i class="fab fa-whatsapp text-lg"></i>
+              </a>
+              <a href="https://www.instagram.com/wtf.w4n_" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#1a1a1a] hover:bg-[#2a2a2a] text-gray-400 hover:text-white transition-colors">
+                <i class="fab fa-instagram text-lg"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="pt-8 border-t border-[#2E2E2E] text-center text-sm text-gray-400">
+          &copy; 2026 Kyoto API, All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 right-8 md:right-16 w-11 h-11 bg-white border text-black rounded-full items-center justify-center transition-all duration-300 opacity-0 invisible flex z-50">
+      <i class="bi bi-arrow-up text-xl"></i>
+    </button>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({ duration: 1500, easing: 'ease-out-cubic', once: true, offset: 50, anchorPlacement: 'top-bottom' });
+
+      function copyNpmCommand() {
+        const command = document.getElementById('npm-command').innerText.trim();
+        navigator.clipboard.writeText(command).then(() => {
+          const icon = document.getElementById('copy-icon');
+          icon.className = 'bi bi-check-lg text-sm';
+          setTimeout(() => { icon.className = 'bi bi-copy text-sm'; }, 2000);
+        });
+      }
+
+      document.querySelectorAll('.faq-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const answer = btn.nextElementSibling;
+          const parent = btn.parentElement;
+          const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', !isExpanded);
+          if (!isExpanded) {
+            answer.classList.add('active');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            parent.classList.add('border-[#444]');
+          } else {
+            answer.classList.remove('active');
+            answer.style.maxHeight = null;
+            parent.classList.remove('border-[#444]');
+          }
+        });
+      });
+
+      const backToTop = document.getElementById('backToTop');
+      const navbar = document.getElementById('navbar');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebarClose = document.getElementById('sidebarClose');
+
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+          backToTop.classList.remove('opacity-0', 'invisible');
+          backToTop.classList.add('opacity-100', 'visible');
+        } else {
+          backToTop.classList.remove('opacity-100', 'visible');
+          backToTop.classList.add('opacity-0', 'invisible');
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('loader').classList.add('hidden');
-            document.getElementById('year').textContent = new Date().getFullYear();
-            updateStats();
-            const glow = document.getElementById('cursor-glow');
-            document.addEventListener('mousemove', e => { glow.style.transform = `translate(${e.clientX}px,${e.clientY}px)`; });
-            const obs = new IntersectionObserver(entries => {
-                entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('sv');obs.unobserve(e.target);} });
-            },{threshold:.1});
-            document.querySelectorAll('.animate-scroll').forEach(el => obs.observe(el));
-        });
+        if (window.innerWidth >= 768) {
+          navbar.classList.add('bg-[#181818]');
+          navbar.classList.remove('!bg-[#181818]/60', 'backdrop-blur-md');
+          return;
+        }
+
+        if (window.scrollY > 50) {
+          navbar.classList.add('!bg-[#181818]/60', 'backdrop-blur-md', '!border-[#2E2E2E]');
+          navbar.classList.remove('bg-[#181818]', 'border-transparent');
+        } else {
+          navbar.classList.remove('!bg-[#181818]/30', 'backdrop-blur-md', '!border-[#2E2E2E]');
+          navbar.classList.add('bg-[#181818]', 'border-transparent');
+        }
+      });
+
+      function openSidebar() {
+        sidebar.classList.add('open');
+        overlay.classList.remove('opacity-0', 'invisible');
+        overlay.classList.add('opacity-100', 'visible');
+        document.body.classList.add('overflow-hidden');
+      }
+
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        overlay.classList.add('opacity-0', 'invisible');
+        overlay.classList.remove('opacity-100', 'visible');
+        document.body.classList.remove('overflow-hidden');
+      }
+
+      sidebarToggle.addEventListener('click', openSidebar);
+      sidebarClose.addEventListener('click', closeSidebar);
+      overlay.addEventListener('click', closeSidebar);
     </script>
-</body>
+  </body>
 </html>

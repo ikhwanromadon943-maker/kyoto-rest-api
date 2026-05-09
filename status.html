@@ -1,348 +1,360 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Kyoto API Status — Real-time system health and uptime monitoring for 55+ live endpoints." />
-    <title>Status — Kyoto API</title>
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://kyoto-rest-api.vercel.app/status" />
+    <meta property="og:title" content="Status — Kyoto API." />
+    <meta property="og:description" content="Real-time system health and uptime monitoring for 55+ live endpoints." />
+    <meta property="og:image" content="https://kyoto-rest-api.vercel.app/og-image.jpg" />
+    <meta property="og:image:width" content="1440" />
+    <meta property="og:image:height" content="600" />
+    <meta property="og:site_name" content="Kyoto API." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://kyoto-rest-api.vercel.app/status" />
+    <meta name="twitter:title" content="Status — Kyoto API." />
+    <meta name="twitter:description" content="Real-time system health and uptime monitoring for 55+ live endpoints." />
+    <meta name="twitter:image" content="https://kyoto-rest-api.vercel.app/og-image.jpg" />
+    <meta name="twitter:creator" content="@kyotodev" />
+    <meta name="author" content="KyotoDev." />
+    <meta name="keywords" content="API, status, uptime, monitoring, Kyoto, endpoints" />
+    <link rel="canonical" href="https://kyoto-rest-api.vercel.app/status" />
+    <title>Status — Kyoto API.</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&amp;family=Inter:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              'mono': ['Ubuntu Mono', 'monospace'],
+              'sans': ['Space Grotesk', 'system-ui', 'sans-serif']
+            }
+          }
+        }
+      }
+    </script>
     <style>
-        :root{--bg:#09090e;--card:rgba(255,255,255,0.03);--card-h:rgba(255,255,255,0.055);--border:rgba(255,255,255,0.07);--border-h:rgba(255,107,107,0.35);--text:#e2e0f0;--muted:rgba(226,224,240,0.42);--accent:#ff6b6b;--accent2:#ff8e53;--green:#4ade80;--yellow:#facc15;--red:#f87171;--blue:#38bdf8;--purple:#a78bfa}
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;-webkit-font-smoothing:antialiased}
-        ::-webkit-scrollbar{display:none}
-        body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.7}
-        header{position:sticky;top:0;z-index:50;background:rgba(9,9,14,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:16px 0}
-        .hdr{max-width:960px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between}
-        .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-        .logo-mark{width:24px;height:24px;border:1px solid rgba(255,107,107,.4);display:flex;align-items:center;justify-content:center;position:relative}
-        .logo-mark i{font-size:8px;color:var(--accent);position:relative;z-index:1}
-        .logo-txt{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;letter-spacing:.18em;color:var(--text);text-transform:uppercase}
-        .vpill{font-size:7px;letter-spacing:.22em;color:var(--accent);border:1px solid rgba(255,107,107,.25);padding:2px 7px;text-transform:uppercase}
-        .nav-links{display:flex;gap:22px}
-        .nav-links a{font-size:9px;letter-spacing:.15em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .2s}
-        .nav-links a:hover,.nav-links a.active{color:var(--accent)}
-        main{max-width:960px;margin:0 auto;padding:40px 28px;position:relative;z-index:1}
-
-        .status-banner{display:flex;align-items:center;gap:14px;padding:20px 24px;border:1px solid;margin-bottom:36px;transition:all .5s}
-        .status-banner.all-good{background:rgba(74,222,128,.06);border-color:rgba(74,222,128,.2)}
-        .status-banner.partial{background:rgba(250,204,21,.06);border-color:rgba(250,204,21,.2)}
-        .status-banner.down{background:rgba(248,113,113,.06);border-color:rgba(248,113,113,.2)}
-        .status-dot-big{width:14px;height:14px;border-radius:50%;flex-shrink:0}
-        .status-dot-big.online{background:var(--green);box-shadow:0 0 16px rgba(74,222,128,.5);animation:pulse 2s infinite}
-        .status-dot-big.degraded{background:var(--yellow);box-shadow:0 0 16px rgba(250,204,21,.5);animation:pulse 3s infinite}
-        .status-dot-big.offline{background:var(--red);box-shadow:0 0 16px rgba(248,113,113,.5)}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-        .status-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700}
-        .status-sub{font-size:10px;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-
-        .uptime-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:40px}
-        @media(max-width:640px){.uptime-stats{grid-template-columns:repeat(2,1fr)}}
-        .ustat{background:var(--bg);padding:22px 16px;text-align:center}
-        .usv{font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:var(--text);line-height:1;margin-bottom:6px}
-        .usl{font-size:8px;letter-spacing:.25em;color:var(--muted);text-transform:uppercase}
-
-        .section-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:.05em;margin-bottom:16px;display:flex;align-items:center;gap:10px;color:var(--text)}
-        .section-title i{color:var(--accent)}
-        .auto-refresh{font-size:8px;color:var(--green);letter-spacing:.2em;margin-left:auto;display:flex;align-items:center;gap:6px}
-        .refresh-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite}
-
-        .service-list{border:1px solid var(--border);margin-bottom:40px}
-        .service-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--card);border-bottom:1px solid var(--border);gap:10px;transition:all .3s;font-size:9px}
-        .service-row:last-child{border-bottom:none}
-        .service-row:hover{background:var(--card-h)}
-        .service-row.checking{opacity:.6}
-        .svc-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
-        .svc-indicator{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:all .3s}
-        .svc-indicator.online{background:var(--green);box-shadow:0 0 6px rgba(74,222,128,.4)}
-        .svc-indicator.degraded{background:var(--yellow);box-shadow:0 0 6px rgba(250,204,21,.4)}
-        .svc-indicator.offline{background:var(--red);box-shadow:0 0 6px rgba(248,113,113,.4)}
-        .svc-indicator.checking{background:var(--blue);box-shadow:0 0 6px rgba(56,189,248,.4);animation:pulse .8s infinite}
-        .svc-info{min-width:0}
-        .svc-name{font-size:9px;font-weight:500;color:var(--text)}
-        .svc-url{font-size:7px;color:var(--muted);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .svc-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
-        .svc-latency{font-size:7px;color:var(--muted);min-width:48px;text-align:right;font-variant-numeric:tabular-nums}
-        .svc-status{font-size:6px;letter-spacing:.15em;text-transform:uppercase;padding:3px 8px;border:1px solid;flex-shrink:0;min-width:60px;text-align:center}
-        .ss-online{color:var(--green);border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.06)}
-        .ss-degraded{color:var(--yellow);border-color:rgba(250,204,21,.25);background:rgba(250,204,21,.06)}
-        .ss-offline{color:var(--red);border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.06)}
-        .ss-checking{color:var(--blue);border-color:rgba(56,189,248,.25);background:rgba(56,189,248,.06)}
-
-        .category-divider{display:flex;align-items:center;gap:10px;margin:24px 0 10px;padding:0 4px}
-        .category-divider:first-of-type{margin-top:0}
-        .cat-label{font-size:7px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
-        .cat-line{flex:1;height:1px;background:var(--border)}
-
-        .incident-list{border:1px solid var(--border);margin-bottom:40px}
-        .incident-row{padding:12px 14px;background:var(--card);border-bottom:1px solid var(--border)}
-        .incident-row:last-child{border-bottom:none}
-        .incident-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:4px}
-        .incident-title{font-size:9px;font-weight:500;color:var(--text)}
-        .incident-date{font-size:7px;color:var(--muted);white-space:nowrap;flex-shrink:0}
-        .incident-desc{font-size:8px;color:var(--muted);line-height:1.7}
-        .incident-badge{font-size:6px;letter-spacing:.12em;text-transform:uppercase;padding:2px 6px;border:1px solid;flex-shrink:0}
-        .ib-resolved{color:var(--green);border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.06)}
-
-        .footer-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:14px;border-top:1px solid var(--border)}
-        .footer-bar span{font-size:8px;color:var(--muted)}
-        .footer-bar button{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:'DM Mono',monospace;font-size:8px;padding:7px 14px;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;transition:all .3s}
-        .footer-bar button:hover{border-color:var(--accent);color:var(--accent);background:rgba(255,107,107,.06)}
-
-        footer{max-width:960px;margin:0 auto;padding:20px 28px 36px;border-top:1px solid var(--border);position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between}
-        .fcopy{font-size:8px;color:var(--muted);letter-spacing:.05em}
-        .flinks{display:flex;gap:16px}
-        .flinks a{font-size:8px;color:var(--muted);text-decoration:none;transition:color .2s}
-        .flinks a:hover{color:var(--accent)}
+      ::-webkit-scrollbar { display: none !important; }
+      body { position: relative; scroll-behavior: smooth; letter-spacing: 0.025em; background-color: #181818; }
+      body::before {
+        content: '';
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; min-height: 100vh; z-index: -1;
+        background-image: linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+        background-size: 40px 40px; pointer-events: none;
+      }
+      @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+      .pulse-dot { animation: pulse 2s infinite; }
+      .pulse-dot-slow { animation: pulse 3s infinite; }
+      .fade-in { animation: fadeIn 0.4s ease-out forwards; opacity: 0; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
-</head>
-<body>
-    <header>
-        <div class="hdr">
-            <a href="/" class="logo">
-                <div class="logo-mark"><i class="fas fa-torii-gate"></i></div>
-                <span class="logo-txt">Kyoto</span>
-            </a>
-            <div style="display:flex;align-items:center;gap:14px">
-                <span class="vpill">v2.0</span>
-                <nav class="nav-links">
-                    <a href="/">Home</a>
-                    <a href="/docs">Docs</a>
-                    <a href="/status" class="active">Status</a>
-                </nav>
-            </div>
+  </head>
+  <body class="bg-[#181818] text-gray-200 antialiased font-sans min-h-screen">
+    <header id="navbar" class="sticky top-0 z-50 bg-[#181818] border-b border-[#2E2E2E]">
+      <div class="max-w-4xl mx-auto px-8 py-4 flex items-center justify-between">
+        <a href="/" class="font-bold text-white text-lg" style="font-family: 'Space Grotesk', sans-serif;">Kyoto API</a>
+        <div class="flex items-center gap-6 text-sm">
+          <a href="/" class="text-gray-400 hover:text-white transition-colors">Home</a>
+          <a href="/docs" class="text-gray-400 hover:text-white transition-colors">Docs</a>
+          <a href="/status" class="text-white transition-colors">Status</a>
         </div>
+      </div>
     </header>
-    <main>
-        <div class="status-banner all-good" id="overall-banner">
-            <div class="status-dot-big online" id="overall-dot"></div>
-            <div>
-                <div class="status-title" id="overall-title">Checking all systems...</div>
-                <div class="status-sub">
-                    <span id="overall-sub">Initializing...</span>
-                    <span style="color:var(--muted)">·</span>
-                    <span id="last-checked">--</span>
-                </div>
-            </div>
+
+    <main class="max-w-4xl mx-auto px-8 py-8">
+      <!-- Overall Status Banner -->
+      <div id="overall-banner" class="bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 mb-8 flex items-center gap-4 transition-all duration-500 fade-in">
+        <div id="overall-dot" class="w-4 h-4 rounded-full bg-green-400 pulse-dot flex-shrink-0"></div>
+        <div>
+          <h2 class="text-lg font-semibold text-white" id="overall-title">Checking all systems...</h2>
+          <p class="text-sm text-gray-400 mt-1">
+            <span id="overall-sub">Initializing...</span>
+            <span class="mx-2 text-gray-600">·</span>
+            <span id="last-checked">--</span>
+          </p>
         </div>
+      </div>
 
-        <div class="uptime-stats">
-            <div class="ustat"><div class="usv" id="stat-online" style="color:var(--green)">—</div><div class="usl">Online</div></div>
-            <div class="ustat"><div class="usv" id="stat-degraded" style="color:var(--yellow)">—</div><div class="usl">Degraded</div></div>
-            <div class="ustat"><div class="usv" id="stat-offline" style="color:var(--red)">—</div><div class="usl">Offline</div></div>
-            <div class="ustat"><div class="usv" id="stat-avg-latency" style="color:var(--blue)">—</div><div class="usl">Avg Latency</div></div>
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-[#212121] border border-[#2E2E2E] hover:border-[#383838] transition-colors p-6 rounded-xl text-center group fade-in">
+          <div class="text-3xl font-bold text-green-400 mb-1" id="stat-online">—</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider">Online</div>
+          <i class="fa-solid fa-check-circle absolute top-3 right-3 text-4xl text-[#1a1a1a] opacity-50 group-hover:scale-110 transition-transform"></i>
         </div>
-
-        <div class="section-title">
-            <i class="fas fa-server"></i> Service Status
-            <span class="auto-refresh"><span class="refresh-dot"></span> Auto-refresh 30s</span>
+        <div class="bg-[#212121] border border-[#2E2E2E] hover:border-[#383838] transition-colors p-6 rounded-xl text-center group relative overflow-hidden fade-in">
+          <div class="text-3xl font-bold text-yellow-400 mb-1" id="stat-degraded">—</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider">Degraded</div>
         </div>
-
-        <div id="service-container"></div>
-
-        <div class="section-title"><i class="fas fa-history"></i> Recent Incidents</div>
-        <div class="incident-list" id="incident-list"></div>
-
-        <div class="footer-bar">
-            <span>Last checked: <strong id="last-checked-footer">--</strong></span>
-            <button onclick="checkAllEndpoints()"><i class="fas fa-rotate-right"></i> Refresh Now</button>
+        <div class="bg-[#212121] border border-[#2E2E2E] hover:border-[#383838] transition-colors p-6 rounded-xl text-center group relative overflow-hidden fade-in">
+          <div class="text-3xl font-bold text-red-400 mb-1" id="stat-offline">—</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider">Offline</div>
         </div>
+        <div class="bg-[#212121] border border-[#2E2E2E] hover:border-[#383838] transition-colors p-6 rounded-xl text-center group relative overflow-hidden fade-in">
+          <div class="text-3xl font-bold text-blue-400 mb-1" id="stat-avg-latency">—</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider">Avg Latency</div>
+        </div>
+      </div>
+
+      <!-- Section Title -->
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-white flex items-center gap-2">
+          <i class="fas fa-server text-gray-400"></i> Service Status
+        </h3>
+        <span class="text-xs text-green-400 flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 bg-green-400 rounded-full pulse-dot"></span> Auto-refresh 30s
+        </span>
+      </div>
+
+      <!-- Service List -->
+      <div id="service-container" class="space-y-6 mb-8"></div>
+
+      <!-- Recent Incidents -->
+      <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <i class="fas fa-history text-gray-400"></i> Recent Incidents
+      </h3>
+      <div id="incident-list" class="space-y-2 mb-8"></div>
+
+      <!-- Footer Bar -->
+      <div class="flex items-center justify-between pt-6 border-t border-[#2E2E2E]">
+        <span class="text-sm text-gray-500">Last checked: <strong id="last-checked-footer" class="text-gray-300">--</strong></span>
+        <button onclick="checkAllEndpoints()" class="flex items-center gap-2 bg-[#212121] border border-[#2E2E2E] text-gray-400 hover:text-white hover:border-[#383838] text-sm py-2 px-4 rounded-lg transition-all">
+          <i class="fas fa-rotate-right text-xs"></i> Refresh Now
+        </button>
+      </div>
     </main>
-    <footer>
-        <span class="fcopy">&copy; <span id="year"></span> Kyoto API</span>
-        <div class="flinks">
-            <a href="/privacy">Privacy</a>
-            <a href="/terms">Terms</a>
-            <a href="/status">Status</a>
+
+    <footer class="bg-[#212121] relative z-10 border-t border-[#2E2E2E] w-full mt-12">
+      <div class="max-w-4xl mx-auto px-8 py-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+          <p class="text-sm text-gray-400">&copy; 2026 Kyoto API, All rights reserved.</p>
+          <div class="flex gap-6">
+            <a href="/privacy" class="text-sm text-gray-400 hover:text-white transition-colors">Privacy</a>
+            <a href="/terms" class="text-sm text-gray-400 hover:text-white transition-colors">Terms</a>
+            <a href="/status" class="text-sm text-white transition-colors">Status</a>
+          </div>
         </div>
+      </div>
     </footer>
 
     <script>
-        const BASE_URL = window.location.origin;
-        const CHECK_INTERVAL = 30000;
+      const BASE_URL = 'https://kyoto-rest-api.vercel.app';
+      const CHECK_INTERVAL = 30000;
 
-        const serviceCategories = [
-            { name: 'AI', services: [
-                { name: 'ChatGPT', path: '/api/ai/chatgpt?text=ping' },
-                { name: 'DALLE', path: '/api/ai/dalle?prompt=ping' },
-                { name: 'Translate', path: '/api/ai/translate?text=hello&to=id' },
-                { name: 'Text to Speech', path: '/api/ai/text-to-speech?text=ping' },
-                { name: 'Image Variation', path: '/api/ai/image-variation?prompt=ping' },
-            ]},
-            { name: 'Anime', services: [
-                { name: 'Manga Search', path: '/api/anime/search?query=One+Piece' },
-                { name: 'Anime Info', path: '/api/anime/anime?title=Jujutsu+Kaisen' },
-                { name: 'Random Manga', path: '/api/anime/random' },
-                { name: 'Waifu', path: '/api/anime/waifu?category=waifu' },
-                { name: 'Character', path: '/api/anime/character?query=Naruto' },
-            ]},
-            { name: 'News', services: [
-                { name: 'CNN Indonesia', path: '/api/news/cnn' },
-                { name: 'CNBC Indonesia', path: '/api/news/cnbc' },
-                { name: 'Detik.com', path: '/api/news/detik' },
-            ]},
-            { name: 'Fun', services: [
-                { name: 'Joke', path: '/api/fun/joke' },
-                { name: 'Dad Joke', path: '/api/fun/dadjoke' },
-                { name: 'Random Fact', path: '/api/fun/fact' },
-                { name: 'Chuck Norris', path: '/api/fun/chuck-norris' },
-                { name: 'Quote', path: '/api/fun/quote' },
-                { name: 'Cat Fact', path: '/api/fun/cat-fact' },
-                { name: 'Bored', path: '/api/fun/bored' },
-            ]},
-            { name: 'Games', services: [
-                { name: 'Games List', path: '/api/games/list' },
-                { name: 'Game Detail', path: '/api/games/detail?id=452' },
-            ]},
-            { name: 'Info', services: [
-                { name: 'Wikipedia', path: '/api/info/wikipedia?title=Indonesia' },
-                { name: 'Dictionary', path: '/api/info/dictionary?word=hello' },
-                { name: 'GitHub User', path: '/api/info/github?username=torvalds' },
-                { name: 'NPM Package', path: '/api/info/npm?package=express' },
-                { name: 'Country Info', path: '/api/info/country?name=Japan' },
-                { name: 'Holidays', path: '/api/info/holiday?year=2026&country=ID' },
-            ]},
-            { name: 'Maker', services: [
-                { name: 'Canvas', path: '/api/maker/canvas?text=ping' },
-                { name: 'Meme', path: '/api/maker/meme?top=hi&bottom=test' },
-                { name: 'Quote Image', path: '/api/maker/quote-image?text=ping&author=test' },
-                { name: 'Password', path: '/api/maker/password?length=16' },
-            ]},
-            { name: 'Stalker', services: [
-                { name: 'My IP', path: '/api/stalker/my-ip' },
-                { name: 'IP Lookup', path: '/api/stalker/ip?ip=8.8.8.8' },
-                { name: 'DNS Lookup', path: '/api/stalker/dns?domain=google.com' },
-            ]},
-            { name: 'Zodiak', services: [
-                { name: 'Horoscope', path: '/api/zodiak/horoscope?sign=aries' },
-            ]},
-            { name: 'Tools', services: [
-                { name: 'QR Code', path: '/api/tools/qr?text=ping' },
-                { name: 'Shortlink', path: '/api/tools/shortlink?url=https://google.com' },
-                { name: 'Weather', path: '/api/tools/cuaca?city=Tokyo' },
-                { name: 'Calculator', path: '/api/tools/calculator?expr=2+2' },
-                { name: 'Screenshot', path: '/api/tools/ssweb?url=https://google.com' },
-            ]},
-            { name: 'Media', services: [
-                { name: 'Canvas', path: '/api/media/canvas?text=ping' },
-                { name: 'Meme', path: '/api/media/meme?top=hi&bottom=test' },
-                { name: 'Quote Image', path: '/api/media/quote-image?text=ping' },
-            ]},
-            { name: 'Quran', services: [
-                { name: 'Surah Info', path: '/api/quran/surah?number=1' },
-                { name: 'Search Quran', path: '/api/quran/search?keyword=Allah' },
-            ]},
-            { name: 'Frontend', services: [
-                { name: 'Landing Page', path: '/' },
-                { name: 'Documentation', path: '/docs' },
-                { name: 'Status Page', path: '/status' },
-            ]},
-        ];
+      const serviceCategories = [
+        { name: 'AI', services: [
+          { name: 'ChatGPT', path: '/api/ai/chatgpt?text=ping' },
+          { name: 'DALLE', path: '/api/ai/dalle?prompt=ping' },
+          { name: 'Translate', path: '/api/ai/translate?text=hello&to=id' },
+          { name: 'Text to Speech', path: '/api/ai/text-to-speech?text=ping' },
+          { name: 'Image Variation', path: '/api/ai/image-variation?prompt=ping' },
+        ]},
+        { name: 'Anime', services: [
+          { name: 'Manga Search', path: '/api/anime/search?query=One+Piece' },
+          { name: 'Anime Info', path: '/api/anime/anime?title=Jujutsu+Kaisen' },
+          { name: 'Random Manga', path: '/api/anime/random' },
+          { name: 'Waifu', path: '/api/anime/waifu?category=waifu' },
+          { name: 'Character', path: '/api/anime/character?query=Naruto' },
+        ]},
+        { name: 'News', services: [
+          { name: 'CNN Indonesia', path: '/api/news/cnn' },
+          { name: 'CNBC Indonesia', path: '/api/news/cnbc' },
+          { name: 'Detik.com', path: '/api/news/detik' },
+        ]},
+        { name: 'Fun', services: [
+          { name: 'Joke', path: '/api/fun/joke' },
+          { name: 'Dad Joke', path: '/api/fun/dadjoke' },
+          { name: 'Random Fact', path: '/api/fun/fact' },
+          { name: 'Chuck Norris', path: '/api/fun/chuck-norris' },
+          { name: 'Quote', path: '/api/fun/quote' },
+          { name: 'Cat Fact', path: '/api/fun/cat-fact' },
+          { name: 'Bored', path: '/api/fun/bored' },
+        ]},
+        { name: 'Games', services: [
+          { name: 'Games List', path: '/api/games/list' },
+          { name: 'Game Detail', path: '/api/games/detail?id=452' },
+        ]},
+        { name: 'Info', services: [
+          { name: 'Wikipedia', path: '/api/info/wikipedia?title=Indonesia' },
+          { name: 'Dictionary', path: '/api/info/dictionary?word=hello' },
+          { name: 'GitHub User', path: '/api/info/github?username=torvalds' },
+          { name: 'NPM Package', path: '/api/info/npm?package=express' },
+          { name: 'Country Info', path: '/api/info/country?name=Japan' },
+          { name: 'Holidays', path: '/api/info/holiday?year=2026&country=ID' },
+        ]},
+        { name: 'Maker', services: [
+          { name: 'Canvas', path: '/api/maker/canvas?text=ping' },
+          { name: 'Meme', path: '/api/maker/meme?top=hi&bottom=test' },
+          { name: 'Quote Image', path: '/api/maker/quote-image?text=ping&author=test' },
+          { name: 'Password', path: '/api/maker/password?length=16' },
+        ]},
+        { name: 'Stalker', services: [
+          { name: 'My IP', path: '/api/stalker/my-ip' },
+          { name: 'IP Lookup', path: '/api/stalker/ip?ip=8.8.8.8' },
+          { name: 'DNS Lookup', path: '/api/stalker/dns?domain=google.com' },
+        ]},
+        { name: 'Zodiak', services: [
+          { name: 'Horoscope', path: '/api/zodiak/horoscope?sign=aries' },
+        ]},
+        { name: 'Tools', services: [
+          { name: 'QR Code', path: '/api/tools/qr?text=ping' },
+          { name: 'Shortlink', path: '/api/tools/shortlink?url=https://google.com' },
+          { name: 'Weather', path: '/api/tools/cuaca?city=Tokyo' },
+          { name: 'Calculator', path: '/api/tools/calculator?expr=2+2' },
+          { name: 'Screenshot', path: '/api/tools/ssweb?url=https://google.com' },
+        ]},
+        { name: 'Media', services: [
+          { name: 'Canvas', path: '/api/media/canvas?text=ping' },
+          { name: 'Meme', path: '/api/media/meme?top=hi&bottom=test' },
+          { name: 'Quote Image', path: '/api/media/quote-image?text=ping' },
+        ]},
+        { name: 'Quran', services: [
+          { name: 'Surah Info', path: '/api/quran/surah?number=1' },
+          { name: 'Search Quran', path: '/api/quran/search?keyword=Allah' },
+        ]},
+      ];
 
-        const incidents = [
-            { title: 'Kyoto API v2.0 Deployed', date: 'May 10, 2026 · 12:00 UTC', desc: 'Major update! 55+ live endpoints across 16 categories. All free, no API key required. Old Downloader & Storage endpoints deprecated.', status: 'resolved' },
-            { title: 'Minor outage — AI ChatGPT endpoint', date: 'May 1, 2026 · 09:15 UTC', desc: 'Brief 3-minute error on /api/ai/chatgpt caused by upstream API restart. Resolved automatically.', status: 'resolved' },
-        ];
+      const incidents = [
+        { title: 'Kyoto API v2.0 Deployed', date: 'May 10, 2026 · 12:00 UTC', desc: 'Major update! 55+ live endpoints across 16 categories. All free, no API key required.', status: 'resolved' },
+        { title: 'Minor outage — AI ChatGPT endpoint', date: 'May 1, 2026 · 09:15 UTC', desc: 'Brief 3-minute error on /api/ai/chatgpt caused by upstream API restart. Resolved automatically.', status: 'resolved' },
+      ];
 
-        let serviceStatuses = {};
+      let serviceStatuses = {};
 
-        function renderServiceList() {
-            const container = document.getElementById('service-container');
-            let html = '';
-            let globalIndex = 0;
-            serviceCategories.forEach(cat => {
-                html += `<div class="category-divider"><span class="cat-label">${cat.name}</span><div class="cat-line"></div></div><div class="service-list">`;
-                cat.services.forEach(svc => {
-                    const idx = globalIndex;
-                    const status = serviceStatuses[idx] || { status: 'checking', latency: '—' };
-                    html += `<div class="service-row" id="svc-row-${idx}">
-                        <div class="svc-left"><div class="svc-indicator ${status.status}" id="svc-dot-${idx}"></div><div class="svc-info"><div class="svc-name">${svc.name}</div></div></div>
-                        <div class="svc-right"><div class="svc-latency" id="svc-latency-${idx}">${status.latency}</div><div class="svc-status ss-${status.status}" id="svc-status-${idx}">${status.status}</div></div>
-                    </div>`;
-                    globalIndex++;
-                });
-                html += `</div>`;
-            });
-            container.innerHTML = html;
-        }
-
-        function renderIncidents() {
-            document.getElementById('incident-list').innerHTML = incidents.map(i => `<div class="incident-row"><div class="incident-hdr"><div class="incident-title">${i.title}</div><div class="incident-badge ib-resolved">${i.status}</div></div><div class="incident-date">${i.date}</div><div class="incident-desc">${i.desc}</div></div>`).join('');
-        }
-
-        function updateSummary() {
-            let online = 0, degraded = 0, offline = 0, totalLatency = 0, count = 0;
-            Object.entries(serviceStatuses).forEach(([, s]) => {
-                if (s.status === 'online') online++;
-                else if (s.status === 'degraded') degraded++;
-                else if (s.status === 'offline') offline++;
-                if (s.latencyMs) { totalLatency += s.latencyMs; count++; }
-            });
-            document.getElementById('stat-online').textContent = online;
-            document.getElementById('stat-degraded').textContent = degraded;
-            document.getElementById('stat-offline').textContent = offline;
-            document.getElementById('stat-avg-latency').textContent = count > 0 ? `${Math.round(totalLatency / count)}ms` : '—';
-            const banner = document.getElementById('overall-banner');
-            const dot = document.getElementById('overall-dot');
-            const title = document.getElementById('overall-title');
-            banner.className = 'status-banner'; dot.className = 'status-dot-big';
-            if (offline > 3) { banner.classList.add('down'); dot.classList.add('offline'); title.textContent = `${offline} services down`; }
-            else if (offline > 0 || degraded > 3) { banner.classList.add('partial'); dot.classList.add('degraded'); title.textContent = 'Some systems degraded'; }
-            else { banner.classList.add('all-good'); dot.classList.add('online'); title.textContent = 'All Systems Operational'; }
-        }
-
-        function updateTimeDisplay() {
-            const now = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'UTC', hour12: false }) + ' UTC';
-            document.getElementById('last-checked').textContent = now;
-            document.getElementById('last-checked-footer').textContent = now;
-            document.getElementById('overall-sub').textContent = `Last checked: ${now}`;
-        }
-
-        async function pingEndpoint(service, index) {
-            const startTime = performance.now();
-            const url = `${BASE_URL}${service.path}`;
-            serviceStatuses[index] = { status: 'checking', latency: '...' };
-            updateServiceUI(index, 'checking', '...');
-            try {
-                const controller = new AbortController();
-                const timeout = setTimeout(() => controller.abort(), 10000);
-                const res = await fetch(url, { method: 'GET', signal: controller.signal });
-                clearTimeout(timeout);
-                const latency = Math.round(performance.now() - startTime);
-                const status = latency > 800 ? 'degraded' : 'online';
-                serviceStatuses[index] = { status, latency: `${latency}ms`, latencyMs: latency };
-            } catch (err) {
-                serviceStatuses[index] = { status: 'offline', latency: err.name === 'AbortError' ? 'timeout' : 'error', latencyMs: null };
-            }
-            updateServiceUI(index, serviceStatuses[index].status, serviceStatuses[index].latency);
-        }
-
-        function updateServiceUI(index, status, latency) {
-            const dot = document.getElementById(`svc-dot-${index}`);
-            const statusEl = document.getElementById(`svc-status-${index}`);
-            const latencyEl = document.getElementById(`svc-latency-${index}`);
-            if (dot) dot.className = 'svc-indicator ' + status;
-            if (statusEl) { statusEl.className = 'svc-status ss-' + status; statusEl.textContent = status; }
-            if (latencyEl) latencyEl.textContent = latency;
-        }
-
-        async function checkAllEndpoints() {
-            updateTimeDisplay();
-            const allServices = serviceCategories.flatMap(c => c.services);
-            const promises = allServices.map((service, index) => pingEndpoint(service, index));
-            await Promise.allSettled(promises);
-            updateSummary();
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('year').textContent = new Date().getFullYear();
-            renderServiceList();
-            renderIncidents();
-            checkAllEndpoints();
-            setInterval(checkAllEndpoints, CHECK_INTERVAL);
+      function renderServiceList() {
+        const container = document.getElementById('service-container');
+        let html = '';
+        let globalIndex = 0;
+        serviceCategories.forEach(cat => {
+          html += `<div class="mb-6 fade-in"><div class="flex items-center gap-3 mb-3"><span class="text-xs text-gray-500 uppercase tracking-widest">${cat.name}</span><div class="flex-1 h-px bg-[#2E2E2E]"></div></div><div class="bg-[#212121] border border-[#2E2E2E] rounded-xl overflow-hidden">`;
+          cat.services.forEach(svc => {
+            const idx = globalIndex;
+            const status = serviceStatuses[idx] || { status: 'checking', latency: '—' };
+            html += `<div class="flex items-center justify-between py-3 px-4 border-b border-[#2E2E2E] last:border-b-0 hover:bg-[#1a1a1a] transition-colors" id="svc-row-${idx}">
+              <div class="flex items-center gap-3 min-w-0">
+                <div id="svc-dot-${idx}" class="w-2 h-2 rounded-full flex-shrink-0 ${status.status === 'online' ? 'bg-green-400 pulse-dot' : status.status === 'degraded' ? 'bg-yellow-400 pulse-dot-slow' : status.status === 'offline' ? 'bg-red-400' : 'bg-blue-400 pulse-dot'}"></div>
+                <span class="text-sm text-gray-200">${svc.name}</span>
+              </div>
+              <div class="flex items-center gap-4 flex-shrink-0">
+                <span class="text-xs text-gray-500 font-mono" id="svc-latency-${idx}">${status.latency}</span>
+                <span id="svc-status-${idx}" class="text-xs uppercase tracking-wider px-2 py-0.5 rounded ${status.status === 'online' ? 'text-green-400 bg-green-400/10' : status.status === 'degraded' ? 'text-yellow-400 bg-yellow-400/10' : status.status === 'offline' ? 'text-red-400 bg-red-400/10' : 'text-blue-400 bg-blue-400/10'}">${status.status}</span>
+              </div>
+            </div>`;
+            globalIndex++;
+          });
+          html += `</div></div>`;
         });
+        container.innerHTML = html;
+      }
+
+      function renderIncidents() {
+        document.getElementById('incident-list').innerHTML = incidents.map(i => `
+          <div class="bg-[#212121] border border-[#2E2E2E] rounded-xl p-4 hover:border-[#383838] transition-colors fade-in">
+            <div class="flex items-start justify-between gap-4 mb-1">
+              <span class="text-sm font-medium text-white">${i.title}</span>
+              <span class="text-xs text-green-400 bg-green-400/10 px-2 py-0.5 rounded uppercase flex-shrink-0">${i.status}</span>
+            </div>
+            <div class="text-xs text-gray-500 mb-2">${i.date}</div>
+            <p class="text-sm text-gray-400">${i.desc}</p>
+          </div>
+        `).join('');
+      }
+
+      function updateSummary() {
+        let online = 0, degraded = 0, offline = 0, totalLatency = 0, count = 0;
+        Object.entries(serviceStatuses).forEach(([, s]) => {
+          if (s.status === 'online') online++;
+          else if (s.status === 'degraded') degraded++;
+          else if (s.status === 'offline') offline++;
+          if (s.latencyMs) { totalLatency += s.latencyMs; count++; }
+        });
+        document.getElementById('stat-online').textContent = online;
+        document.getElementById('stat-degraded').textContent = degraded;
+        document.getElementById('stat-offline').textContent = offline;
+        document.getElementById('stat-avg-latency').textContent = count > 0 ? `${Math.round(totalLatency / count)}ms` : '—';
+        
+        const banner = document.getElementById('overall-banner');
+        const dot = document.getElementById('overall-dot');
+        const title = document.getElementById('overall-title');
+        
+        if (offline > 3) {
+          banner.className = 'bg-[#212121] border border-red-500/20 rounded-xl p-6 mb-8 flex items-center gap-4 transition-all duration-500';
+          dot.className = 'w-4 h-4 rounded-full bg-red-400 flex-shrink-0';
+          title.textContent = `${offline} services down`;
+        } else if (offline > 0 || degraded > 3) {
+          banner.className = 'bg-[#212121] border border-yellow-500/20 rounded-xl p-6 mb-8 flex items-center gap-4 transition-all duration-500';
+          dot.className = 'w-4 h-4 rounded-full bg-yellow-400 pulse-dot-slow flex-shrink-0';
+          title.textContent = 'Some systems degraded';
+        } else {
+          banner.className = 'bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 mb-8 flex items-center gap-4 transition-all duration-500';
+          dot.className = 'w-4 h-4 rounded-full bg-green-400 pulse-dot flex-shrink-0';
+          title.textContent = 'All Systems Operational';
+        }
+      }
+
+      function updateTimeDisplay() {
+        const now = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'UTC', hour12: false }) + ' UTC';
+        document.getElementById('last-checked').textContent = now;
+        document.getElementById('last-checked-footer').textContent = now;
+        document.getElementById('overall-sub').textContent = `Last checked: ${now}`;
+      }
+
+      async function pingEndpoint(service, index) {
+        const startTime = performance.now();
+        const url = `${BASE_URL}${service.path}`;
+        serviceStatuses[index] = { status: 'checking', latency: '...' };
+        updateServiceUI(index, 'checking', '...');
+        try {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 10000);
+          const res = await fetch(url, { method: 'GET', signal: controller.signal });
+          clearTimeout(timeout);
+          const latency = Math.round(performance.now() - startTime);
+          const status = latency > 800 ? 'degraded' : 'online';
+          serviceStatuses[index] = { status, latency: `${latency}ms`, latencyMs: latency };
+        } catch (err) {
+          serviceStatuses[index] = { status: 'offline', latency: err.name === 'AbortError' ? 'timeout' : 'error', latencyMs: null };
+        }
+        updateServiceUI(index, serviceStatuses[index].status, serviceStatuses[index].latency);
+      }
+
+      function updateServiceUI(index, status, latency) {
+        const dot = document.getElementById(`svc-dot-${index}`);
+        const statusEl = document.getElementById(`svc-status-${index}`);
+        const latencyEl = document.getElementById(`svc-latency-${index}`);
+        if (dot) {
+          dot.className = `w-2 h-2 rounded-full flex-shrink-0 ${status === 'online' ? 'bg-green-400 pulse-dot' : status === 'degraded' ? 'bg-yellow-400 pulse-dot-slow' : status === 'offline' ? 'bg-red-400' : 'bg-blue-400 pulse-dot'}`;
+        }
+        if (statusEl) {
+          statusEl.className = `text-xs uppercase tracking-wider px-2 py-0.5 rounded ${status === 'online' ? 'text-green-400 bg-green-400/10' : status === 'degraded' ? 'text-yellow-400 bg-yellow-400/10' : status === 'offline' ? 'text-red-400 bg-red-400/10' : 'text-blue-400 bg-blue-400/10'}`;
+          statusEl.textContent = status;
+        }
+        if (latencyEl) latencyEl.textContent = latency;
+      }
+
+      async function checkAllEndpoints() {
+        updateTimeDisplay();
+        const allServices = serviceCategories.flatMap(c => c.services);
+        const promises = allServices.map((service, index) => pingEndpoint(service, index));
+        await Promise.allSettled(promises);
+        updateSummary();
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        renderServiceList();
+        renderIncidents();
+        checkAllEndpoints();
+        setInterval(checkAllEndpoints, CHECK_INTERVAL);
+      });
     </script>
-</body>
+  </body>
 </html>

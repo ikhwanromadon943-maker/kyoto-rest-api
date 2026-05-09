@@ -1,64 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Privacy Policy — Kyoto API</title>
+    <meta name="description" content="Kyoto API Privacy Policy — How we handle your data and protect your privacy." />
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://kyoto-rest-api.vercel.app/privacy" />
+    <meta property="og:title" content="Privacy Policy — Kyoto API." />
+    <meta property="og:description" content="How we handle your data and protect your privacy." />
+    <meta property="og:image" content="https://kyoto-rest-api.vercel.app/og-image.jpg" />
+    <meta property="og:image:width" content="1440" />
+    <meta property="og:image:height" content="600" />
+    <meta property="og:site_name" content="Kyoto API." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://kyoto-rest-api.vercel.app/privacy" />
+    <meta name="twitter:title" content="Privacy Policy — Kyoto API." />
+    <meta name="twitter:description" content="How we handle your data and protect your privacy." />
+    <meta name="twitter:image" content="https://kyoto-rest-api.vercel.app/og-image.jpg" />
+    <meta name="twitter:creator" content="@kyotodev" />
+    <meta name="author" content="KyotoDev." />
+    <meta name="keywords" content="API, privacy, policy, data, Kyoto" />
+    <link rel="canonical" href="https://kyoto-rest-api.vercel.app/privacy" />
+    <title>Privacy Policy — Kyoto API.</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&amp;family=Inter:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              'mono': ['Ubuntu Mono', 'monospace'],
+              'sans': ['Space Grotesk', 'system-ui', 'sans-serif']
+            }
+          }
+        }
+      }
+    </script>
     <style>
-        :root{--bg:#09090e;--border:rgba(255,255,255,0.07);--text:#e2e0f0;--muted:rgba(226,224,240,0.42);--accent:#ff6b6b}
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;-webkit-font-smoothing:antialiased}
-        ::-webkit-scrollbar{display:none}
-        body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.7}
-        header{position:sticky;top:0;z-index:50;background:rgba(9,9,14,.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:16px 0}
-        .hdr{max-width:720px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between}
-        .logo{display:flex;align-items:center;gap:11px;text-decoration:none}
-        .logo-mark{width:26px;height:26px;border:1px solid rgba(255,107,107,.4);display:flex;align-items:center;justify-content:center;position:relative}
-        .logo-mark i{font-size:9px;color:var(--accent);position:relative;z-index:1}
-        .logo-txt{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:.18em;color:var(--text);text-transform:uppercase}
-        main{max-width:720px;margin:0 auto;padding:48px 32px;position:relative;z-index:1}
-        h1{font-family:'Syne',sans-serif;font-size:28px;font-weight:700;margin-bottom:12px;color:var(--accent)}
-        .updated{font-size:9px;color:var(--muted);margin-bottom:40px}
-        h2{font-family:'Syne',sans-serif;font-size:16px;font-weight:600;margin:32px 0 12px;color:var(--text)}
-        p,li{font-size:10px;line-height:1.9;color:var(--muted);margin-bottom:12px}
-        ul{padding-left:20px;margin-bottom:12px}
-        footer{max-width:720px;margin:0 auto;padding:22px 32px 40px;border-top:1px solid var(--border);position:relative;z-index:1}
-        footer a{font-size:9px;color:var(--muted);text-decoration:none}
-        footer a:hover{color:var(--accent)}
+      ::-webkit-scrollbar { display: none !important; }
+      body { position: relative; scroll-behavior: smooth; letter-spacing: 0.025em; background-color: #181818; }
+      body::before {
+        content: '';
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; min-height: 100vh; z-index: -1;
+        background-image: linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+        background-size: 40px 40px; pointer-events: none;
+      }
+      .fade-in { animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     </style>
-</head>
-<body>
-    <header><div class="hdr"><a href="/" class="logo"><div class="logo-mark"><i class="fas fa-torii-gate"></i></div><span class="logo-txt">Kyoto</span></a></div></header>
-    <main>
-        <h1>Privacy Policy</h1>
-        <p class="updated">Last updated: May 9, 2026</p>
-        <p>Kyoto API ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we handle information when you use our API services.</p>
-        <h2>1. Information We Collect</h2>
-        <p>We collect minimal information necessary to provide our services:</p>
-        <ul>
-            <li><strong>Request Logs:</strong> API endpoint accessed, timestamp, and response status code.</li>
-            <li><strong>Usage Data:</strong> Number of requests made, rate limit consumption.</li>
-            <li><strong>Uploaded Files:</strong> Temporarily stored for processing, auto-deleted within 24 hours.</li>
-        </ul>
-        <h2>2. How We Use Information</h2>
-        <ul>
-            <li>To provide and maintain our API services</li>
-            <li>To monitor usage and prevent abuse</li>
-            <li>To improve service performance and reliability</li>
-            <li>To enforce rate limiting and security measures</li>
-        </ul>
-        <h2>3. Data Retention</h2>
-        <p>Request logs are retained for 30 days. Uploaded files are automatically deleted within 24 hours after processing. We do not store personal data beyond what is necessary for service operation.</p>
-        <h2>4. Third-Party Services</h2>
-        <p>Our API may interact with third-party services (e.g., TikTok, Instagram, YouTube) solely to fulfill your requests. We do not share your data with third parties for marketing purposes.</p>
-        <h2>5. Security</h2>
-        <p>All API traffic is encrypted via HTTPS. We implement rate limiting to prevent abuse. However, no internet transmission is 100% secure.</p>
-        <h2>6. Contact</h2>
-        <p>For privacy concerns, contact us via WhatsApp or Telegram channels listed on our homepage.</p>
+  </head>
+  <body class="bg-[#181818] text-gray-200 antialiased font-sans min-h-screen">
+    <header id="navbar" class="sticky top-0 z-50 bg-[#181818] border-b border-[#2E2E2E]">
+      <div class="max-w-3xl mx-auto px-8 py-4 flex items-center justify-between">
+        <a href="/" class="font-bold text-white text-lg" style="font-family: 'Space Grotesk', sans-serif;">Kyoto API</a>
+        <div class="flex items-center gap-6 text-sm">
+          <a href="/" class="text-gray-400 hover:text-white transition-colors">Home</a>
+          <a href="/docs" class="text-gray-400 hover:text-white transition-colors">Docs</a>
+          <a href="/status" class="text-gray-400 hover:text-white transition-colors">Status</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-8 py-12">
+      <div class="fade-in">
+        <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">Privacy Policy</h1>
+        <p class="text-sm text-gray-500 mb-10">Last updated: May 9, 2026</p>
+
+        <p class="text-sm text-gray-400 leading-relaxed mb-8">
+          Kyoto API ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we handle information when you use our API services.
+        </p>
+
+        <!-- Section 1 -->
+        <div class="bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 mb-4 hover:border-[#383838] transition-colors">
+          <h2 class="text-lg font-semibold text-white mb-3">1. Information We Collect</h2>
+          <p class="text-sm text-gray-400 leading-relaxed mb-3">We collect minimal information necessary to provide our services:</p>
+          <ul class="space-y-2">
+            <li class="flex items-start gap-3 text-sm text-gray-400">
+              <span class="text-white mt-0.5">•</span>
+              <span><strong class="text-gray-300">Request Logs:</strong> API endpoint accessed, timestamp, and response status code.</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-gray-400">
+              <span class="text-white mt-0.5">•</span>
+              <span><strong class="text-gray-300">Usage Data:</strong> Number of requests made, rate limit consumption.</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-gray-400">
+              <span class="text-white mt-0.5">•</span>
+              <span><strong class="text-gray-300">Uploaded Files:</strong> Temporarily stored for processing, auto-deleted within 24 hours.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 2 -->
+        <div class="bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 mb-4 hover:border-[#383838] transition-colors">
+          <h2 class="text-lg font-semibold text-white mb-3">2. How We Use Information</h2>
+          <ul class="space-y-2">
+            <li class="flex items-start gap-3 text-sm text-gray-400">
+              <span class="text-white mt-0.5">•</span>
+              <span>To provide and maintain our API services</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-gray-400">
+              <span class="text-white mt-0.5">•</span>
+              <span>To monitor usage and prevent abuse</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-gray-400">
+              <span class="text-white mt-0.5">•</span>
+              <span>To improve service performance and reliability</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-gray-400">
+              <span class="text-white mt-0.5">•</span>
+              <span>To enforce rate limiting and security measures</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 mb-4 hover:border-[#383838] transition-colors">
+          <h2 class="text-lg font-semibold text-white mb-3">3. Data Retention</h2>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            Request logs are retained for 30 days. Uploaded files are automatically deleted within 24 hours after processing. We do not store personal data beyond what is necessary for service operation.
+          </p>
+        </div>
+
+        <!-- Section 4 -->
+        <div class="bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 mb-4 hover:border-[#383838] transition-colors">
+          <h2 class="text-lg font-semibold text-white mb-3">4. Third-Party Services</h2>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            Our API may interact with third-party services (e.g., Jikan API, Pollinations.ai, Open-Meteo) solely to fulfill your requests. We do not share your data with third parties for marketing purposes.
+          </p>
+        </div>
+
+        <!-- Section 5 -->
+        <div class="bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 mb-4 hover:border-[#383838] transition-colors">
+          <h2 class="text-lg font-semibold text-white mb-3">5. Security</h2>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            All API traffic is encrypted via HTTPS. We implement rate limiting to prevent abuse. However, no internet transmission is 100% secure.
+          </p>
+        </div>
+
+        <!-- Section 6 -->
+        <div class="bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 mb-4 hover:border-[#383838] transition-colors">
+          <h2 class="text-lg font-semibold text-white mb-3">6. Contact</h2>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            For privacy concerns, contact us via WhatsApp or Telegram channels listed on our homepage.
+          </p>
+        </div>
+
+        <!-- Back link -->
+        <div class="mt-8">
+          <a href="/" class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors">
+            <i class="fas fa-arrow-left text-xs"></i> Back to Home
+          </a>
+        </div>
+      </div>
     </main>
-    <footer><a href="/">← Back to Home</a></footer>
-</body>
+
+    <footer class="bg-[#212121] relative z-10 border-t border-[#2E2E2E] w-full mt-12">
+      <div class="max-w-3xl mx-auto px-8 py-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+          <p class="text-sm text-gray-400">&copy; 2026 Kyoto API, All rights reserved.</p>
+          <div class="flex gap-6">
+            <a href="/privacy" class="text-sm text-white transition-colors">Privacy</a>
+            <a href="/terms" class="text-sm text-gray-400 hover:text-white transition-colors">Terms</a>
+            <a href="/status" class="text-sm text-gray-400 hover:text-white transition-colors">Status</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
 </html>
