@@ -3,35 +3,31 @@
   "info": {
     "title": "Kyoto API",
     "version": "1.0.0",
-    "description": "High-performance REST API dengan 30+ endpoint. Semua endpoint kini terhubung ke API publik sungguhan.",
-    "externalDocs": {
-      "description": "GitHub Repository",
-      "url": "https://github.com/your-username/kyoto-api"
-    }
+    "description": "High-performance REST API dengan 30+ endpoint. ChatGPT, DALL·E, Translate, Downloader, Weather, QR, Shortlink, Screenshot, Storage, Media, Manga, Anime & Waifu."
   },
   "tags": [
-    { "name": "AI", "description": "ChatGPT (free-unoficial-gpt4o-mini), DALL·E (pollinations.ai), Translate (lingva.ml)" },
-    { "name": "Downloader", "description": "TikTok, Instagram, YouTube, Twitter, Spotify (self-hosted scraper)" },
-    { "name": "Tools", "description": "Screenshot (microlink.io), QR (goQR.me), Shortlink (is.gd), Weather (Open-Meteo)" },
-    { "name": "Storage", "description": "Upload/List/Delete (production: Cloudinary/S3)" },
-    { "name": "Media", "description": "Canvas/Sticker/Meme (pollinations.ai), RemoveBG (withoutbg.com)" },
-    { "name": "Manga", "description": "Search/Chapter/Anime (Jikan API v4), Waifu (Waifu.pics)" }
+    { "name": "AI", "description": "ChatGPT (GPT-4o-mini), DALL·E (Pollinations.ai), Translate (Lingva.ml)" },
+    { "name": "Downloader", "description": "TikTok, Instagram, YouTube, Twitter, Spotify — self-hosted scraper" },
+    { "name": "Tools", "description": "Screenshot (Microlink), QR (goQR), Shortlink (is.gd), Weather (Open-Meteo), Calculator" },
+    { "name": "Storage", "description": "Upload, List, Delete — production: Cloudinary / S3" },
+    { "name": "Media", "description": "Canvas, Sticker, RemoveBG, Meme (Pollinations.ai)" },
+    { "name": "Manga", "description": "Search, Chapter, Anime (Jikan API), Random, Waifu (Waifu.pics)" }
   ],
   "paths": {
     "/api/ai/chatgpt": {
       "get": {
         "tags": ["AI"],
-        "summary": "ChatGPT Conversation (Real GPT-4o-mini)",
-        "description": "Chat with real GPT-4o-mini AI via free-unoficial-gpt4o-mini-api-g70n.onrender.com. No API key required.",
+        "summary": "ChatGPT Conversation",
+        "description": "Chat with real GPT-4o-mini AI. No API key required. Powered by free-unoficial-gpt4o-mini-api.",
         "deprecated": false,
         "parameters": [
-          { "name": "text", "required": true, "description": "Your message or question", "schema": { "type": "string", "example": "Hello, who are you?" } }
+          { "name": "text", "required": true, "description": "Your message or question", "schema": { "type": "string", "example": "Halo, siapa kamu?" } }
         ]
       },
       "post": {
         "tags": ["AI"],
         "summary": "ChatGPT with Context",
-        "description": "Send conversation history for contextual responses.",
+        "description": "Send conversation history for better contextual responses.",
         "deprecated": false,
         "requestBody": {
           "content": {
@@ -39,12 +35,325 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "messages": { "type": "array", "description": "Array of {role, content}" }
+                  "messages": { "type": "array", "description": "Array of {role: 'user'|'assistant', content: string}" }
                 }
               }
             }
           }
         }
+      }
+    },
+    "/api/ai/dalle": {
+      "get": {
+        "tags": ["AI"],
+        "summary": "DALL·E Image Generation",
+        "description": "Generate AI images from text prompts using Pollinations.ai. Free, no API key needed.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "prompt", "required": true, "description": "Image description", "schema": { "type": "string", "example": "A red torii gate in Kyoto at sunset" } },
+          { "name": "size", "required": false, "description": "Image size (WxH)", "schema": { "type": "string", "enum": ["256x256", "512x512", "1024x1024"], "default": "512x512" } }
+        ]
+      }
+    },
+    "/api/ai/translate": {
+      "get": {
+        "tags": ["AI"],
+        "summary": "Text Translator",
+        "description": "Translate text between languages. Auto-detect source language. Powered by Lingva.ml.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "text", "required": true, "description": "Text to translate", "schema": { "type": "string", "example": "Hello world" } },
+          { "name": "to", "required": true, "description": "Target language code", "schema": { "type": "string", "example": "id", "enum": ["id", "en", "ja", "ko", "zh", "es", "fr", "de", "ar", "ru"] } }
+        ]
+      }
+    },
+    "/api/ai/ocr": {
+      "post": {
+        "tags": ["AI"],
+        "summary": "OCR Text Extraction",
+        "description": "Extract text from images. Upload image via multipart/form-data.",
+        "deprecated": false,
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["image"],
+                "properties": {
+                  "image": { "type": "string", "format": "binary", "description": "Image file (jpg/png)" },
+                  "lang": { "type": "string", "description": "Language code (eng, ind, jpn, etc)", "example": "eng" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/downloader/tiktok": {
+      "get": {
+        "tags": ["Downloader"],
+        "summary": "TikTok Video Downloader",
+        "description": "Download TikTok videos. Requires self-hosted scraper (tiktok-api-unofficial or yt-dlp).",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "TikTok video URL", "schema": { "type": "string", "example": "https://vt.tiktok.com/ZS8abc123/" } }
+        ]
+      }
+    },
+    "/api/downloader/instagram": {
+      "get": {
+        "tags": ["Downloader"],
+        "summary": "Instagram Downloader",
+        "description": "Download Instagram reels, posts, and stories. Requires self-hosted scraper.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "Instagram post/reel/story URL", "schema": { "type": "string", "example": "https://www.instagram.com/reel/abc123/" } }
+        ]
+      }
+    },
+    "/api/downloader/youtube": {
+      "get": {
+        "tags": ["Downloader"],
+        "summary": "YouTube Downloader",
+        "description": "Download YouTube videos in various qualities. Requires yt-dlp on worker environment.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "YouTube video URL", "schema": { "type": "string", "example": "https://youtube.com/watch?v=abc123" } },
+          { "name": "quality", "required": false, "description": "Video quality", "schema": { "type": "string", "enum": ["360p", "480p", "720p", "1080p"], "default": "720p" } }
+        ]
+      }
+    },
+    "/api/downloader/twitter": {
+      "get": {
+        "tags": ["Downloader"],
+        "summary": "Twitter / X Downloader",
+        "description": "Download videos from Twitter/X posts. Requires self-hosted scraper.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "Twitter/X video URL", "schema": { "type": "string", "example": "https://twitter.com/user/status/123456" } }
+        ]
+      }
+    },
+    "/api/downloader/spotify": {
+      "get": {
+        "tags": ["Downloader"],
+        "summary": "Spotify Downloader",
+        "description": "Download songs from Spotify. Requires spotdl on worker environment.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "Spotify track/album URL", "schema": { "type": "string", "example": "https://open.spotify.com/track/abc123" } }
+        ]
+      }
+    },
+    "/api/tools/ssweb": {
+      "get": {
+        "tags": ["Tools"],
+        "summary": "Website Screenshot",
+        "description": "Capture screenshot of any website. Powered by Microlink (50 req/day free).",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "Website URL", "schema": { "type": "string", "example": "https://google.com" } },
+          { "name": "full", "required": false, "description": "Full page screenshot (true/false)", "schema": { "type": "boolean", "default": false } }
+        ]
+      }
+    },
+    "/api/tools/qr": {
+      "get": {
+        "tags": ["Tools"],
+        "summary": "QR Code Generator",
+        "description": "Generate QR code from any text or URL. Powered by goQR.me — free, no auth.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "text", "required": true, "description": "Text or URL to encode", "schema": { "type": "string", "example": "https://kyoto-api.vercel.app" } }
+        ]
+      }
+    },
+    "/api/tools/shortlink": {
+      "get": {
+        "tags": ["Tools"],
+        "summary": "URL Shortener",
+        "description": "Shorten long URLs. Powered by is.gd — free, no API key needed.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "Long URL to shorten", "schema": { "type": "string", "example": "https://example.com/very-long-url-that-needs-shortening" } }
+        ]
+      }
+    },
+    "/api/tools/cuaca": {
+      "get": {
+        "tags": ["Tools"],
+        "summary": "Weather Information",
+        "description": "Get real-time weather for any major city. Powered by Open-Meteo — free, no key.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "city", "required": true, "description": "City name (Jakarta, Tokyo, London, NewYork, etc)", "schema": { "type": "string", "example": "Tokyo" } }
+        ]
+      }
+    },
+    "/api/tools/calculator": {
+      "get": {
+        "tags": ["Tools"],
+        "summary": "Math Calculator",
+        "description": "Evaluate mathematical expressions safely.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "expr", "required": true, "description": "Math expression to evaluate", "schema": { "type": "string", "example": "2+2*3" } }
+        ]
+      }
+    },
+    "/api/storage/upload": {
+      "post": {
+        "tags": ["Storage"],
+        "summary": "Upload File",
+        "description": "Upload files to cloud storage. Max 50MB. For production, integrate with Cloudinary or AWS S3.",
+        "deprecated": false,
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": { "type": "string", "format": "binary", "description": "File to upload" },
+                  "folder": { "type": "string", "description": "Target folder name", "example": "images" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/storage/list": {
+      "get": {
+        "tags": ["Storage"],
+        "summary": "List Files",
+        "description": "Get list of all uploaded files.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "folder", "required": false, "description": "Filter by folder name", "schema": { "type": "string", "example": "images" } }
+        ]
+      }
+    },
+    "/api/storage/delete": {
+      "delete": {
+        "tags": ["Storage"],
+        "summary": "Delete File",
+        "description": "Remove a file from storage permanently.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "file", "required": true, "description": "File ID to delete", "schema": { "type": "string", "example": "abc123.jpg" } }
+        ]
+      }
+    },
+    "/api/media/canvas": {
+      "get": {
+        "tags": ["Media"],
+        "summary": "Canvas Image Generator",
+        "description": "Generate custom canvas images with text. Powered by Pollinations.ai.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "text", "required": true, "description": "Text to render on canvas", "schema": { "type": "string", "example": "Hello Kyoto" } },
+          { "name": "bg", "required": false, "description": "Background color (hex without #)", "schema": { "type": "string", "example": "ff6b6b" } }
+        ]
+      }
+    },
+    "/api/media/sticker": {
+      "get": {
+        "tags": ["Media"],
+        "summary": "Sticker Maker",
+        "description": "Convert any image to sticker format. Production: wa-sticker-formatter (npm).",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "Image URL to convert", "schema": { "type": "string", "example": "https://example.com/image.jpg" } }
+        ]
+      }
+    },
+    "/api/media/removebg": {
+      "post": {
+        "tags": ["Media"],
+        "summary": "Remove Background",
+        "description": "Remove image background using AI. Upload image via multipart/form-data.",
+        "deprecated": false,
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["image"],
+                "properties": {
+                  "image": { "type": "string", "format": "binary", "description": "Image file (jpg/png)" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/media/meme": {
+      "get": {
+        "tags": ["Media"],
+        "summary": "Meme Generator",
+        "description": "Create meme images with top and bottom text. Powered by Pollinations.ai.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "Base image URL", "schema": { "type": "string" } },
+          { "name": "top", "required": true, "description": "Top text", "schema": { "type": "string", "example": "WHEN YOU" } },
+          { "name": "bottom", "required": true, "description": "Bottom text", "schema": { "type": "string", "example": "FINISH THE PROJECT" } }
+        ]
+      }
+    },
+    "/api/manga/search": {
+      "get": {
+        "tags": ["Manga"],
+        "summary": "Search Manga",
+        "description": "Search manga by title. Powered by Jikan API v4 (MyAnimeList). Free, no auth.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "query", "required": true, "description": "Manga title to search", "schema": { "type": "string", "example": "One Piece" } },
+          { "name": "limit", "required": false, "description": "Max results (1-25)", "schema": { "type": "number", "default": 10 } }
+        ]
+      }
+    },
+    "/api/manga/chapter": {
+      "get": {
+        "tags": ["Manga"],
+        "summary": "Get Manga Info & Chapters",
+        "description": "Get manga details including total chapters. Chapter images: use MangaDex API.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "id", "required": true, "description": "MyAnimeList Manga ID", "schema": { "type": "number", "example": 2 } },
+          { "name": "chapter", "required": false, "description": "Chapter number (for reference)", "schema": { "type": "number", "example": 1 } }
+        ]
+      }
+    },
+    "/api/manga/anime": {
+      "get": {
+        "tags": ["Manga"],
+        "summary": "Anime Info",
+        "description": "Get anime details, episodes, score, and synopsis. Powered by Jikan API v4.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "title", "required": true, "description": "Anime title to search", "schema": { "type": "string", "example": "Jujutsu Kaisen" } }
+        ]
+      }
+    },
+    "/api/manga/random": {
+      "get": {
+        "tags": ["Manga"],
+        "summary": "Random Manga",
+        "description": "Get a random manga recommendation from MyAnimeList.",
+        "deprecated": false
+      }
+    },
+    "/api/manga/waifu": {
+      "get": {
+        "tags": ["Manga"],
+        "summary": "Waifu / Anime Image",
+        "description": "Get random anime images by category. Powered by Waifu.pics — free, no auth.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "category", "required": false, "description": "Image category", "schema": { "type": "string", "enum": ["waifu", "neko", "shinobu", "megumin", "bully", "cuddle", "cry", "hug", "kiss", "pat", "smug", "bonk", "blush", "smile", "wave", "happy", "dance"], "default": "waifu" } }
+        ]
       }
     }
   }
