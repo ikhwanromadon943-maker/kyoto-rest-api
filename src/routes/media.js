@@ -1,14 +1,15 @@
 // Kyoto API — Media Endpoints
-// Canvas    : image.pollinations.ai
-// Sticker   : Konversi gambar ke WebP (mock)
-// RemoveBG  : api.withoutbg.com (gratis, tanpa auth)
-// Meme      : image.pollinations.ai dengan teks overlay
+// Canvas / Sticker / Meme : image.pollinations.ai
+// RemoveBG : Pollinations.ai (simulasi) | Production: rembg (Python) / withoutbg.com
 
 export default async function handler(req, res) {
+  const start = Date.now();
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method === 'OPTIONS') {
+    return res.status(200).json({ status: true, message: 'CORS preflight OK', response_time: `${Date.now() - start}ms` });
+  }
 
   const url = new URL(req.url, `http://${req.headers.host}`);
   const endpoint = url.pathname.replace('/api/media/', '');
@@ -18,33 +19,66 @@ export default async function handler(req, res) {
     if (endpoint === 'canvas') {
       const text = url.searchParams.get('text');
       const bg = url.searchParams.get('bg') || 'ff6b6b';
-      if (!text) return res.status(400).json({ error: 'Parameter "text" diperlukan' });
-      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(text)}%20clean%20minimal%20design?width=800&height=400&nologo=true`;
-      return res.json({ status: 200, text, bg, image: imageUrl, provider: 'Pollinations.ai' });
+      if (!text) {
+        return res.status(400).json({
+          status: false, author: 'Kyoto API',
+          error: 'Parameter "text" is required',
+          timestamp: new Date().toISOString(), response_time: `${Date.now() - start}ms`
+        });
+      }
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(text)}%20minimal%20clean%20design%20background%20color%20${bg}?width=800&height=400&nologo=true`;
+      return res.json({
+        status: true,
+        author: 'Kyoto API',
+        provider: 'Pollinations.ai',
+        text,
+        background_color: `#${bg}`,
+        image: imageUrl,
+        timestamp: new Date().toISOString(),
+        response_time: `${Date.now() - start}ms`
+      });
     }
 
     // ---------- STICKER ----------
     if (endpoint === 'sticker') {
       const imageUrl = url.searchParams.get('url');
-      if (!imageUrl) return res.status(400).json({ error: 'Parameter "url" diperlukan' });
+      if (!imageUrl) {
+        return res.status(400).json({
+          status: false, author: 'Kyoto API',
+          error: 'Parameter "url" is required',
+          timestamp: new Date().toISOString(), response_time: `${Date.now() - start}ms`
+        });
+      }
       return res.json({
-        status: 200,
+        status: true,
+        author: 'Kyoto API',
+        provider: 'Pollinations.ai (simulation)',
         original: imageUrl,
         sticker: `https://image.pollinations.ai/prompt/sticker%20style%20transparent%20background?width=512&height=512&nologo=true`,
-        provider: 'Pollinations.ai',
-        note: 'Untuk sticker WhatsApp asli, gunakan library wa-sticker-formatter (npm).',
+        production_note: 'For real WhatsApp sticker conversion, use: wa-sticker-formatter (npm).',
+        timestamp: new Date().toISOString(),
+        response_time: `${Date.now() - start}ms`
       });
     }
 
     // ---------- REMOVE BG ----------
     if (endpoint === 'removebg') {
-      if (req.method !== 'POST') return res.status(405).json({ error: 'Gunakan method POST dengan image file' });
+      if (req.method !== 'POST') {
+        return res.status(405).json({
+          status: false, author: 'Kyoto API',
+          error: 'Method not allowed. Use POST with multipart/form-data (key: "image").',
+          timestamp: new Date().toISOString(), response_time: `${Date.now() - start}ms`
+        });
+      }
       return res.json({
-        status: 200,
-        message: 'Background removal berhasil',
-        result: 'https://image.pollinations.ai/prompt/cutout%20isolated%20on%20transparent?width=512&height=512&nologo=true',
-        provider: 'Pollinations.ai (simulasi)',
-        note: 'Untuk remove BG sesungguhnya, gunakan api.withoutbg.com (gratis, tanpa API key) atau rembg Python.',
+        status: true,
+        author: 'Kyoto API',
+        provider: 'Pollinations.ai (simulation)',
+        message: 'Background removal successful',
+        result: 'https://image.pollinations.ai/prompt/cutout%20isolated%20on%20transparent%20background?width=512&height=512&nologo=true',
+        production_note: 'For real background removal, use: rembg (Python) or api.withoutbg.com.',
+        timestamp: new Date().toISOString(),
+        response_time: `${Date.now() - start}ms`
       });
     }
 
@@ -53,13 +87,36 @@ export default async function handler(req, res) {
       const imgUrl = url.searchParams.get('url');
       const top = url.searchParams.get('top') || '';
       const bottom = url.searchParams.get('bottom') || '';
-      if (!imgUrl) return res.status(400).json({ error: 'Parameter "url" diperlukan' });
+      if (!imgUrl) {
+        return res.status(400).json({
+          status: false, author: 'Kyoto API',
+          error: 'Parameter "url" is required',
+          timestamp: new Date().toISOString(), response_time: `${Date.now() - start}ms`
+        });
+      }
       const memeUrl = `https://image.pollinations.ai/prompt/meme%20${encodeURIComponent(top)}%20${encodeURIComponent(bottom)}?width=600&height=400&nologo=true`;
-      return res.json({ status: 200, top, bottom, meme: memeUrl, provider: 'Pollinations.ai' });
+      return res.json({
+        status: true,
+        author: 'Kyoto API',
+        provider: 'Pollinations.ai',
+        top_text: top,
+        bottom_text: bottom,
+        meme: memeUrl,
+        timestamp: new Date().toISOString(),
+        response_time: `${Date.now() - start}ms`
+      });
     }
 
-    return res.status(404).json({ error: `Media "${endpoint}" tidak tersedia` });
+    return res.status(404).json({
+      status: false, author: 'Kyoto API',
+      error: `Endpoint /api/media/${endpoint} not found`,
+      timestamp: new Date().toISOString(), response_time: `${Date.now() - start}ms`
+    });
   } catch (err) {
-    return res.status(500).json({ error: 'Gagal memproses media', detail: err.message });
+    return res.status(500).json({
+      status: false, author: 'Kyoto API',
+      error: `Internal server error: ${err.message}`,
+      timestamp: new Date().toISOString(), response_time: `${Date.now() - start}ms`
+    });
   }
 }
