@@ -2,7 +2,27 @@
   "version": 2,
   "cleanUrls": true,
   "functions": {
-    "src/routes/*.js": {
+    "api/ai.js": {
+      "memory": 512,
+      "maxDuration": 10
+    },
+    "api/downloader.js": {
+      "memory": 512,
+      "maxDuration": 10
+    },
+    "api/tools.js": {
+      "memory": 512,
+      "maxDuration": 10
+    },
+    "api/storage.js": {
+      "memory": 512,
+      "maxDuration": 10
+    },
+    "api/media.js": {
+      "memory": 512,
+      "maxDuration": 10
+    },
+    "api/manga.js": {
       "memory": 512,
       "maxDuration": 10
     }
@@ -13,13 +33,7 @@
     { "source": "/pricing", "destination": "/pricing.html" },
     { "source": "/changelog", "destination": "/changelog.html" },
     { "source": "/privacy", "destination": "/privacy.html" },
-    { "source": "/terms", "destination": "/terms.html" },
-    { "source": "/api/ai/:path*", "destination": "/src/routes/ai" },
-    { "source": "/api/downloader/:path*", "destination": "/src/routes/downloader" },
-    { "source": "/api/tools/:path*", "destination": "/src/routes/tools" },
-    { "source": "/api/storage/:path*", "destination": "/src/routes/storage" },
-    { "source": "/api/media/:path*", "destination": "/src/routes/media" },
-    { "source": "/api/manga/:path*", "destination": "/src/routes/manga" }
+    { "source": "/terms", "destination": "/terms.html" }
   ],
   "headers": [
     {
