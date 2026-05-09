@@ -29,10 +29,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&amp;family=Inter:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <script>
       tailwind.config = {
         theme: {
@@ -82,22 +79,14 @@
       </div>
       <div class="px-5 pb-8 pt-0 md:pt-8">
         <nav>
-          <p class="font-medium text-sm text-gray-300 mb-4 px-4">Navigation</p>
-          <div class="space-y-1 mb-6">
-            <a href="/" class="flex items-center justify-between py-1 px-4 text-sm text-gray-400 hover:text-white hover:bg-[#222222] rounded-xl">
-              <span>Home</span>
-              <i class="material-icons text-lg ml-3">keyboard_arrow_right</i>
-            </a>
+          <p class="font-medium text-sm text-gray-300 mb-4 px-4">Get Started</p>
+          <div class="space-y-1">
             <a href="/category" class="flex items-center justify-between py-1 px-4 text-sm text-white bg-[#222222] rounded-xl">
-              <span>Documentation</span>
-              <i class="material-icons text-lg ml-3">keyboard_arrow_right</i>
-            </a>
-            <a href="/status" class="flex items-center justify-between py-1 px-4 text-sm text-gray-400 hover:text-white hover:bg-[#222222] rounded-xl">
-              <span>Status</span>
+              <span>Category</span>
               <i class="material-icons text-lg ml-3">keyboard_arrow_right</i>
             </a>
           </div>
-          <p class="font-medium text-sm text-gray-300 my-4 px-4">Categories</p>
+          <p class="font-medium text-sm text-gray-300 my-4 px-4">Available Endpoints</p>
           <div class="space-y-1" id="sidebar-dynamic-list"></div>
         </nav>
       </div>
@@ -109,29 +98,13 @@
           <button id="sidebarToggle" class="text-sm text-white flex items-center justify-center md:hidden">
             <i class="material-icons text-2xl">notes</i>
           </button>
-          <a href="/" class="font-bold text-white text-lg" style="font-family: 'Space Grotesk', sans-serif;">Kyoto API</a>
-        </div>
-        <div class="hidden md:flex items-center gap-4">
-          <a href="/" class="text-sm text-gray-400 hover:text-white transition-colors">Home</a>
-          <a href="/status" class="text-sm text-gray-400 hover:text-white transition-colors">Status</a>
         </div>
       </div>
     </header>
     <div class="flex flex-col min-h-screen">
       <main class="max-w-2xl mx-auto px-8 pt-4 pb-8 flex-1 w-full">
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-white mb-2">API Documentation</h2>
-          <p class="text-sm text-gray-400">Browse and test 55+ live endpoints across 16 categories. All endpoints are GET only, no API key required.</p>
-        </div>
-        <div class="relative mb-8">
-          <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
-          <input type="text" id="searchInput" placeholder="Search 55+ endpoints..." class="w-full bg-[#212121] border border-[#2E2E2E] text-gray-200 font-mono text-sm py-3 pl-10 pr-4 rounded-xl outline-none focus:border-[#383838] transition-colors" />
-        </div>
-        <div id="content">
-          <div class="text-center py-12 hidden" id="noResults">
-            <p class="text-gray-500 text-sm">No results found.</p>
-          </div>
-          <div id="apiList" class="space-y-1"></div>
+        <div id="content" class="space-y-3">
+          <!-- Cards akan di-inject JS dari openapi.json -->
         </div>
       </main>
       <footer class="bg-[#212121] relative z-10 border-t border-[#2E2E2E] w-full">
@@ -139,23 +112,22 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div>
               <h3 class="font-semibold text-white mb-3">About</h3>
-              <p class="text-sm text-gray-400 leading-relaxed">Kyoto API v2.0 — 55+ Live REST API Endpoints. Explore and test our comprehensive collection of API endpoints in real-time.</p>
+              <p class="text-sm text-gray-400 leading-relaxed">This interactive interface allows you to explore and test our comprehensive collection of API endpoints in real-time.</p>
             </div>
             <div>
               <h3 class="font-semibold text-white mb-3">Quick Links</h3>
               <div class="flex flex-col items-start space-y-2">
-                <a href="/" class="text-sm text-gray-400 hover:text-white transition-colors">Home</a>
-                <a href="/category" class="text-sm text-gray-400 hover:text-white transition-colors">Documentation</a>
-                <a href="/status" class="text-sm text-gray-400 hover:text-white transition-colors">Status</a>
+                <a href="/introduction" class="text-sm text-gray-400 hover:text-white transition-colors">Documentation</a>
+                <a href="/category" class="text-sm text-gray-400 hover:text-white transition-colors">All Categories</a>
               </div>
             </div>
             <div>
               <h3 class="font-semibold text-white mb-3">Connect</h3>
               <div class="flex gap-3">
-                <a href="https://whatsapp.com/channel/0029Vb69z8n1dAvztHQTDu3r" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#1a1a1a] hover:bg-[#2a2a2a] text-gray-400 hover:text-white transition-colors">
+                <a href="" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#1a1a1a] hover:bg-[#2a2a2a] text-gray-600 hover:text-white transition-all">
                   <i class="fab fa-whatsapp text-lg"></i>
                 </a>
-                <a href="https://www.instagram.com/elrayyxml" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#1a1a1a] hover:bg-[#2a2a2a] text-gray-400 hover:text-white transition-colors">
+                <a href="https://www.instagram.com/wtf.w4n_" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#1a1a1a] hover:bg-[#2a2a2a] text-gray-600 hover:text-white transition-all">
                   <i class="fab fa-instagram text-lg"></i>
                 </a>
               </div>
@@ -178,217 +150,63 @@
       sidebarClose.addEventListener('click', closeSidebar);
       overlay.addEventListener('click', closeSidebar);
 
-      async function copyToClipboard(text, btn) {
-        const orig = btn.innerHTML;
-        try { await navigator.clipboard.writeText(text); btn.textContent = 'Copied!'; } catch(e) { btn.textContent = 'Failed'; }
-        setTimeout(() => btn.innerHTML = orig, 1500);
-      }
-
-      function hlJSON(el) { if (window.hljs) hljs.highlightElement(el); }
-
-      function toggleCategory(idx) {
-        document.getElementById(`cat-body-${idx}`).classList.toggle('hidden');
-        document.getElementById(`cat-chev-${idx}`).classList.toggle('rotate-180');
-      }
-
-      function toggleEndpoint(ci, ei) {
-        const panel = document.getElementById(`ep-detail-${ci}-${ei}`);
-        const chev = document.getElementById(`ep-chev-${ci}-${ei}`);
-        if (!panel.dataset.rendered) {
-          const item = _epData[`${ci}-${ei}`];
-          if (item) panel.innerHTML = buildDetailHTML(ci, ei, item);
-          panel.dataset.rendered = '1';
-        }
-        panel.classList.toggle('hidden');
-        chev.classList.toggle('rotate-180');
-      }
-
-      async function executeRequest(event, ci, ei, method, path) {
-        event.preventDefault();
-        const form = document.getElementById(`form-${ci}-${ei}`);
-        const respWrap = document.getElementById(`resp-${ci}-${ei}`);
-        const clearBtn = document.getElementById(`clear-${ci}-${ei}`);
-        respWrap.classList.remove('hidden');
-        const formData = new FormData(form);
-        const params = new URLSearchParams();
-        for (const [k, v] of formData.entries()) { if (typeof v === 'string' && v) params.append(k, v); }
-        const qs = params.toString();
-        let fullPath = path + (qs ? (path.includes('?') ? '&' : '?') + qs : '');
-        let curlCmd = `curl "https://kyoto-rest-api.vercel.app${fullPath}"`;
-        document.getElementById(`resp-url-${ci}-${ei}`).textContent = `https://kyoto-rest-api.vercel.app${fullPath}`;
-        document.getElementById(`resp-curl-${ci}-${ei}`).textContent = curlCmd;
-        const bodyDiv = document.getElementById(`resp-body-${ci}-${ei}`);
-        bodyDiv.innerHTML = '<span style="color:#9ca3af;font-size:13px">Loading...</span>';
-        try {
-          const res = await fetch(fullPath);
-          const ct = res.headers.get('content-type') || '';
-          if (ct.includes('application/json')) {
-            const data = await res.json();
-            bodyDiv.innerHTML = `<pre><code class="language-json">${JSON.stringify(data, null, 2)}</code></pre>`;
-            setTimeout(() => hlJSON(bodyDiv.querySelector('code')), 0);
-          } else if (ct.startsWith('image/')) {
-            const blob = await res.blob();
-            const u = URL.createObjectURL(blob);
-            bodyDiv.innerHTML = `<img src="${u}" style="max-width:100%;height:auto" class="rounded-lg"><br><a href="${u}" download class="text-white text-xs underline mt-2 inline-block">Download</a>`;
-          } else {
-            bodyDiv.textContent = await res.text();
-          }
-        } catch (err) {
-          bodyDiv.innerHTML = `<pre style="color:#f87171">${err.message}</pre>`;
-        }
-        clearBtn.style.display = 'inline-block';
-      }
-
-      function clearResponse(ci, ei) {
-        document.getElementById(`resp-${ci}-${ei}`).classList.add('hidden');
-        document.getElementById(`clear-${ci}-${ei}`).style.display = 'none';
-      }
-
-      const _epData = {};
-
-      function buildFormFields(item) {
-        let f = '';
-        if (item.parameters) {
-          item.parameters.forEach(param => {
-            const s = param.schema || {};
-            const req = !!param.required;
-            const lbl = `${param.name}${req ? ' <span style="color:#f87171">*</span>' : ''}`;
-            const desc = param.description ? `<div class="text-xs text-gray-500 mt-1">${param.description}</div>` : '';
-            const ph = (s.example ?? s.default ?? '') + '';
-            if (Array.isArray(s.enum) && s.enum.length) {
-              f += `<div class="mb-3"><label class="block text-sm text-gray-300 mb-1">${lbl}</label><select name="${param.name}"${req ? ' required' : ''} class="w-full bg-[#111] border border-[#2E2E2E] text-gray-200 font-mono text-sm py-2 px-3 rounded-lg outline-none focus:border-[#383838]">${s.enum.map(v => `<option value="${v}">${v}</option>`).join('')}</select>${desc}</div>`;
-            } else {
-              const t = (s.type === 'number' || s.type === 'integer') ? 'number' : 'text';
-              f += `<div class="mb-3"><label class="block text-sm text-gray-300 mb-1">${lbl}</label><input type="${t}" name="${param.name}" placeholder="${ph.replace(/"/g, '&quot;')}"${req ? ' required' : ''} class="w-full bg-[#111] border border-[#2E2E2E] text-gray-200 font-mono text-sm py-2 px-3 rounded-lg outline-none focus:border-[#383838]">${desc}</div>`;
-            }
-          });
-        }
-        return f;
-      }
-
-      function buildDetailHTML(ci, ei, item) {
-        const formFields = buildFormFields(item);
-        return `
-          ${item.desc ? `<p class="text-sm text-gray-400 mb-4 leading-relaxed">${item.desc}</p>` : ''}
-          <div class="text-xs font-semibold text-gray-300 uppercase tracking-wider mb-3">Try It Out</div>
-          <form id="form-${ci}-${ei}" onsubmit="executeRequest(event,${ci},${ei},'${item.method}','${item.path}')">
-            ${formFields}
-            <div class="flex gap-2 mt-4">
-              <button type="submit" class="bg-white text-black font-semibold text-sm py-2 px-5 rounded-lg hover:bg-gray-200 transition-colors">Execute</button>
-              <button type="button" id="clear-${ci}-${ei}" class="bg-transparent text-gray-400 border border-[#2E2E2E] text-sm py-2 px-5 rounded-lg hover:text-white hover:border-[#383838] transition-colors hidden" onclick="clearResponse(${ci},${ei})">Clear</button>
-            </div>
-          </form>
-          <div class="hidden mt-4 space-y-3" id="resp-${ci}-${ei}">
-            <div>
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-xs text-gray-400 uppercase tracking-wider">Request URL</span>
-                <button class="text-xs text-gray-500 hover:text-white transition-colors" onclick="copyToClipboard(document.getElementById('resp-url-${ci}-${ei}').textContent,this)">Copy</button>
-              </div>
-              <div class="bg-[#111] border border-[#2E2E2E] rounded-lg p-3 font-mono text-xs text-gray-300 overflow-x-auto"><pre id="resp-url-${ci}-${ei}"></pre></div>
-            </div>
-            <div>
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-xs text-gray-400 uppercase tracking-wider">cURL Command</span>
-                <button class="text-xs text-gray-500 hover:text-white transition-colors" onclick="copyToClipboard(document.getElementById('resp-curl-${ci}-${ei}').textContent,this)">Copy</button>
-              </div>
-              <div class="bg-[#111] border border-[#2E2E2E] rounded-lg p-3 font-mono text-xs text-gray-300 overflow-x-auto"><pre id="resp-curl-${ci}-${ei}"></pre></div>
-            </div>
-            <div>
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-xs text-gray-400 uppercase tracking-wider">Response</span>
-                <button class="text-xs text-gray-500 hover:text-white transition-colors" onclick="copyToClipboard(document.getElementById('resp-body-${ci}-${ei}').innerText,this)">Copy</button>
-              </div>
-              <div class="bg-[#111] border border-[#2E2E2E] rounded-lg p-3 font-mono text-xs text-gray-300 overflow-x-auto" id="resp-body-${ci}-${ei}"></div>
-            </div>
-          </div>`;
-      }
-
-      async function loadApis() {
-        const apiList = document.getElementById('apiList');
-        const sideCats = document.getElementById('sidebar-dynamic-list');
+      async function loadCategories() {
+        const content = document.getElementById('content');
+        const sideList = document.getElementById('sidebar-dynamic-list');
         try {
           const res = await fetch('/src/openapi.json');
           const data = await res.json();
+
+          // Kumpulin kategori + hitung endpoint per kategori
           const categories = {};
-          if (data.tags) data.tags.forEach(t => { categories[t.name] = { name: t.name, items: [] }; });
+          if (data.tags) {
+            data.tags.forEach(t => { categories[t.name] = { name: t.name, count: 0 }; });
+          }
           Object.keys(data.paths || {}).forEach(path => {
             const pi = data.paths[path];
             Object.keys(pi).forEach(method => {
               const ep = pi[method];
               const tag = ep.tags?.[0] || 'Other';
-              if (!categories[tag]) categories[tag] = { name: tag, items: [] };
-              categories[tag].items.push({ path, method: method.toUpperCase(), name: ep.summary || 'No summary', desc: ep.description || '', status: 'ready', parameters: ep.parameters });
+              if (!categories[tag]) categories[tag] = { name: tag, count: 0 };
+              categories[tag].count++;
             });
           });
-          const frag = document.createDocumentFragment();
-          const sideFragHtml = [];
-          Object.values(categories).forEach((cat, ci) => {
-            if (!cat.items.length) return;
-            const catId = `cat-${ci}`;
-            sideFragHtml.push(`<a href="#${catId}" class="flex items-center justify-between py-1 px-4 text-sm text-gray-400 hover:text-white hover:bg-[#222222] rounded-xl"><span>${cat.name}</span><span class="text-xs text-gray-600">${cat.items.length}</span></a>`);
-            let itemsHtml = '';
-            cat.items.forEach((item, ei) => {
-              _epData[`${ci}-${ei}`] = item;
-              itemsHtml += `
-                <div class="border-b border-[#2E2E2E] last:border-b-0 api-item" data-path="${item.path}" data-alias="${item.name}" data-description="${item.desc}" data-category="${cat.name}">
-                  <button class="w-full flex items-center justify-between py-3 px-4 text-left hover:bg-[#1a1a1a] transition-colors" onclick="toggleEndpoint(${ci},${ei})">
-                    <div class="flex items-center gap-3 min-w-0 flex-1">
-                      <span class="text-xs font-semibold text-green-400 bg-green-400/10 px-2 py-0.5 rounded uppercase">GET</span>
-                      <div class="min-w-0 flex-1">
-                        <div class="text-sm text-gray-200 truncate">${item.path}</div>
-                        <div class="text-xs text-gray-500 truncate">${item.name}</div>
-                      </div>
-                      <span class="text-xs text-green-400 bg-green-400/10 px-2 py-0.5 rounded uppercase">live</span>
+
+          const cats = Object.values(categories).filter(c => c.count > 0);
+
+          // Render cards
+          content.innerHTML = cats.map((cat, i) => {
+            const slug = cat.name.toLowerCase().replace(/\s+/g, '-');
+            const delay = i * 100;
+            return `
+              <a href="/category/${slug}" class="block bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 hover:border-[#383838] group fade-in" style="animation-delay: ${delay}ms">
+                <div class="flex items-center justify-between">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                      <h4 class="text-lg font-semibold text-white">${cat.name}</h4>
+                      <span class="px-2 py-1 bg-[#2a2a2a] text-gray-400 text-xs font-medium rounded">${cat.count} endpoint${cat.count !== 1 ? 's' : ''}</span>
                     </div>
-                    <i class="material-icons text-gray-500 text-lg ml-2 transition-transform" id="ep-chev-${ci}-${ei}">keyboard_arrow_down</i>
-                  </button>
-                  <div class="hidden px-4 pb-4" id="ep-detail-${ci}-${ei}"></div>
-                </div>`;
-            });
-            const wrapper = document.createElement('div');
-            wrapper.className = 'bg-[#212121] border border-[#2E2E2E] rounded-xl overflow-hidden mb-3 fade-in';
-            wrapper.id = catId;
-            wrapper.dataset.category = cat.name;
-            wrapper.innerHTML = `
-              <button class="w-full flex items-center justify-between py-3 px-4 hover:bg-[#1a1a1a] transition-colors" onclick="toggleCategory(${ci})">
-                <div class="flex items-center gap-3">
-                  <i class="fas fa-folder text-gray-400 text-sm"></i>
-                  <div>
-                    <div class="text-sm font-semibold text-white">${cat.name}</div>
-                    <div class="text-xs text-gray-500">${cat.items.length} endpoint${cat.items.length !== 1 ? 's' : ''}</div>
+                    <p class="text-sm text-gray-400">Explore ${cat.name} related endpoints and features.</p>
+                  </div>
+                  <div class="ml-4">
+                    <span class="material-icons text-white group-hover:text-white">arrow_forward</span>
                   </div>
                 </div>
-                <i class="material-icons text-gray-500 transition-transform" id="cat-chev-${ci}">keyboard_arrow_down</i>
-              </button>
-              <div class="hidden" id="cat-body-${ci}">${itemsHtml}</div>`;
-            frag.appendChild(wrapper);
-          });
-          apiList.innerHTML = '';
-          apiList.appendChild(frag);
-          sideCats.innerHTML = sideFragHtml.join('');
+              </a>`;
+          }).join('');
+
+          // Render sidebar
+          sideList.innerHTML = cats.map(cat => {
+            const slug = cat.name.toLowerCase().replace(/\s+/g, '-');
+            return `<a href="/category/${slug}" class="flex items-center justify-between py-1 px-4 text-sm text-gray-400 hover:text-white hover:bg-[#222222] rounded-xl"><span>${cat.name}</span><i class="material-icons text-lg ml-3">keyboard_arrow_right</i></a>`;
+          }).join('');
+
         } catch (err) {
-          apiList.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Failed to load API data.</p>';
+          content.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Failed to load categories.</p>';
         }
       }
 
-      document.getElementById('searchInput').addEventListener('input', function() {
-        const q = this.value.toLowerCase();
-        let vis = 0;
-        document.querySelectorAll('.api-item').forEach(el => {
-          const m = el.dataset.path.toLowerCase().includes(q) || el.dataset.alias.toLowerCase().includes(q) || el.dataset.description.toLowerCase().includes(q);
-          el.style.display = m ? '' : 'none';
-        });
-        document.querySelectorAll('.bg-\\[\\#212121\\].border.rounded-xl').forEach(g => {
-          const h = [...g.querySelectorAll('.api-item')].some(e => e.style.display !== 'none');
-          g.style.display = h ? '' : 'none';
-          if (h) vis++;
-        });
-        document.getElementById('noResults').classList.toggle('hidden', vis > 0 || !q);
-      });
-
-      document.addEventListener('DOMContentLoaded', () => {
-        loadApis();
-      });
+      document.addEventListener('DOMContentLoaded', loadCategories);
     </script>
   </body>
 </html>
