@@ -51,6 +51,7 @@
         .ct-improve{color:var(--purple);border-color:rgba(167,139,250,.25)}
         .ct-fix{color:var(--yellow);border-color:rgba(250,204,21,.25)}
         .ct-breaking{color:var(--red);border-color:rgba(248,113,113,.25)}
+        .ct-removed{color:var(--muted);border-color:rgba(255,255,255,.15);text-decoration:line-through}
 
         footer{max-width:760px;margin:0 auto;padding:22px 32px 40px;border-top:1px solid var(--border);position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between}
         .fcopy{font-size:9px;color:var(--muted);letter-spacing:.05em}
@@ -62,12 +63,9 @@
 <body>
     <header>
         <div class="hdr">
-            <a href="/" class="logo">
-                <div class="logo-mark"><i class="fas fa-torii-gate"></i></div>
-                <span class="logo-txt">Kyoto</span>
-            </a>
+            <a href="/" class="logo"><div class="logo-mark"><i class="fas fa-torii-gate"></i></div><span class="logo-txt">Kyoto</span></a>
             <div style="display:flex;align-items:center;gap:14px">
-                <span class="vpill">v1.0.0</span>
+                <span class="vpill">v2.0.0</span>
                 <nav class="nav-links">
                     <a href="/">Home</a>
                     <a href="/docs">Docs</a>
@@ -79,32 +77,45 @@
     <main>
         <h1 class="page-title">Changelog</h1>
         <p class="page-sub">All notable changes to Kyoto API. Versioning follows <span style="color:var(--accent)">Semantic Versioning</span>.</p>
-        <div class="timeline" id="changelog">
-            <!-- Filled by JS -->
-        </div>
+        <div class="timeline" id="changelog"></div>
     </main>
     <footer>
         <span class="fcopy">&copy; <span id="year"></span> Kyoto API</span>
-        <div class="flinks">
-            <a href="/privacy">Privacy</a>
-            <a href="/terms">Terms</a>
-            <a href="/changelog">Changelog</a>
-        </div>
+        <div class="flinks"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/changelog">Changelog</a></div>
     </footer>
     <script>
         const releases = [
+            {
+                version: 'v2.0.0',
+                type: 'major',
+                date: 'May 10, 2026',
+                changes: [
+                    { tag: 'feature', text: '55+ live endpoints across 16 categories — all free, no API key, GET only' },
+                    { tag: 'feature', text: 'New categories: News, Fun, Games, Info, Maker, Stalker, Random, Zodiak, Crypto, Quran, Animals, Number Facts' },
+                    { tag: 'feature', text: 'AI: Added Text-to-Speech & Image Variation endpoints' },
+                    { tag: 'feature', text: 'Anime: Added Waifu images & Character search' },
+                    { tag: 'feature', text: 'Brand new interactive landing page with category grid & code examples' },
+                    { tag: 'feature', text: 'Redesigned Status Page — now monitors all 55+ endpoints in real-time' },
+                    { tag: 'feature', text: 'Streamlined Documentation — GET only, clean UI, faster loading' },
+                    { tag: 'improve', text: 'All response formats standardized: { status, author, provider, result, timestamp, response_time }' },
+                    { tag: 'improve', text: 'Complete rewrite of all API handlers for better error handling & performance' },
+                    { tag: 'improve', text: 'CORS headers added to all endpoints with proper OPTIONS preflight' },
+                    { tag: 'removed', text: 'Downloader category (TikTok, Instagram, YouTube, Twitter, Spotify) — requires self-hosted scraper' },
+                    { tag: 'removed', text: 'Storage category (Upload, List, Delete) — Vercel read-only filesystem limitation' },
+                    { tag: 'removed', text: 'POST, PUT, DELETE, PATCH methods — simplified to GET only for 100% Vercel compatibility' },
+                    { tag: 'breaking', text: 'API path structure changed — categories moved from /api/manga to /api/anime, new paths added' },
+                ]
+            },
             {
                 version: 'v1.0.0',
                 type: 'major',
                 date: 'May 9, 2026',
                 changes: [
-                    { tag: 'feature', text: 'Initial release — 30+ endpoints across 6 categories' },
+                    { tag: 'feature', text: 'Initial release — 12 endpoints across 4 categories (AI, Tools, Media, Manga)' },
                     { tag: 'feature', text: 'Interactive API documentation with live tester' },
-                    { tag: 'feature', text: 'Full CRUD support: GET, POST, PUT, DELETE, PATCH' },
-                    { tag: 'feature', text: 'CORS headers for all endpoints including OPTIONS preflight' },
-                    { tag: 'feature', text: 'Rate limiting at 100 req/min with informative headers' },
+                    { tag: 'feature', text: 'CORS headers for all endpoints' },
+                    { tag: 'feature', text: 'Dark-themed UI with Kyoto-inspired design language' },
                     { tag: 'improve', text: 'Average response time under 100ms' },
-                    { tag: 'improve', text: 'Dark-themed UI with Kyoto-inspired design language' }
                 ]
             },
             {
@@ -112,40 +123,28 @@
                 type: 'minor',
                 date: 'May 5, 2026',
                 changes: [
-                    { tag: 'feature', text: 'Added Manga category with search, chapters, anime info' },
-                    { tag: 'feature', text: 'Added Storage category with upload, list, and delete' },
-                    { tag: 'feature', text: 'Built-in notification system for real-time updates' },
+                    { tag: 'feature', text: 'Added Manga category with search, anime info, and random' },
+                    { tag: 'feature', text: 'Added Waifu images via Waifu.pics' },
+                    { tag: 'feature', text: 'Built-in notification system' },
                     { tag: 'improve', text: 'Refined error responses with consistent JSON format' },
                     { tag: 'fix', text: 'Fixed CORS preflight for custom headers' }
                 ]
             },
             {
-                version: 'v0.8.0-beta',
-                type: 'minor',
-                date: 'May 1, 2026',
-                changes: [
-                    { tag: 'feature', text: 'AI endpoints: ChatGPT, DALL-E, Translate, OCR' },
-                    { tag: 'feature', text: 'Downloader endpoints: TikTok, Instagram, YouTube, Twitter, Spotify' },
-                    { tag: 'feature', text: 'Tools endpoints: Screenshot, QR, Shortlink, Weather, Calculator' },
-                    { tag: 'feature', text: 'Media endpoints: Canvas, Sticker, Remove BG, Meme' },
-                    { tag: 'breaking', text: 'API base path changed from /v1/ to /api/ for cleaner structure' }
-                ]
-            },
-            {
                 version: 'v0.5.0-alpha',
                 type: 'patch',
-                date: 'April 25, 2026',
+                date: 'May 1, 2026',
                 changes: [
-                    { tag: 'feature', text: 'Project scaffolding and architecture design' },
-                    { tag: 'feature', text: 'OpenAPI 3.0 specification created' },
-                    { tag: 'improve', text: 'Set up Vercel serverless functions for all routes' }
+                    { tag: 'feature', text: 'AI endpoints: ChatGPT, DALL·E, Translate' },
+                    { tag: 'feature', text: 'Tools endpoints: QR, Shortlink, Weather, Calculator' },
+                    { tag: 'feature', text: 'Media endpoints: Canvas, Meme' },
+                    { tag: 'feature', text: 'Project scaffolding & OpenAPI 3.0 specification' },
                 ]
-            }
+            },
         ];
 
         function renderChangelog() {
-            const container = document.getElementById('changelog');
-            container.innerHTML = releases.map(r => `
+            document.getElementById('changelog').innerHTML = releases.map(r => `
                 <div class="release">
                     <div class="release-dot ${r.type}"></div>
                     <div class="release-header">
@@ -153,14 +152,7 @@
                         <span class="release-badge rb-${r.type}">${r.type}</span>
                         <span class="release-date">${r.date}</span>
                     </div>
-                    <ul class="release-changes">
-                        ${r.changes.map(c => `
-                            <li>
-                                <span class="change-tag ct-${c.tag}">${c.tag}</span>
-                                ${c.text}
-                            </li>
-                        `).join('')}
-                    </ul>
+                    <ul class="release-changes">${r.changes.map(c => `<li><span class="change-tag ct-${c.tag}">${c.tag}</span>${c.text}</li>`).join('')}</ul>
                 </div>
             `).join('');
         }

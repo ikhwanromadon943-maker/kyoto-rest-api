@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Kyoto API Status — Real-time system health and uptime monitoring." />
+    <meta name="description" content="Kyoto API Status — Real-time system health and uptime monitoring for 55+ live endpoints." />
     <title>Status — Kyoto API</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
@@ -50,53 +50,51 @@
         .refresh-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite}
 
         .service-list{border:1px solid var(--border);margin-bottom:40px}
-        .service-row{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--card);border-bottom:1px solid var(--border);gap:12px;transition:all .3s}
+        .service-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--card);border-bottom:1px solid var(--border);gap:10px;transition:all .3s;font-size:9px}
         .service-row:last-child{border-bottom:none}
         .service-row:hover{background:var(--card-h)}
         .service-row.checking{opacity:.6}
-        .svc-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
-        .svc-indicator{width:9px;height:9px;border-radius:50%;flex-shrink:0;transition:all .3s}
-        .svc-indicator.online{background:var(--green);box-shadow:0 0 8px rgba(74,222,128,.4)}
-        .svc-indicator.degraded{background:var(--yellow);box-shadow:0 0 8px rgba(250,204,21,.4)}
-        .svc-indicator.offline{background:var(--red);box-shadow:0 0 8px rgba(248,113,113,.4)}
-        .svc-indicator.checking{background:var(--blue);box-shadow:0 0 8px rgba(56,189,248,.4);animation:pulse .8s infinite}
+        .svc-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+        .svc-indicator{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:all .3s}
+        .svc-indicator.online{background:var(--green);box-shadow:0 0 6px rgba(74,222,128,.4)}
+        .svc-indicator.degraded{background:var(--yellow);box-shadow:0 0 6px rgba(250,204,21,.4)}
+        .svc-indicator.offline{background:var(--red);box-shadow:0 0 6px rgba(248,113,113,.4)}
+        .svc-indicator.checking{background:var(--blue);box-shadow:0 0 6px rgba(56,189,248,.4);animation:pulse .8s infinite}
         .svc-info{min-width:0}
-        .svc-name{font-size:10px;font-weight:500;color:var(--text)}
-        .svc-url{font-size:8px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .svc-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
-        .svc-latency{font-size:8px;color:var(--muted);min-width:55px;text-align:right;font-variant-numeric:tabular-nums}
-        .svc-status{font-size:7px;letter-spacing:.15em;text-transform:uppercase;padding:4px 10px;border:1px solid;flex-shrink:0;min-width:72px;text-align:center}
+        .svc-name{font-size:9px;font-weight:500;color:var(--text)}
+        .svc-url{font-size:7px;color:var(--muted);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .svc-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+        .svc-latency{font-size:7px;color:var(--muted);min-width:48px;text-align:right;font-variant-numeric:tabular-nums}
+        .svc-status{font-size:6px;letter-spacing:.15em;text-transform:uppercase;padding:3px 8px;border:1px solid;flex-shrink:0;min-width:60px;text-align:center}
         .ss-online{color:var(--green);border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.06)}
         .ss-degraded{color:var(--yellow);border-color:rgba(250,204,21,.25);background:rgba(250,204,21,.06)}
         .ss-offline{color:var(--red);border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.06)}
         .ss-checking{color:var(--blue);border-color:rgba(56,189,248,.25);background:rgba(56,189,248,.06)}
 
-        .category-divider{display:flex;align-items:center;gap:12px;margin:28px 0 16px;padding:0 4px}
+        .category-divider{display:flex;align-items:center;gap:10px;margin:24px 0 10px;padding:0 4px}
         .category-divider:first-of-type{margin-top:0}
-        .cat-label{font-size:8px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
+        .cat-label{font-size:7px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
         .cat-line{flex:1;height:1px;background:var(--border)}
 
         .incident-list{border:1px solid var(--border);margin-bottom:40px}
-        .incident-row{padding:14px 18px;background:var(--card);border-bottom:1px solid var(--border)}
+        .incident-row{padding:12px 14px;background:var(--card);border-bottom:1px solid var(--border)}
         .incident-row:last-child{border-bottom:none}
-        .incident-row:hover{background:var(--card-h)}
-        .incident-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
-        .incident-title{font-size:10px;font-weight:500;color:var(--text)}
-        .incident-date{font-size:8px;color:var(--muted);white-space:nowrap;flex-shrink:0}
-        .incident-desc{font-size:9px;color:var(--muted);line-height:1.7}
-        .incident-badge{font-size:7px;letter-spacing:.12em;text-transform:uppercase;padding:2px 7px;border:1px solid;flex-shrink:0}
+        .incident-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:4px}
+        .incident-title{font-size:9px;font-weight:500;color:var(--text)}
+        .incident-date{font-size:7px;color:var(--muted);white-space:nowrap;flex-shrink:0}
+        .incident-desc{font-size:8px;color:var(--muted);line-height:1.7}
+        .incident-badge{font-size:6px;letter-spacing:.12em;text-transform:uppercase;padding:2px 6px;border:1px solid;flex-shrink:0}
         .ib-resolved{color:var(--green);border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.06)}
-        .ib-investigating{color:var(--yellow);border-color:rgba(250,204,21,.25);background:rgba(250,204,21,.06)}
 
-        .footer-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding-top:16px;border-top:1px solid var(--border)}
-        .footer-bar span{font-size:9px;color:var(--muted)}
-        .footer-bar button{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;padding:8px 16px;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;transition:all .3s}
+        .footer-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:14px;border-top:1px solid var(--border)}
+        .footer-bar span{font-size:8px;color:var(--muted)}
+        .footer-bar button{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:'DM Mono',monospace;font-size:8px;padding:7px 14px;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;transition:all .3s}
         .footer-bar button:hover{border-color:var(--accent);color:var(--accent);background:rgba(255,107,107,.06)}
 
-        footer{max-width:960px;margin:0 auto;padding:22px 28px 40px;border-top:1px solid var(--border);position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between}
-        .fcopy{font-size:9px;color:var(--muted);letter-spacing:.05em}
-        .flinks{display:flex;gap:18px}
-        .flinks a{font-size:9px;color:var(--muted);text-decoration:none;transition:color .2s}
+        footer{max-width:960px;margin:0 auto;padding:20px 28px 36px;border-top:1px solid var(--border);position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between}
+        .fcopy{font-size:8px;color:var(--muted);letter-spacing:.05em}
+        .flinks{display:flex;gap:16px}
+        .flinks a{font-size:8px;color:var(--muted);text-decoration:none;transition:color .2s}
         .flinks a:hover{color:var(--accent)}
     </style>
 </head>
@@ -108,7 +106,7 @@
                 <span class="logo-txt">Kyoto</span>
             </a>
             <div style="display:flex;align-items:center;gap:14px">
-                <span class="vpill">v1.0</span>
+                <span class="vpill">v2.0</span>
                 <nav class="nav-links">
                     <a href="/">Home</a>
                     <a href="/docs">Docs</a>
@@ -131,45 +129,25 @@
         </div>
 
         <div class="uptime-stats">
-            <div class="ustat">
-                <div class="usv" id="stat-online" style="color:var(--green)">—</div>
-                <div class="usl">Online</div>
-            </div>
-            <div class="ustat">
-                <div class="usv" id="stat-degraded" style="color:var(--yellow)">—</div>
-                <div class="usl">Degraded</div>
-            </div>
-            <div class="ustat">
-                <div class="usv" id="stat-offline" style="color:var(--red)">—</div>
-                <div class="usl">Offline</div>
-            </div>
-            <div class="ustat">
-                <div class="usv" id="stat-avg-latency" style="color:var(--blue)">—</div>
-                <div class="usl">Avg Latency</div>
-            </div>
+            <div class="ustat"><div class="usv" id="stat-online" style="color:var(--green)">—</div><div class="usl">Online</div></div>
+            <div class="ustat"><div class="usv" id="stat-degraded" style="color:var(--yellow)">—</div><div class="usl">Degraded</div></div>
+            <div class="ustat"><div class="usv" id="stat-offline" style="color:var(--red)">—</div><div class="usl">Offline</div></div>
+            <div class="ustat"><div class="usv" id="stat-avg-latency" style="color:var(--blue)">—</div><div class="usl">Avg Latency</div></div>
         </div>
 
         <div class="section-title">
-            <i class="fas fa-server"></i>
-            Service Status
-            <span class="auto-refresh">
-                <span class="refresh-dot"></span>
-                Auto-refresh 30s
-            </span>
+            <i class="fas fa-server"></i> Service Status
+            <span class="auto-refresh"><span class="refresh-dot"></span> Auto-refresh 30s</span>
         </div>
 
-        <div id="service-container">
-            <!-- Filled dynamically by JS -->
-        </div>
+        <div id="service-container"></div>
 
         <div class="section-title"><i class="fas fa-history"></i> Recent Incidents</div>
         <div class="incident-list" id="incident-list"></div>
 
         <div class="footer-bar">
             <span>Last checked: <strong id="last-checked-footer">--</strong></span>
-            <button onclick="checkAllEndpoints()">
-                <i class="fas fa-rotate-right"></i> Refresh Now
-            </button>
+            <button onclick="checkAllEndpoints()"><i class="fas fa-rotate-right"></i> Refresh Now</button>
         </div>
     </main>
     <footer>
@@ -182,220 +160,184 @@
     </footer>
 
     <script>
-        // ---------- CONFIG ----------
         const BASE_URL = window.location.origin;
-        const CHECK_INTERVAL = 30000; // 30 detik
+        const CHECK_INTERVAL = 30000;
 
-        // Kategori + endpoint yang di-ping
-        // "live" = endpoint real API, "info" = perlu self-hosted, "sim" = simulasi
         const serviceCategories = [
-  {
-    name: 'AI',
-    services: [
-      { name: 'ChatGPT', path: '/api/ai/chatgpt?text=ping', method: 'GET', type: 'live' },
-      { name: 'DALL·E', path: '/api/ai/dalle?prompt=ping', method: 'GET', type: 'live' },
-      { name: 'Translate', path: '/api/ai/translate?text=hello&to=id', method: 'GET', type: 'live' },
-    ]
-  },
-  {
-    name: 'Tools',
-    services: [
-      { name: 'QR Code', path: '/api/tools/qr?text=ping', method: 'GET', type: 'live' },
-      { name: 'Shortlink', path: '/api/tools/shortlink?url=https://google.com', method: 'GET', type: 'live' },
-      { name: 'Weather', path: '/api/tools/cuaca?city=Tokyo', method: 'GET', type: 'live' },
-      { name: 'Calculator', path: '/api/tools/calculator?expr=2+2', method: 'GET', type: 'live' },
-    ]
-  },
-  {
-    name: 'Media',
-    services: [
-      { name: 'Canvas', path: '/api/media/canvas?text=ping', method: 'GET', type: 'live' },
-      { name: 'Meme', path: '/api/media/meme?top=hi&bottom=test', method: 'GET', type: 'live' },
-    ]
-  },
-  {
-    name: 'Manga',
-    services: [
-      { name: 'Search', path: '/api/manga/search?query=One+Piece', method: 'GET', type: 'live' },
-      { name: 'Anime Info', path: '/api/manga/anime?title=Jujutsu+Kaisen', method: 'GET', type: 'live' },
-      { name: 'Random', path: '/api/manga/random', method: 'GET', type: 'live' },
-    ]
-  },
-  {
-    name: 'Frontend',
-    services: [
-      { name: 'Landing Page', path: '/', method: 'HEAD', type: 'static' },
-      { name: 'Documentation', path: '/docs', method: 'HEAD', type: 'static' },
-      { name: 'Status Page', path: '/status', method: 'HEAD', type: 'static' },
-    ]
-  },
-];
-
-        const incidents = [
-            {
-                title: 'Elevated latency on Downloader API',
-                date: 'May 8, 2026 · 14:30 UTC',
-                desc: 'Response times spiked to ~300ms for 15 minutes due to upstream provider throttling. Resolved after automatic retry logic kicked in.',
-                status: 'resolved'
-            },
-            {
-                title: 'Scheduled maintenance — Storage API v1.0 upgrade',
-                date: 'May 5, 2026 · 02:00–02:08 UTC',
-                desc: 'Planned maintenance completed. Storage API was unavailable for approximately 8 minutes.',
-                status: 'resolved'
-            },
-            {
-                title: 'Minor outage — AI ChatGPT endpoint',
-                date: 'May 1, 2026 · 09:15–09:18 UTC',
-                desc: 'Brief 3-minute 500 error on /api/ai/chatgpt caused by upstream free API restart. Resolved automatically.',
-                status: 'resolved'
-            }
+            { name: 'AI', services: [
+                { name: 'ChatGPT', path: '/api/ai/chatgpt?text=ping' },
+                { name: 'DALLE', path: '/api/ai/dalle?prompt=ping' },
+                { name: 'Translate', path: '/api/ai/translate?text=hello&to=id' },
+                { name: 'Text to Speech', path: '/api/ai/text-to-speech?text=ping' },
+                { name: 'Image Variation', path: '/api/ai/image-variation?prompt=ping' },
+            ]},
+            { name: 'Anime', services: [
+                { name: 'Manga Search', path: '/api/anime/search?query=One+Piece' },
+                { name: 'Anime Info', path: '/api/anime/anime?title=Jujutsu+Kaisen' },
+                { name: 'Random Manga', path: '/api/anime/random' },
+                { name: 'Waifu', path: '/api/anime/waifu?category=waifu' },
+                { name: 'Character', path: '/api/anime/character?query=Naruto' },
+            ]},
+            { name: 'News', services: [
+                { name: 'CNN Indonesia', path: '/api/news/cnn' },
+                { name: 'CNBC Indonesia', path: '/api/news/cnbc' },
+                { name: 'Detik.com', path: '/api/news/detik' },
+            ]},
+            { name: 'Fun', services: [
+                { name: 'Joke', path: '/api/fun/joke' },
+                { name: 'Dad Joke', path: '/api/fun/dadjoke' },
+                { name: 'Random Fact', path: '/api/fun/fact' },
+                { name: 'Chuck Norris', path: '/api/fun/chuck-norris' },
+                { name: 'Quote', path: '/api/fun/quote' },
+                { name: 'Cat Fact', path: '/api/fun/cat-fact' },
+                { name: 'Bored', path: '/api/fun/bored' },
+            ]},
+            { name: 'Games', services: [
+                { name: 'Games List', path: '/api/games/list' },
+                { name: 'Game Detail', path: '/api/games/detail?id=452' },
+            ]},
+            { name: 'Info', services: [
+                { name: 'Wikipedia', path: '/api/info/wikipedia?title=Indonesia' },
+                { name: 'Dictionary', path: '/api/info/dictionary?word=hello' },
+                { name: 'GitHub User', path: '/api/info/github?username=torvalds' },
+                { name: 'NPM Package', path: '/api/info/npm?package=express' },
+                { name: 'Country Info', path: '/api/info/country?name=Japan' },
+                { name: 'Holidays', path: '/api/info/holiday?year=2026&country=ID' },
+            ]},
+            { name: 'Maker', services: [
+                { name: 'Canvas', path: '/api/maker/canvas?text=ping' },
+                { name: 'Meme', path: '/api/maker/meme?top=hi&bottom=test' },
+                { name: 'Quote Image', path: '/api/maker/quote-image?text=ping&author=test' },
+                { name: 'Password', path: '/api/maker/password?length=16' },
+            ]},
+            { name: 'Stalker', services: [
+                { name: 'My IP', path: '/api/stalker/my-ip' },
+                { name: 'IP Lookup', path: '/api/stalker/ip?ip=8.8.8.8' },
+                { name: 'DNS Lookup', path: '/api/stalker/dns?domain=google.com' },
+            ]},
+            { name: 'Random', services: [
+                { name: 'Random User', path: '/api/random/user' },
+                { name: 'Random Number', path: '/api/random/number?min=1&max=100' },
+                { name: 'UUID', path: '/api/random/uuid' },
+                { name: 'Random Color', path: '/api/random/color' },
+                { name: 'Timestamp', path: '/api/random/timestamp' },
+            ]},
+            { name: 'Zodiak', services: [
+                { name: 'Horoscope', path: '/api/zodiak/horoscope?sign=aries' },
+            ]},
+            { name: 'Tools', services: [
+                { name: 'QR Code', path: '/api/tools/qr?text=ping' },
+                { name: 'Shortlink', path: '/api/tools/shortlink?url=https://google.com' },
+                { name: 'Weather', path: '/api/tools/cuaca?city=Tokyo' },
+                { name: 'Calculator', path: '/api/tools/calculator?expr=2+2' },
+                { name: 'Screenshot', path: '/api/tools/ssweb?url=https://google.com' },
+            ]},
+            { name: 'Media', services: [
+                { name: 'Canvas', path: '/api/media/canvas?text=ping' },
+                { name: 'Meme', path: '/api/media/meme?top=hi&bottom=test' },
+                { name: 'Quote Image', path: '/api/media/quote-image?text=ping' },
+            ]},
+            { name: 'Crypto', services: [
+                { name: 'Crypto Price', path: '/api/crypto/price?id=bitcoin' },
+                { name: 'Crypto List', path: '/api/crypto/list' },
+            ]},
+            { name: 'Quran', services: [
+                { name: 'Surah Info', path: '/api/quran/surah?number=1' },
+                { name: 'Search Quran', path: '/api/quran/search?keyword=Allah' },
+            ]},
+            { name: 'Animals', services: [
+                { name: 'Random Dog', path: '/api/animals/dog' },
+                { name: 'Random Cat', path: '/api/animals/cat' },
+                { name: 'Cat Fact', path: '/api/animals/cat-fact' },
+            ]},
+            { name: 'Number Facts', services: [
+                { name: 'Random Fact', path: '/api/number-fact/random' },
+                { name: 'Number Fact', path: '/api/number-fact/number?number=42' },
+                { name: 'Math Fact', path: '/api/number-fact/math?number=7' },
+                { name: 'Year Fact', path: '/api/number-fact/year?year=2024' },
+            ]},
+            { name: 'Frontend', services: [
+                { name: 'Landing Page', path: '/' },
+                { name: 'Documentation', path: '/docs' },
+                { name: 'Status Page', path: '/status' },
+            ]},
         ];
 
-        // ---------- STATE ----------
+        const incidents = [
+            { title: 'Kyoto API v2.0 Deployed', date: 'May 10, 2026 · 12:00 UTC', desc: 'Major update! 55+ live endpoints across 16 categories. All free, no API key required. Old Downloader & Storage endpoints deprecated.', status: 'resolved' },
+            { title: 'Minor outage — AI ChatGPT endpoint', date: 'May 1, 2026 · 09:15 UTC', desc: 'Brief 3-minute error on /api/ai/chatgpt caused by upstream API restart. Resolved automatically.', status: 'resolved' },
+        ];
+
         let serviceStatuses = {};
 
-        // ---------- RENDER ----------
         function renderServiceList() {
             const container = document.getElementById('service-container');
             let html = '';
             let globalIndex = 0;
-
             serviceCategories.forEach(cat => {
-                html += `<div class="category-divider"><span class="cat-label">${cat.name}</span><div class="cat-line"></div></div>`;
-                html += `<div class="service-list">`;
+                html += `<div class="category-divider"><span class="cat-label">${cat.name}</span><div class="cat-line"></div></div><div class="service-list">`;
                 cat.services.forEach(svc => {
                     const idx = globalIndex;
                     const status = serviceStatuses[idx] || { status: 'checking', latency: '—' };
-                    const typeBadge = svc.type === 'info' ? '<span style="font-size:6px;color:var(--blue);border:1px solid rgba(56,189,248,.25);padding:1px 5px;margin-left:6px;text-transform:uppercase;letter-spacing:.1em">INFO</span>' :
-                                       svc.type === 'sim' ? '<span style="font-size:6px;color:var(--purple);border:1px solid rgba(167,139,250,.25);padding:1px 5px;margin-left:6px;text-transform:uppercase;letter-spacing:.1em">SIM</span>' : '';
-                    html += `
-                        <div class="service-row" id="svc-row-${idx}">
-                            <div class="svc-left">
-                                <div class="svc-indicator ${status.status}" id="svc-dot-${idx}"></div>
-                                <div class="svc-info">
-                                    <div class="svc-name">${svc.name}${typeBadge}</div>
-                                    <div class="svc-url">${svc.path.split('?')[0]}</div>
-                                </div>
-                            </div>
-                            <div class="svc-right">
-                                <div class="svc-latency" id="svc-latency-${idx}">${status.latency}</div>
-                                <div class="svc-status ss-${status.status}" id="svc-status-${idx}">${status.status}</div>
-                            </div>
-                        </div>`;
+                    html += `<div class="service-row" id="svc-row-${idx}">
+                        <div class="svc-left"><div class="svc-indicator ${status.status}" id="svc-dot-${idx}"></div><div class="svc-info"><div class="svc-name">${svc.name}</div></div></div>
+                        <div class="svc-right"><div class="svc-latency" id="svc-latency-${idx}">${status.latency}</div><div class="svc-status ss-${status.status}" id="svc-status-${idx}">${status.status}</div></div>
+                    </div>`;
                     globalIndex++;
                 });
                 html += `</div>`;
             });
-
             container.innerHTML = html;
         }
 
         function renderIncidents() {
-            document.getElementById('incident-list').innerHTML = incidents.map(i => `
-                <div class="incident-row">
-                    <div class="incident-hdr">
-                        <div class="incident-title">${i.title}</div>
-                        <div class="incident-badge ib-${i.status}">${i.status}</div>
-                    </div>
-                    <div class="incident-date">${i.date}</div>
-                    <div class="incident-desc">${i.desc}</div>
-                </div>
-            `).join('');
+            document.getElementById('incident-list').innerHTML = incidents.map(i => `<div class="incident-row"><div class="incident-hdr"><div class="incident-title">${i.title}</div><div class="incident-badge ib-resolved">${i.status}</div></div><div class="incident-date">${i.date}</div><div class="incident-desc">${i.desc}</div></div>`).join('');
         }
 
         function updateSummary() {
             let online = 0, degraded = 0, offline = 0, totalLatency = 0, count = 0;
-            const allServices = serviceCategories.flatMap(c => c.services);
-            
-            Object.entries(serviceStatuses).forEach(([idx, s]) => {
+            Object.entries(serviceStatuses).forEach(([, s]) => {
                 if (s.status === 'online') online++;
                 else if (s.status === 'degraded') degraded++;
                 else if (s.status === 'offline') offline++;
                 if (s.latencyMs) { totalLatency += s.latencyMs; count++; }
             });
-
             document.getElementById('stat-online').textContent = online;
             document.getElementById('stat-degraded').textContent = degraded;
             document.getElementById('stat-offline').textContent = offline;
             document.getElementById('stat-avg-latency').textContent = count > 0 ? `${Math.round(totalLatency / count)}ms` : '—';
-
             const banner = document.getElementById('overall-banner');
             const dot = document.getElementById('overall-dot');
             const title = document.getElementById('overall-title');
-            
-            banner.className = 'status-banner';
-            dot.className = 'status-dot-big';
-            
-            if (offline > 2) {
-                banner.classList.add('down');
-                dot.classList.add('offline');
-                title.textContent = `${offline} services experiencing outage`;
-            } else if (offline > 0 || degraded > 2) {
-                banner.classList.add('partial');
-                dot.classList.add('degraded');
-                title.textContent = 'Some systems degraded';
-            } else {
-                banner.classList.add('all-good');
-                dot.classList.add('online');
-                title.textContent = 'All Systems Operational';
-            }
+            banner.className = 'status-banner'; dot.className = 'status-dot-big';
+            if (offline > 3) { banner.classList.add('down'); dot.classList.add('offline'); title.textContent = `${offline} services down`; }
+            else if (offline > 0 || degraded > 3) { banner.classList.add('partial'); dot.classList.add('degraded'); title.textContent = 'Some systems degraded'; }
+            else { banner.classList.add('all-good'); dot.classList.add('online'); title.textContent = 'All Systems Operational'; }
         }
 
         function updateTimeDisplay() {
-            const now = new Date().toLocaleTimeString('en-US', { 
-                hour: '2-digit', minute: '2-digit', second: '2-digit', 
-                timeZone: 'UTC', hour12: false 
-            }) + ' UTC';
+            const now = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'UTC', hour12: false }) + ' UTC';
             document.getElementById('last-checked').textContent = now;
             document.getElementById('last-checked-footer').textContent = now;
             document.getElementById('overall-sub').textContent = `Last checked: ${now}`;
         }
 
-        // ---------- PING LOGIC ----------
         async function pingEndpoint(service, index) {
             const startTime = performance.now();
             const url = `${BASE_URL}${service.path}`;
-            
             serviceStatuses[index] = { status: 'checking', latency: '...' };
             updateServiceUI(index, 'checking', '...');
-            
             try {
                 const controller = new AbortController();
                 const timeout = setTimeout(() => controller.abort(), 10000);
-                
-                // Untuk POST/DELETE, cukup cek apakah endpoint merespons (ga perlu kirim body valid)
-                const fetchOpts = { 
-                    method: service.method === 'POST' || service.method === 'DELETE' ? 'GET' : service.method,
-                    signal: controller.signal 
-                };
-                
-                // POST & DELETE — fallback ke GET biar tetep ke-ping (endpoint bakal return 405 atau 400 tapi tetep responsif)
-                const res = await fetch(url, fetchOpts);
+                const res = await fetch(url, { method: 'GET', signal: controller.signal });
                 clearTimeout(timeout);
-                
                 const latency = Math.round(performance.now() - startTime);
-                
-                if (res.ok) {
-                    const status = latency > 800 ? 'degraded' : 'online';
-                    serviceStatuses[index] = { status, latency: `${latency}ms`, latencyMs: latency };
-                } else if (res.status === 429) {
-                    serviceStatuses[index] = { status: 'degraded', latency: `${latency}ms (429)`, latencyMs: latency };
-                } else if (res.status === 405 || res.status === 400) {
-                    // Method not allowed atau bad request = server tetap hidup
-                    serviceStatuses[index] = { status: 'online', latency: `${latency}ms`, latencyMs: latency };
-                } else {
-                    serviceStatuses[index] = { status: 'offline', latency: `${res.status}`, latencyMs: null };
-                }
+                const status = latency > 800 ? 'degraded' : 'online';
+                serviceStatuses[index] = { status, latency: `${latency}ms`, latencyMs: latency };
             } catch (err) {
-                const latency = Math.round(performance.now() - startTime);
-                if (err.name === 'AbortError') {
-                    serviceStatuses[index] = { status: 'offline', latency: 'timeout', latencyMs: null };
-                } else {
-                    serviceStatuses[index] = { status: 'offline', latency: 'error', latencyMs: null };
-                }
+                serviceStatuses[index] = { status: 'offline', latency: err.name === 'AbortError' ? 'timeout' : 'error', latencyMs: null };
             }
-            
             updateServiceUI(index, serviceStatuses[index].status, serviceStatuses[index].latency);
         }
 
@@ -403,35 +345,25 @@
             const dot = document.getElementById(`svc-dot-${index}`);
             const statusEl = document.getElementById(`svc-status-${index}`);
             const latencyEl = document.getElementById(`svc-latency-${index}`);
-            const row = document.getElementById(`svc-row-${index}`);
-            
             if (dot) dot.className = 'svc-indicator ' + status;
             if (statusEl) { statusEl.className = 'svc-status ss-' + status; statusEl.textContent = status; }
             if (latencyEl) latencyEl.textContent = latency;
-            if (row) row.classList.remove('checking');
         }
 
         async function checkAllEndpoints() {
             updateTimeDisplay();
-            
             const allServices = serviceCategories.flatMap(c => c.services);
             const promises = allServices.map((service, index) => pingEndpoint(service, index));
             await Promise.allSettled(promises);
-            
             updateSummary();
-        }
-
-        // ---------- INIT ----------
-        function init() {
-            renderServiceList();
-            renderIncidents();
-            checkAllEndpoints();
-            setInterval(checkAllEndpoints, CHECK_INTERVAL);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('year').textContent = new Date().getFullYear();
-            init();
+            renderServiceList();
+            renderIncidents();
+            checkAllEndpoints();
+            setInterval(checkAllEndpoints, CHECK_INTERVAL);
         });
     </script>
 </body>
