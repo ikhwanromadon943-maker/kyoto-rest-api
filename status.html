@@ -189,71 +189,47 @@
         // Kategori + endpoint yang di-ping
         // "live" = endpoint real API, "info" = perlu self-hosted, "sim" = simulasi
         const serviceCategories = [
-            {
-                name: 'AI',
-                services: [
-                    { name: 'ChatGPT', path: '/api/ai/chatgpt?text=ping', method: 'GET', type: 'live', desc: 'GPT-4o-mini via free-unoficial API' },
-                    { name: 'DALL·E', path: '/api/ai/dalle?prompt=ping', method: 'GET', type: 'live', desc: 'Pollinations.ai image gen' },
-                    { name: 'Translate', path: '/api/ai/translate?text=hello&to=id', method: 'GET', type: 'live', desc: 'Lingva.ml translator' },
-                    { name: 'OCR', path: '/api/ai/ocr', method: 'POST', type: 'live', desc: 'OCR (POST only — returns info on GET)' },
-                ]
-            },
-            {
-                name: 'Downloader',
-                services: [
-                    { name: 'TikTok', path: '/api/downloader/tiktok?url=ping', method: 'GET', type: 'info', desc: 'Self-hosted scraper (yt-dlp / tiktok-api)' },
-                    { name: 'Instagram', path: '/api/downloader/instagram?url=ping', method: 'GET', type: 'info', desc: 'Self-hosted scraper (instagrapi / igdl)' },
-                    { name: 'YouTube', path: '/api/downloader/youtube?url=ping', method: 'GET', type: 'info', desc: 'Self-hosted scraper (yt-dlp)' },
-                    { name: 'Twitter/X', path: '/api/downloader/twitter?url=ping', method: 'GET', type: 'info', desc: 'Self-hosted scraper (yt-dlp)' },
-                    { name: 'Spotify', path: '/api/downloader/spotify?url=ping', method: 'GET', type: 'info', desc: 'Self-hosted scraper (spotdl)' },
-                ]
-            },
-            {
-                name: 'Tools',
-                services: [
-                    { name: 'Screenshot', path: '/api/tools/ssweb?url=https://google.com', method: 'GET', type: 'live', desc: 'Microlink.io (50 req/day)' },
-                    { name: 'QR Code', path: '/api/tools/qr?text=ping', method: 'GET', type: 'live', desc: 'goQR.me API' },
-                    { name: 'Shortlink', path: '/api/tools/shortlink?url=https://google.com', method: 'GET', type: 'live', desc: 'is.gd API' },
-                    { name: 'Weather', path: '/api/tools/cuaca?city=Tokyo', method: 'GET', type: 'live', desc: 'Open-Meteo API' },
-                    { name: 'Calculator', path: '/api/tools/calculator?expr=2+2', method: 'GET', type: 'live', desc: 'Local eval (sandboxed)' },
-                ]
-            },
-            {
-                name: 'Storage',
-                services: [
-                    { name: 'List Files', path: '/api/storage/list', method: 'GET', type: 'sim', desc: 'Simulasi — production: Cloudinary/S3' },
-                    { name: 'Upload', path: '/api/storage/upload', method: 'POST', type: 'sim', desc: 'Simulasi — production: Cloudinary/S3' },
-                    { name: 'Delete', path: '/api/storage/delete?file=test', method: 'DELETE', type: 'sim', desc: 'Simulasi — production: Cloudinary/S3' },
-                ]
-            },
-            {
-                name: 'Media',
-                services: [
-                    { name: 'Canvas', path: '/api/media/canvas?text=ping', method: 'GET', type: 'live', desc: 'Pollinations.ai' },
-                    { name: 'Sticker', path: '/api/media/sticker?url=ping', method: 'GET', type: 'live', desc: 'Pollinations.ai (simulasi sticker)' },
-                    { name: 'Remove BG', path: '/api/media/removebg', method: 'POST', type: 'live', desc: 'Pollinations.ai (POST only)' },
-                    { name: 'Meme', path: '/api/media/meme?url=ping&top=hi&bottom=test', method: 'GET', type: 'live', desc: 'Pollinations.ai' },
-                ]
-            },
-            {
-                name: 'Manga',
-                services: [
-                    { name: 'Search', path: '/api/manga/search?query=One+Piece', method: 'GET', type: 'live', desc: 'Jikan API v4 (MyAnimeList)' },
-                    { name: 'Chapter Info', path: '/api/manga/chapter?id=2', method: 'GET', type: 'live', desc: 'Jikan API v4' },
-                    { name: 'Anime Info', path: '/api/manga/anime?title=Jujutsu+Kaisen', method: 'GET', type: 'live', desc: 'Jikan API v4' },
-                    { name: 'Random', path: '/api/manga/random', method: 'GET', type: 'live', desc: 'Jikan API v4' },
-                    { name: 'Waifu', path: '/api/manga/waifu?category=waifu', method: 'GET', type: 'live', desc: 'Waifu.pics API' },
-                ]
-            },
-            {
-                name: 'Frontend',
-                services: [
-                    { name: 'Landing Page', path: '/', method: 'HEAD', type: 'static', desc: 'Static HTML' },
-                    { name: 'Documentation', path: '/docs', method: 'HEAD', type: 'static', desc: 'Static HTML (docs.html)' },
-                    { name: 'Status Page', path: '/status', method: 'HEAD', type: 'static', desc: 'Static HTML (status.html)' },
-                ]
-            },
-        ];
+  {
+    name: 'AI',
+    services: [
+      { name: 'ChatGPT', path: '/api/ai/chatgpt?text=ping', method: 'GET', type: 'live' },
+      { name: 'DALL·E', path: '/api/ai/dalle?prompt=ping', method: 'GET', type: 'live' },
+      { name: 'Translate', path: '/api/ai/translate?text=hello&to=id', method: 'GET', type: 'live' },
+    ]
+  },
+  {
+    name: 'Tools',
+    services: [
+      { name: 'QR Code', path: '/api/tools/qr?text=ping', method: 'GET', type: 'live' },
+      { name: 'Shortlink', path: '/api/tools/shortlink?url=https://google.com', method: 'GET', type: 'live' },
+      { name: 'Weather', path: '/api/tools/cuaca?city=Tokyo', method: 'GET', type: 'live' },
+      { name: 'Calculator', path: '/api/tools/calculator?expr=2+2', method: 'GET', type: 'live' },
+    ]
+  },
+  {
+    name: 'Media',
+    services: [
+      { name: 'Canvas', path: '/api/media/canvas?text=ping', method: 'GET', type: 'live' },
+      { name: 'Meme', path: '/api/media/meme?top=hi&bottom=test', method: 'GET', type: 'live' },
+    ]
+  },
+  {
+    name: 'Manga',
+    services: [
+      { name: 'Search', path: '/api/manga/search?query=One+Piece', method: 'GET', type: 'live' },
+      { name: 'Anime Info', path: '/api/manga/anime?title=Jujutsu+Kaisen', method: 'GET', type: 'live' },
+      { name: 'Random', path: '/api/manga/random', method: 'GET', type: 'live' },
+    ]
+  },
+  {
+    name: 'Frontend',
+    services: [
+      { name: 'Landing Page', path: '/', method: 'HEAD', type: 'static' },
+      { name: 'Documentation', path: '/docs', method: 'HEAD', type: 'static' },
+      { name: 'Status Page', path: '/status', method: 'HEAD', type: 'static' },
+    ]
+  },
+];
 
         const incidents = [
             {
