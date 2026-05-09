@@ -1,0 +1,38 @@
+[
+  {
+    "title": "🚀 Kyoto API v1.0 Released",
+    "message": "30+ endpoints now available! AI, Downloader, Tools, Storage, Media & Manga categories.",
+    "date": "2026-05-09",
+    "read": false
+  },
+  {
+    "title": "📢 New: Manga Category",
+    "message": "5 new manga/anime endpoints added including search, chapters, anime info, and waifu images.",
+    "date": "2026-05-08",
+    "read": false
+  },
+  {
+    "title": "⚡ Performance Update",
+    "message": "Average response time improved to <80ms across all endpoints. Rate limit increased to 100 req/min.",
+    "date": "2026-05-07",
+    "read": true
+  },
+  {
+    "title": "🔒 Security Patch",
+    "message": "Updated CORS headers to support all HTTP methods (GET, POST, PUT, DELETE, PATCH, OPTIONS).",
+    "date": "2026-05-06",
+    "read": true
+  },
+  {
+    "title": "📦 New: Storage API",
+    "message": "File upload, list, and delete endpoints now available with 50MB max file size.",
+    "date": "2026-05-05",
+    "read": true
+  },
+  {
+    "title": "🎨 Media Tools Added",
+    "message": "Canvas generator, sticker maker, remove background, and meme generator endpoints live.",
+    "date": "2026-05-04",
+    "read": true
+  }
+]

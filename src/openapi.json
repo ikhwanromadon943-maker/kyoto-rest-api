@@ -1,1 +1,360 @@
-
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Kyoto API",
+    "version": "1.0.0",
+    "description": "High-performance REST API platform with 30+ endpoints for AI, Downloader, Tools, Storage, Media & Manga."
+  },
+  "tags": [
+    { "name": "AI", "description": "Artificial Intelligence endpoints" },
+    { "name": "Downloader", "description": "Media downloader endpoints" },
+    { "name": "Tools", "description": "Utility & converter tools" },
+    { "name": "Storage", "description": "File storage & management" },
+    { "name": "Media", "description": "Media creation & manipulation" },
+    { "name": "Manga", "description": "Manga & anime endpoints" }
+  ],
+  "paths": {
+    "/api/ai/chatgpt": {
+      "get": {
+        "tags": ["AI"],
+        "summary": "ChatGPT Conversation",
+        "description": "Chat with GPT-4 AI model. Returns intelligent responses.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "text", "required": true, "description": "Your message or question", "schema": { "type": "string", "example": "Hello, who are you?" } }
+        ]
+      },
+      "post": {
+        "tags": ["AI"],
+        "summary": "ChatGPT with Context",
+        "description": "Send conversation with history context for better responses.",
+        "deprecated": false,
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": { "type": "array", "description": "Array of {role, content}" },
+                  "model": { "type": "string", "example": "gpt-4" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ai/dalle": {
+      "get": {
+        "tags": ["AI"],
+        "summary": "DALL-E Image Generation",
+        "description": "Generate AI images from text prompts using DALL-E.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "prompt", "required": true, "description": "Image description", "schema": { "type": "string", "example": "A red torii gate in Kyoto at sunset" } },
+          { "name": "size", "required": false, "description": "Image size", "schema": { "type": "string", "enum": ["256x256", "512x512", "1024x1024"], "default": "512x512" } }
+        ]
+      }
+    },
+    "/api/ai/translate": {
+      "get": {
+        "tags": ["AI"],
+        "summary": "Text Translator",
+        "description": "Translate text between languages.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "text", "required": true, "description": "Text to translate", "schema": { "type": "string", "example": "Hello world" } },
+          { "name": "to", "required": true, "description": "Target language code", "schema": { "type": "string", "example": "id", "enum": ["id", "en", "ja", "ko", "zh", "es", "fr", "de"] } }
+        ]
+      }
+    },
+    "/api/ai/ocr": {
+      "post": {
+        "tags": ["AI"],
+        "summary": "OCR Text Extraction",
+        "description": "Extract text from images using OCR.",
+        "deprecated": false,
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["image"],
+                "properties": {
+                  "image": { "type": "string", "format": "binary", "description": "Image file (jpg/png)" },
+                  "lang": { "type": "string", "description": "Language code", "example": "eng" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/downloader/tiktok": {
+      "get": {
+        "tags": ["Downloader"],
+        "summary": "TikTok Downloader",
+        "description": "Download TikTok videos without watermark.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "TikTok video URL", "schema": { "type": "string", "example": "https://vt.tiktok.com/ZS8abc123/" } }
+        ]
+      }
+    },
+    "/api/downloader/instagram": {
+      "get": {
+        "tags": ["Downloader"],
+        "summary": "Instagram Downloader",
+        "description": "Download Instagram reels, posts, and stories.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "Instagram post/reel/story URL", "schema": { "type": "string", "example": "https://www.instagram.com/reel/abc123/" } }
+        ]
+      }
+    },
+    "/api/downloader/youtube": {
+      "get": {
+        "tags": ["Downloader"],
+        "summary": "YouTube Downloader",
+        "description": "Download YouTube videos in various qualities.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "YouTube video URL", "schema": { "type": "string", "example": "https://youtube.com/watch?v=abc123" } },
+          { "name": "quality", "required": false, "description": "Video quality", "schema": { "type": "string", "enum": ["360p", "480p", "720p", "1080p"], "default": "720p" } }
+        ]
+      }
+    },
+    "/api/downloader/twitter": {
+      "get": {
+        "tags": ["Downloader"],
+        "summary": "Twitter/X Downloader",
+        "description": "Download videos from Twitter/X posts.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "Twitter/X video URL", "schema": { "type": "string", "example": "https://twitter.com/user/status/123" } }
+        ]
+      }
+    },
+    "/api/downloader/spotify": {
+      "get": {
+        "tags": ["Downloader"],
+        "summary": "Spotify Downloader",
+        "description": "Download songs from Spotify.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "Spotify track/album URL", "schema": { "type": "string", "example": "https://open.spotify.com/track/abc123" } }
+        ]
+      }
+    },
+    "/api/tools/ssweb": {
+      "get": {
+        "tags": ["Tools"],
+        "summary": "Website Screenshot",
+        "description": "Take a screenshot of any website.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "Website URL", "schema": { "type": "string", "example": "https://google.com" } },
+          { "name": "full", "required": false, "description": "Full page screenshot", "schema": { "type": "boolean", "default": false } }
+        ]
+      }
+    },
+    "/api/tools/qr": {
+      "get": {
+        "tags": ["Tools"],
+        "summary": "QR Code Generator",
+        "description": "Generate QR code from text or URL.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "text", "required": true, "description": "Text to encode", "schema": { "type": "string", "example": "https://kyoto-api.vercel.app" } }
+        ]
+      }
+    },
+    "/api/tools/shortlink": {
+      "get": {
+        "tags": ["Tools"],
+        "summary": "URL Shortener",
+        "description": "Shorten long URLs.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "Long URL to shorten", "schema": { "type": "string", "example": "https://example.com/very-long-url" } }
+        ]
+      }
+    },
+    "/api/tools/cuaca": {
+      "get": {
+        "tags": ["Tools"],
+        "summary": "Weather Info",
+        "description": "Get current weather for any city.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "city", "required": true, "description": "City name", "schema": { "type": "string", "example": "Tokyo" } }
+        ]
+      }
+    },
+    "/api/tools/calculator": {
+      "get": {
+        "tags": ["Tools"],
+        "summary": "Math Calculator",
+        "description": "Evaluate mathematical expressions.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "expr", "required": true, "description": "Math expression", "schema": { "type": "string", "example": "2+2*3" } }
+        ]
+      }
+    },
+    "/api/storage/upload": {
+      "post": {
+        "tags": ["Storage"],
+        "summary": "Upload File",
+        "description": "Upload files to cloud storage. Max 50MB.",
+        "deprecated": false,
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": { "type": "string", "format": "binary", "description": "File to upload" },
+                  "folder": { "type": "string", "description": "Target folder", "example": "images" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/storage/list": {
+      "get": {
+        "tags": ["Storage"],
+        "summary": "List Files",
+        "description": "List all uploaded files.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "folder", "required": false, "description": "Filter by folder", "schema": { "type": "string", "example": "images" } }
+        ]
+      }
+    },
+    "/api/storage/delete": {
+      "delete": {
+        "tags": ["Storage"],
+        "summary": "Delete File",
+        "description": "Delete a file from storage.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "file", "required": true, "description": "File ID or path", "schema": { "type": "string", "example": "abc123.jpg" } }
+        ]
+      }
+    },
+    "/api/media/canvas": {
+      "get": {
+        "tags": ["Media"],
+        "summary": "Canvas Image Generator",
+        "description": "Generate custom canvas images with text.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "text", "required": true, "description": "Text on canvas", "schema": { "type": "string", "example": "Hello Kyoto" } },
+          { "name": "bg", "required": false, "description": "Background color (hex)", "schema": { "type": "string", "example": "#ff6b6b" } }
+        ]
+      }
+    },
+    "/api/media/sticker": {
+      "get": {
+        "tags": ["Media"],
+        "summary": "Sticker Maker",
+        "description": "Convert image to WhatsApp sticker.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "Image URL", "schema": { "type": "string", "example": "https://example.com/image.jpg" } }
+        ]
+      }
+    },
+    "/api/media/removebg": {
+      "post": {
+        "tags": ["Media"],
+        "summary": "Remove Background",
+        "description": "Remove image background using AI.",
+        "deprecated": false,
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["image"],
+                "properties": {
+                  "image": { "type": "string", "format": "binary", "description": "Image file" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/media/meme": {
+      "get": {
+        "tags": ["Media"],
+        "summary": "Meme Generator",
+        "description": "Generate meme images with top and bottom text.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "url", "required": true, "description": "Base image URL", "schema": { "type": "string" } },
+          { "name": "top", "required": true, "description": "Top text", "schema": { "type": "string", "example": "WHEN YOU" } },
+          { "name": "bottom", "required": true, "description": "Bottom text", "schema": { "type": "string", "example": "FINISH THE PROJECT" } }
+        ]
+      }
+    },
+    "/api/manga/search": {
+      "get": {
+        "tags": ["Manga"],
+        "summary": "Search Manga",
+        "description": "Search manga by title.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "query", "required": true, "description": "Manga title to search", "schema": { "type": "string", "example": "One Piece" } }
+        ]
+      }
+    },
+    "/api/manga/chapter": {
+      "get": {
+        "tags": ["Manga"],
+        "summary": "Get Chapter",
+        "description": "Get manga chapter images.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "id", "required": true, "description": "Manga ID", "schema": { "type": "string" } },
+          { "name": "chapter", "required": true, "description": "Chapter number", "schema": { "type": "number", "example": 1 } }
+        ]
+      }
+    },
+    "/api/manga/anime": {
+      "get": {
+        "tags": ["Manga"],
+        "summary": "Anime Info",
+        "description": "Get anime details and episodes.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "title", "required": true, "description": "Anime title", "schema": { "type": "string", "example": "Jujutsu Kaisen" } }
+        ]
+      }
+    },
+    "/api/manga/random": {
+      "get": {
+        "tags": ["Manga"],
+        "summary": "Random Manga",
+        "description": "Get a random manga recommendation.",
+        "deprecated": false
+      }
+    },
+    "/api/manga/waifu": {
+      "get": {
+        "tags": ["Manga"],
+        "summary": "Waifu Image",
+        "description": "Get random waifu/anime images.",
+        "deprecated": false,
+        "parameters": [
+          { "name": "category", "required": false, "description": "Image category", "schema": { "type": "string", "enum": ["waifu", "neko", "shinobu", "megumin"], "default": "waifu" } }
+        ]
+      }
+    }
+  }
+}
