@@ -1,5 +1,12 @@
 {
   "version": 2,
+  "cleanUrls": true,
+  "functions": {
+    "src/routes/*.js": {
+      "memory": 512,
+      "maxDuration": 10
+    }
+  },
   "rewrites": [
     { "source": "/docs", "destination": "/docs.html" },
     { "source": "/status", "destination": "/status.html" },
@@ -12,9 +19,7 @@
     { "source": "/api/tools/:path*", "destination": "/src/routes/tools" },
     { "source": "/api/storage/:path*", "destination": "/src/routes/storage" },
     { "source": "/api/media/:path*", "destination": "/src/routes/media" },
-    { "source": "/api/manga/:path*", "destination": "/src/routes/manga" },
-    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
-    { "source": "/robots.txt", "destination": "/robots.txt" }
+    { "source": "/api/manga/:path*", "destination": "/src/routes/manga" }
   ],
   "headers": [
     {
