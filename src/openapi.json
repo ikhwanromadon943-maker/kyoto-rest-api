@@ -3,22 +3,22 @@
   "info": {
     "title": "Kyoto API",
     "version": "1.0.0",
-    "description": "High-performance REST API dengan 30+ endpoint. ChatGPT, DALL·E, Translate, Downloader, Weather, QR, Shortlink, Screenshot, Storage, Media, Manga, Anime & Waifu."
+    "description": "High-performance REST API dengan 30+ endpoint. ChatGPT GPT-4o-mini, DALL·E Pollinations.ai, Translate Lingva.ml, Weather Open-Meteo, QR goQR.me, Shortlink is.gd, Screenshot Microlink, Manga Jikan API v4, Waifu Waifu.pics, dan banyak lagi."
   },
   "tags": [
-    { "name": "AI", "description": "ChatGPT (GPT-4o-mini), DALL·E (Pollinations.ai), Translate (Lingva.ml)" },
-    { "name": "Downloader", "description": "TikTok, Instagram, YouTube, Twitter, Spotify — self-hosted scraper" },
-    { "name": "Tools", "description": "Screenshot (Microlink), QR (goQR), Shortlink (is.gd), Weather (Open-Meteo), Calculator" },
+    { "name": "AI", "description": "ChatGPT (GPT-4o-mini), DALL·E (Pollinations.ai), Translate (Lingva.ml), OCR" },
+    { "name": "Downloader", "description": "TikTok, Instagram, YouTube, Twitter/X, Spotify — self-hosted scraper required" },
+    { "name": "Tools", "description": "Screenshot (Microlink), QR Code (goQR.me), Shortlink (is.gd), Weather (Open-Meteo), Calculator" },
     { "name": "Storage", "description": "Upload, List, Delete — production: Cloudinary / S3" },
-    { "name": "Media", "description": "Canvas, Sticker, RemoveBG, Meme (Pollinations.ai)" },
-    { "name": "Manga", "description": "Search, Chapter, Anime (Jikan API), Random, Waifu (Waifu.pics)" }
+    { "name": "Media", "description": "Canvas, Sticker, Remove BG, Meme (Pollinations.ai)" },
+    { "name": "Manga", "description": "Search, Chapter, Anime (Jikan API v4), Random, Waifu (Waifu.pics)" }
   ],
   "paths": {
     "/api/ai/chatgpt": {
       "get": {
         "tags": ["AI"],
         "summary": "ChatGPT Conversation",
-        "description": "Chat with real GPT-4o-mini AI. No API key required. Powered by free-unoficial-gpt4o-mini-api.",
+        "description": "Chat with real GPT-4o-mini AI via free-unoficial-gpt4o-mini-api. No API key required.",
         "deprecated": false,
         "parameters": [
           { "name": "text", "required": true, "description": "Your message or question", "schema": { "type": "string", "example": "Halo, siapa kamu?" } }
@@ -27,7 +27,7 @@
       "post": {
         "tags": ["AI"],
         "summary": "ChatGPT with Context",
-        "description": "Send conversation history for better contextual responses.",
+        "description": "Send conversation history for better contextual responses. Body: { messages: [{role, content}] }",
         "deprecated": false,
         "requestBody": {
           "content": {
@@ -35,7 +35,8 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "messages": { "type": "array", "description": "Array of {role: 'user'|'assistant', content: string}" }
+                  "messages": { "type": "array", "description": "Array of {role: 'user'|'assistant', content: string}" },
+                  "model": { "type": "string", "example": "gpt-4o-mini" }
                 }
               }
             }
@@ -50,7 +51,7 @@
         "description": "Generate AI images from text prompts using Pollinations.ai. Free, no API key needed.",
         "deprecated": false,
         "parameters": [
-          { "name": "prompt", "required": true, "description": "Image description", "schema": { "type": "string", "example": "A red torii gate in Kyoto at sunset" } },
+          { "name": "prompt", "required": true, "description": "Image description in English or any language", "schema": { "type": "string", "example": "A red torii gate in Kyoto at sunset" } },
           { "name": "size", "required": false, "description": "Image size (WxH)", "schema": { "type": "string", "enum": ["256x256", "512x512", "1024x1024"], "default": "512x512" } }
         ]
       }
@@ -63,7 +64,7 @@
         "deprecated": false,
         "parameters": [
           { "name": "text", "required": true, "description": "Text to translate", "schema": { "type": "string", "example": "Hello world" } },
-          { "name": "to", "required": true, "description": "Target language code", "schema": { "type": "string", "example": "id", "enum": ["id", "en", "ja", "ko", "zh", "es", "fr", "de", "ar", "ru"] } }
+          { "name": "to", "required": true, "description": "Target language code", "schema": { "type": "string", "example": "id", "enum": ["id", "en", "ja", "ko", "zh", "es", "fr", "de", "ar", "ru", "pt", "it"] } }
         ]
       }
     },
@@ -71,7 +72,7 @@
       "post": {
         "tags": ["AI"],
         "summary": "OCR Text Extraction",
-        "description": "Extract text from images. Upload image via multipart/form-data.",
+        "description": "Extract text from images. Upload image via multipart/form-data with key 'image'.",
         "deprecated": false,
         "requestBody": {
           "content": {
@@ -81,7 +82,7 @@
                 "required": ["image"],
                 "properties": {
                   "image": { "type": "string", "format": "binary", "description": "Image file (jpg/png)" },
-                  "lang": { "type": "string", "description": "Language code (eng, ind, jpn, etc)", "example": "eng" }
+                  "lang": { "type": "string", "description": "Language code", "example": "eng" }
                 }
               }
             }
@@ -149,7 +150,7 @@
       "get": {
         "tags": ["Tools"],
         "summary": "Website Screenshot",
-        "description": "Capture screenshot of any website. Powered by Microlink (50 req/day free).",
+        "description": "Capture screenshot of any website. Powered by Microlink.io (50 req/day free).",
         "deprecated": false,
         "parameters": [
           { "name": "url", "required": true, "description": "Website URL", "schema": { "type": "string", "example": "https://google.com" } },
@@ -183,10 +184,10 @@
       "get": {
         "tags": ["Tools"],
         "summary": "Weather Information",
-        "description": "Get real-time weather for any major city. Powered by Open-Meteo — free, no key.",
+        "description": "Get real-time weather for major cities worldwide. Powered by Open-Meteo — free, no API key.",
         "deprecated": false,
         "parameters": [
-          { "name": "city", "required": true, "description": "City name (Jakarta, Tokyo, London, NewYork, etc)", "schema": { "type": "string", "example": "Tokyo" } }
+          { "name": "city", "required": true, "description": "City name (Jakarta, Tokyo, London, NewYork, Paris, Seoul, Sydney, etc)", "schema": { "type": "string", "example": "Tokyo" } }
         ]
       }
     },
@@ -194,7 +195,7 @@
       "get": {
         "tags": ["Tools"],
         "summary": "Math Calculator",
-        "description": "Evaluate mathematical expressions safely.",
+        "description": "Evaluate mathematical expressions safely. Supports + - * / ( ) % .",
         "deprecated": false,
         "parameters": [
           { "name": "expr", "required": true, "description": "Math expression to evaluate", "schema": { "type": "string", "example": "2+2*3" } }
@@ -227,7 +228,7 @@
       "get": {
         "tags": ["Storage"],
         "summary": "List Files",
-        "description": "Get list of all uploaded files.",
+        "description": "Get list of all uploaded files in a folder.",
         "deprecated": false,
         "parameters": [
           { "name": "folder", "required": false, "description": "Filter by folder name", "schema": { "type": "string", "example": "images" } }
@@ -241,7 +242,7 @@
         "description": "Remove a file from storage permanently.",
         "deprecated": false,
         "parameters": [
-          { "name": "file", "required": true, "description": "File ID to delete", "schema": { "type": "string", "example": "abc123.jpg" } }
+          { "name": "file", "required": true, "description": "File ID or path to delete", "schema": { "type": "string", "example": "kyoto_demo_001.jpg" } }
         ]
       }
     },
@@ -261,7 +262,7 @@
       "get": {
         "tags": ["Media"],
         "summary": "Sticker Maker",
-        "description": "Convert any image to sticker format. Production: wa-sticker-formatter (npm).",
+        "description": "Convert any image to sticker format. Production: use wa-sticker-formatter (npm) for WhatsApp stickers.",
         "deprecated": false,
         "parameters": [
           { "name": "url", "required": true, "description": "Image URL to convert", "schema": { "type": "string", "example": "https://example.com/image.jpg" } }
@@ -272,7 +273,7 @@
       "post": {
         "tags": ["Media"],
         "summary": "Remove Background",
-        "description": "Remove image background using AI. Upload image via multipart/form-data.",
+        "description": "Remove image background using AI. Upload image via multipart/form-data with key 'image'.",
         "deprecated": false,
         "requestBody": {
           "content": {
@@ -296,7 +297,7 @@
         "description": "Create meme images with top and bottom text. Powered by Pollinations.ai.",
         "deprecated": false,
         "parameters": [
-          { "name": "url", "required": true, "description": "Base image URL", "schema": { "type": "string" } },
+          { "name": "url", "required": true, "description": "Base image URL", "schema": { "type": "string", "example": "https://example.com/meme-template.jpg" } },
           { "name": "top", "required": true, "description": "Top text", "schema": { "type": "string", "example": "WHEN YOU" } },
           { "name": "bottom", "required": true, "description": "Bottom text", "schema": { "type": "string", "example": "FINISH THE PROJECT" } }
         ]
@@ -306,7 +307,7 @@
       "get": {
         "tags": ["Manga"],
         "summary": "Search Manga",
-        "description": "Search manga by title. Powered by Jikan API v4 (MyAnimeList). Free, no auth.",
+        "description": "Search manga by title from MyAnimeList database. Powered by Jikan API v4. Free, no auth required.",
         "deprecated": false,
         "parameters": [
           { "name": "query", "required": true, "description": "Manga title to search", "schema": { "type": "string", "example": "One Piece" } },
@@ -318,11 +319,11 @@
       "get": {
         "tags": ["Manga"],
         "summary": "Get Manga Info & Chapters",
-        "description": "Get manga details including total chapters. Chapter images: use MangaDex API.",
+        "description": "Get manga details including total chapters, author, score, and synopsis. Chapter images not available via Jikan — use MangaDex API for reading.",
         "deprecated": false,
         "parameters": [
           { "name": "id", "required": true, "description": "MyAnimeList Manga ID", "schema": { "type": "number", "example": 2 } },
-          { "name": "chapter", "required": false, "description": "Chapter number (for reference)", "schema": { "type": "number", "example": 1 } }
+          { "name": "chapter", "required": false, "description": "Chapter number (for reference only)", "schema": { "type": "number", "example": 1 } }
         ]
       }
     },
@@ -330,7 +331,7 @@
       "get": {
         "tags": ["Manga"],
         "summary": "Anime Info",
-        "description": "Get anime details, episodes, score, and synopsis. Powered by Jikan API v4.",
+        "description": "Get anime details: episodes, status, score, synopsis, and cover image. Powered by Jikan API v4.",
         "deprecated": false,
         "parameters": [
           { "name": "title", "required": true, "description": "Anime title to search", "schema": { "type": "string", "example": "Jujutsu Kaisen" } }
@@ -341,7 +342,7 @@
       "get": {
         "tags": ["Manga"],
         "summary": "Random Manga",
-        "description": "Get a random manga recommendation from MyAnimeList.",
+        "description": "Get a random manga recommendation from MyAnimeList. Returns title, author, chapters, score, and cover image.",
         "deprecated": false
       }
     },
@@ -349,10 +350,10 @@
       "get": {
         "tags": ["Manga"],
         "summary": "Waifu / Anime Image",
-        "description": "Get random anime images by category. Powered by Waifu.pics — free, no auth.",
+        "description": "Get random anime/waifu images by category. Powered by Waifu.pics — free, no auth required.",
         "deprecated": false,
         "parameters": [
-          { "name": "category", "required": false, "description": "Image category", "schema": { "type": "string", "enum": ["waifu", "neko", "shinobu", "megumin", "bully", "cuddle", "cry", "hug", "kiss", "pat", "smug", "bonk", "blush", "smile", "wave", "happy", "dance"], "default": "waifu" } }
+          { "name": "category", "required": false, "description": "Image category", "schema": { "type": "string", "enum": ["waifu", "neko", "shinobu", "megumin", "bully", "cuddle", "cry", "hug", "awoo", "kiss", "lick", "pat", "smug", "bonk", "yeet", "blush", "smile", "wave", "highfive", "handhold", "nom", "bite", "glomp", "slap", "kill", "kick", "happy", "wink", "poke", "dance", "cringe"], "default": "waifu" } }
         ]
       }
     }
