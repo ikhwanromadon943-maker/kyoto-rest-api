@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Kyoto API Documentation - Browse and test API endpoints." />
+    <title>Kyoto API — Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/json.min.js"></script>
+    <style>
+        :root{
+            --bg:#09090e;--bg2:#0e0e16;
+            --card:rgba(255,255,255,0.03);--card-h:rgba(255,255,255,0.055);
+            --border:rgba(255,255,255,0.07);--border-h:rgba(255,107,107,0.35);
+            --text:#e2e0f0;--muted:rgba(226,224,240,0.42);
+            --accent:#ff6b6b;--accent2:#ff8e53;
+            --green:#4ade80;--yellow:#facc15;--red:#f87171;--purple:#a78bfa;
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+        ::-webkit-scrollbar{display:none}
+        body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.7}
+
+        .blob{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0}
+        .b1{width:440px;height:440px;background:radial-gradient(circle,rgba(255,107,107,.065) 0%,transparent 70%);top:-160px;left:-100px;animation:b1a 22s ease-in-out infinite}
+        .b2{width:340px;height:340px;background:radial-gradient(circle,rgba(255,142,83,.045) 0%,transparent 70%);bottom:-60px;right:-60px;animation:b2a 28s ease-in-out infinite}
+        @keyframes b1a{0%,100%{transform:translate(0,0)}50%{transform:translate(45px,30px)}}
+        @keyframes b2a{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,-50px)}}
+
+        #loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:18px;transition:opacity .6s,visibility .6s}
+        #loader.gone{opacity:0;visibility:hidden}
+        .lring{width:36px;height:36px;border:1px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite}
+        .ltxt{font-size:9px;letter-spacing:.35em;color:var(--muted);text-transform:uppercase}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        header{position:sticky;top:0;z-index:50;background:rgba(9,9,14,.9);backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--border)}
+        .hdr{max-width:940px;margin:0 auto;padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between}
+        .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+        .lmark{width:24px;height:24px;border:1px solid rgba(255,107,107,.4);display:flex;align-items:center;justify-content:center;position:relative}
+        .lmark::before{content:'';position:absolute;inset:3px;background:var(--accent);opacity:.12}
+        .lmark i{font-size:8px;color:var(--accent);position:relative;z-index:1}
+        .ltname{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;letter-spacing:.18em;color:var(--text);text-transform:uppercase}
+        .vpill{font-size:7px;letter-spacing:.22em;color:var(--accent);border:1px solid rgba(255,107,107,.25);padding:2px 7px;text-transform:uppercase}
+        .hdr-right{display:flex;align-items:center;gap:14px}
+        .hdr-right a{font-size:9px;letter-spacing:.14em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .2s}
+        .hdr-right a:hover{color:var(--accent)}
+        #menu-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:6px 10px;cursor:pointer;font-size:11px;transition:all .2s;display:none}
+        #menu-btn:hover{border-color:var(--border-h);color:var(--text)}
+
+        .wrap{max-width:940px;margin:0 auto;padding:32px 28px;position:relative;z-index:1;display:grid;grid-template-columns:200px 1fr;gap:32px}
+        @media(max-width:640px){.wrap{grid-template-columns:1fr}.side{display:none}.side.open{display:block;position:fixed;inset:0;z-index:100;background:var(--bg);padding:24px;overflow-y:auto}#menu-btn{display:flex}}
+
+        .side{position:sticky;top:72px;height:calc(100vh - 72px);overflow-y:auto}
+        .side-section{margin-bottom:24px}
+        .side-label{font-size:8px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+        .side-link{display:flex;align-items:center;gap:8px;padding:6px 0;color:var(--muted);text-decoration:none;font-size:9px;letter-spacing:.08em;transition:all .2s;border-left:1px solid transparent;padding-left:8px}
+        .side-link:hover{color:var(--text);border-left-color:var(--accent)}
+        .side-link.active{color:var(--accent);border-left-color:var(--accent)}
+        .side-close{display:none;background:none;border:1px solid var(--border);color:var(--muted);padding:6px 10px;cursor:pointer;margin-bottom:20px}
+        @media(max-width:640px){.side-close{display:block}}
+
+        .content{min-width:0}
+
+        .notif-wrap{margin-bottom:28px}
+        .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+        .sec-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:.05em;display:flex;align-items:center;gap:8px}
+        .sec-title i{color:var(--accent);font-size:13px}
+        .badge{font-size:8px;background:var(--accent);color:#fff;padding:2px 7px;letter-spacing:.1em}
+        .notif-card{background:var(--card);border:1px solid var(--border);padding:12px 16px;margin-bottom:1px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;transition:background .2s}
+        .notif-card:hover{background:var(--card-h)}
+        .notif-card.read{opacity:.5}
+        .notif-title{font-size:10px;font-weight:500;color:var(--text);margin-bottom:3px}
+        .notif-msg{font-size:9px;color:var(--muted);line-height:1.6}
+        .notif-meta{display:flex;align-items:center;gap:6px;flex-shrink:0}
+        .unread-dot{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+        .notif-date{font-size:8px;color:var(--muted);white-space:nowrap}
+
+        .search-wrap{margin-bottom:24px;position:relative}
+        .search-wrap i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:11px}
+        #searchInput{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:10px;padding:11px 16px 11px 36px;outline:none;transition:border-color .2s}
+        #searchInput::placeholder{color:var(--muted)}
+        #searchInput:focus{border-color:var(--border-h)}
+
+        .cat-group{margin-bottom:2px}
+        .cat-toggle{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;text-align:left;transition:all .2s;gap:12px}
+        .cat-toggle:hover{background:var(--card-h);border-color:var(--border-h)}
+        .cat-left{display:flex;align-items:center;gap:10px}
+        .cat-icon{width:22px;height:22px;background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .cat-icon i{font-size:9px;color:var(--accent)}
+        .cat-name{font-family:'Syne',sans-serif;font-weight:600;font-size:11px;letter-spacing:.04em}
+        .cat-count{font-size:8px;color:var(--muted);letter-spacing:.1em}
+        .cat-chevron{font-size:10px;color:var(--muted);transition:transform .3s}
+        .cat-chevron.open{transform:rotate(180deg)}
+        .cat-body{display:none;border:1px solid var(--border);border-top:none}
+        .cat-body.show{display:block}
+
+        .ep-item{border-bottom:1px solid var(--border)}
+        .ep-item:last-child{border-bottom:none}
+        .ep-toggle{width:100%;background:none;border:none;color:var(--text);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:'DM Mono',monospace;font-size:9px;text-align:left;transition:background .2s;gap:12px}
+        .ep-toggle:hover{background:var(--card)}
+        .ep-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+        .method{font-size:8px;font-weight:600;letter-spacing:.12em;padding:3px 7px;flex-shrink:0;text-transform:uppercase}
+        .m-get{background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.2)}
+        .m-post{background:rgba(255,107,107,.1);color:var(--accent);border:1px solid rgba(255,107,107,.2)}
+        .m-put{background:rgba(250,204,21,.1);color:var(--yellow);border:1px solid rgba(250,204,21,.2)}
+        .m-delete{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.2)}
+        .m-patch{background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2)}
+        .ep-path{font-size:9px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .ep-name{font-size:8px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .status-pill{font-size:7px;letter-spacing:.1em;padding:2px 6px;border:1px solid;flex-shrink:0;text-transform:uppercase}
+        .s-ready{color:var(--green);border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.06)}
+        .s-depr{color:var(--yellow);border-color:rgba(250,204,21,.25);background:rgba(250,204,21,.06)}
+        .ep-chevron{font-size:9px;color:var(--muted);transition:transform .3s;flex-shrink:0}
+        .ep-chevron.open{transform:rotate(180deg)}
+
+        .ep-detail{display:none;background:var(--bg2);padding:18px 20px;border-top:1px solid var(--border)}
+        .ep-detail.show{display:block}
+        .ep-desc{font-size:9px;color:var(--muted);line-height:1.8;margin-bottom:16px}
+        .panel-title{font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+        .panel-title::before{content:'';width:14px;height:1px;background:var(--border)}
+
+        .param-group{margin-bottom:12px}
+        .param-label{font-size:9px;color:var(--text);margin-bottom:5px;display:flex;align-items:center;gap:4px}
+        .req-star{color:var(--accent)}
+        .param-desc{font-size:8px;color:var(--muted);margin-top:4px;line-height:1.5}
+        input[type=text],input[type=number],input[type=file],select,textarea{
+            width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);
+            font-family:'DM Mono',monospace;font-size:9px;padding:9px 12px;outline:none;
+            transition:border-color .2s;
+        }
+        input::placeholder,textarea::placeholder{color:var(--muted)}
+        input:focus,select:focus,textarea:focus{border-color:var(--border-h)}
+        select option{background:var(--bg2)}
+        textarea{resize:vertical;min-height:80px}
+        input[type=file]{padding:7px 12px;cursor:pointer}
+
+        .btn-exec{background:var(--accent);color:#fff;border:none;padding:9px 20px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+        .btn-exec::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent),var(--accent2));opacity:0;transition:opacity .25s}
+        .btn-exec:hover::before{opacity:1}
+        .btn-exec span{position:relative;z-index:1}
+        .btn-exec:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(255,107,107,.25)}
+        .btn-clear{background:transparent;color:var(--muted);border:1px solid var(--border);padding:8px 20px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .2s;display:none}
+        .btn-clear:hover{color:var(--text);border-color:var(--border-h)}
+
+        .resp-wrap{margin-top:16px;display:none}
+        .resp-wrap.show{display:block}
+        .resp-block{margin-bottom:12px}
+        .resp-label{font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
+        .copy-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:3px 8px;cursor:pointer;font-size:8px;font-family:'DM Mono',monospace;transition:all .2s}
+        .copy-btn:hover{border-color:var(--border-h);color:var(--text)}
+        .code-box{background:rgba(0,0,0,.4);border:1px solid var(--border);padding:10px 14px;font-size:9px;overflow-x:auto;line-height:1.7;color:var(--text)}
+        .code-box pre{margin:0}
+        .code-box img{max-width:100%;height:auto;display:block}
+
+        .status-table{width:100%;border-collapse:collapse;font-size:9px;margin-top:8px}
+        .status-table th{text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);color:var(--muted);letter-spacing:.1em;font-size:8px;text-transform:uppercase;font-weight:400}
+        .status-table td{padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.04)}
+        .status-table tr:last-child td{border-bottom:none}
+        .status-table tr:hover td{background:var(--card)}
+        .sc-200{color:var(--green)}.sc-4xx{color:var(--red)}.sc-429{color:var(--yellow)}.sc-500{color:var(--red)}
+        .sc-desc{color:var(--muted)}
+
+        .no-results{text-align:center;padding:48px 20px;display:none}
+        .no-results p{font-size:10px;color:var(--muted)}
+
+        @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        .fadeup{animation:fadeUp .35s ease forwards}
+    </style>
+</head>
+<body>
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div id="loader">
+        <div class="lring"></div>
+        <span class="ltxt">Loading API</span>
+    </div>
+    <header>
+        <div class="hdr">
+            <a href="/" class="logo">
+                <div class="lmark"><i class="fas fa-torii-gate"></i></div>
+                <span class="ltname">Kyoto</span>
+            </a>
+            <div class="hdr-right">
+                <span class="vpill">v1.0</span>
+                <a href="/">Dashboard</a>
+                <a href="https://wa.me/6283181644868" target="_blank">Contact</a>
+                <button id="menu-btn"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="wrap">
+        <aside class="side" id="sidebar">
+            <button class="side-close" id="sidebar-close"><i class="fas fa-times"></i></button>
+            <div class="side-section">
+                <div class="side-label">Navigation</div>
+                <a href="/" class="side-link"><i class="fas fa-home" style="font-size:9px;color:var(--accent)"></i>Dashboard</a>
+            </div>
+            <div class="side-section">
+                <div class="side-label">Links</div>
+                <a href="https://wa.me/6283181644868" target="_blank" class="side-link"><i class="fab fa-whatsapp" style="font-size:9px;color:#25D366"></i>Contact</a>
+                <a href="https://whatsapp.com/channel/0029Vb8Lge5FHWq3fTan4V0J" target="_blank" class="side-link"><i class="fas fa-broadcast-tower" style="font-size:9px;color:var(--accent)"></i>Channel</a>
+            </div>
+            <div class="side-section">
+                <div class="side-label">Categories</div>
+                <div id="side-cats"></div>
+            </div>
+        </aside>
+        <main class="content">
+            <div class="notif-wrap">
+                <div class="sec-hdr">
+                    <div class="sec-title"><i class="fas fa-bell"></i>Informasi</div>
+                    <span id="unread-badge" class="badge" style="display:none"></span>
+                </div>
+                <div id="notifications-list"></div>
+            </div>
+            <div class="search-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search endpoints, categories..." />
+            </div>
+            <div id="content">
+                <div class="no-results" id="noResults"><p>No results found.</p></div>
+                <div id="apiList"></div>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.getElementById('menu-btn').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('open');
+        });
+        document.getElementById('sidebar-close').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.remove('open');
+        });
+
+        async function copyToClipboard(text, btn) {
+            const orig = btn.innerHTML;
+            try {
+                await navigator.clipboard.writeText(text);
+                btn.textContent = 'Copied!';
+            } catch(e) {
+                btn.textContent = 'Failed';
+            }
+            setTimeout(() => btn.innerHTML = orig, 1500);
+        }
+
+        function hlJSON(el) {
+            if (window.hljs) hljs.highlightElement(el);
+        }
+
+        function toggleCategory(idx) {
+            const body = document.getElementById(`cat-body-${idx}`);
+            const chev = document.getElementById(`cat-chev-${idx}`);
+            body.classList.toggle('show');
+            chev.classList.toggle('open');
+        }
+
+        function toggleEndpoint(ci, ei) {
+            const panel = document.getElementById(`ep-detail-${ci}-${ei}`);
+            const chev = document.getElementById(`ep-chev-${ci}-${ei}`);
+            if (!panel.dataset.rendered) {
+                const item = _epData[`${ci}-${ei}`];
+                if (item) panel.innerHTML = buildDetailHTML(ci, ei, item);
+                panel.dataset.rendered = '1';
+            }
+            panel.classList.toggle('show');
+            chev.classList.toggle('open');
+        }
+
+        async function executeRequest(event, ci, ei, method, path) {
+            event.preventDefault();
+            const form = document.getElementById(`form-${ci}-${ei}`);
+            const respWrap = document.getElementById(`resp-${ci}-${ei}`);
+            const clearBtn = document.getElementById(`clear-${ci}-${ei}`);
+
+            respWrap.classList.add('show');
+
+            const formData = new FormData(form);
+            const fetchOpts = { method: method.toUpperCase() };
+            let fullPath = path;
+            let curlCmd = `curl -X ${method.toUpperCase()} "${window.location.origin}${path}"`;
+
+            if (['POST','PUT','PATCH'].includes(method.toUpperCase())) {
+                const rawJson = formData.get('__raw_json__');
+                if (rawJson && rawJson.trim()) {
+                    fetchOpts.headers = {'Content-Type':'application/json'};
+                    fetchOpts.body = rawJson.trim();
+                    curlCmd += ` -H "Content-Type: application/json" -d '${rawJson.trim()}'`;
+                } else {
+                    fetchOpts.body = formData;
+                    for (const [k,v] of formData.entries()) {
+                        curlCmd += v instanceof File && v.name ? ` -F "${k}=@${v.name}"` : ` -F "${k}=${v}"`;
+                    }
+                }
+            } else {
+                const params = new URLSearchParams();
+                for (const [k,v] of formData.entries()) {
+                    if (typeof v === 'string' && v) params.append(k, v);
+                }
+                const qs = params.toString();
+                if (qs) { fullPath += (path.includes('?')?'&':'?') + qs; }
+                curlCmd = `curl -X ${method.toUpperCase()} "${window.location.origin}${fullPath}"`;
+            }
+
+            document.getElementById(`resp-url-${ci}-${ei}`).textContent = `${window.location.origin}${fullPath}`;
+            document.getElementById(`resp-curl-${ci}-${ei}`).textContent = curlCmd;
+            const bodyDiv = document.getElementById(`resp-body-${ci}-${ei}`);
+            bodyDiv.innerHTML = '<span style="color:var(--muted);font-size:9px">Loading...</span>';
+
+            try {
+                const res = await fetch(fullPath, fetchOpts);
+                const ct = res.headers.get('content-type') || '';
+                if (!res.ok) {
+                    const t = await res.text().catch(() => '');
+                    throw new Error(`${res.status} ${res.statusText}\n${t}`);
+                }
+                if (ct.includes('application/json')) {
+                    const data = await res.json();
+                    bodyDiv.innerHTML = `<pre><code class="language-json">${JSON.stringify(data,null,2)}</code></pre>`;
+                    setTimeout(() => hlJSON(bodyDiv.querySelector('code')), 0);
+                } else if (ct.startsWith('image/')) {
+                    const blob = await res.blob();
+                    const url = URL.createObjectURL(blob);
+                    bodyDiv.innerHTML = `<img src="${url}" style="max-width:100%;height:auto;display:block"><br><a href="${url}" download style="color:var(--accent);font-size:9px">↓ Download</a>`;
+                } else {
+                    bodyDiv.textContent = await res.text();
+                }
+            } catch(err) {
+                bodyDiv.innerHTML = `<pre style="color:var(--red)">${err.message}</pre>`;
+            }
+            clearBtn.style.display = 'inline-block';
+        }
+
+        function clearResponse(ci, ei) {
+            const rw = document.getElementById(`resp-${ci}-${ei}`);
+            rw.classList.remove('show');
+            document.getElementById(`clear-${ci}-${ei}`).style.display = 'none';
+        }
+
+        async function loadNotifications() {
+            const list = document.getElementById('notifications-list');
+            const badge = document.getElementById('unread-badge');
+            try {
+                const res = await fetch(`/src/notifications.json?t=${Date.now()}`);
+                let notifs = await res.json();
+                if (!Array.isArray(notifs)) notifs = notifs ? [notifs] : [];
+                notifs.sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
+                let unread = 0;
+                list.innerHTML = '';
+                notifs.forEach((n,i) => {
+                    if (!n.read) unread++;
+                    const el = document.createElement('div');
+                    el.className = `notif-card${n.read ? ' read':''} fadeup`;
+                    el.style.animationDelay = `${i*40}ms`;
+                    el.innerHTML = `
+                        <div>
+                            <div class="notif-title">${n.title||'Notification'}</div>
+                            <div class="notif-msg">${n.message||'-'}</div>
+                        </div>
+                        <div class="notif-meta">
+                            ${!n.read ? '<div class="unread-dot"></div>' : ''}
+                            <span class="notif-date">${n.date ? new Date(n.date).toLocaleDateString('id-ID',{year:'numeric',month:'short',day:'numeric'}) : '-'}</span>
+                        </div>
+                    `;
+                    list.appendChild(el);
+                });
+                if (!notifs.length) list.innerHTML = '<div style="font-size:9px;color:var(--muted);padding:12px 0">No notifications</div>';
+                if (unread > 0) { badge.textContent = unread; badge.style.display = 'inline'; }
+            } catch(e) {
+                list.innerHTML = '<div style="font-size:9px;color:var(--red);padding:12px 0">Failed to load notifications</div>';
+            }
+        }
+
+        function methodClass(m) {
+            return {GET:'m-get',POST:'m-post',PUT:'m-put',DELETE:'m-delete',PATCH:'m-patch'}[m] || 'm-get';
+        }
+
+        const _epData = {};
+
+        function buildFormFields(item) {
+            let f = '';
+            if (item.parameters) {
+                item.parameters.forEach(param => {
+                    const s = param.schema || {};
+                    const req = !!param.required;
+                    const lbl = `${param.name}${req ? ' <span class="req-star">*</span>' : ''}`;
+                    const desc = param.description ? `<div class="param-desc">${param.description}</div>` : '';
+                    const ph = (s.example ?? s.default ?? '') + '';
+                    if (Array.isArray(s.enum) && s.enum.length) {
+                        f += `<div class="param-group"><label class="param-label">${lbl}</label><select name="${param.name}"${req?' required':''}>${s.enum.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>${desc}</div>`;
+                    } else if (s.type === 'boolean') {
+                        f += `<div class="param-group"><label class="param-label">${lbl}</label><select name="${param.name}"${req?' required':''}><option value="true">true</option><option value="false">false</option></select>${desc}</div>`;
+                    } else {
+                        const t = (s.type==='number'||s.type==='integer') ? 'number' : 'text';
+                        f += `<div class="param-group"><label class="param-label">${lbl}</label><input type="${t}" name="${param.name}" placeholder="${ph.replace(/"/g,'&quot;')}"${req?' required':''}>${desc}</div>`;
+                    }
+                });
+            }
+            if (item.requestBody?.content) {
+                const content = item.requestBody.content;
+                if (content['multipart/form-data']) {
+                    const sc = content['multipart/form-data'].schema || {properties:{}};
+                    const reqd = sc.required || [];
+                    Object.keys(sc.properties||{}).forEach(pn => {
+                        const p = sc.properties[pn] || {};
+                        const isReq = reqd.includes(pn);
+                        const lbl = `${pn}${isReq?' <span class="req-star">*</span>':''}`;
+                        const desc = p.description ? `<div class="param-desc">${p.description}</div>` : '';
+                        const ph = (p.example ?? p.default ?? '') + '';
+                        if (p.format === 'binary') {
+                            let acc = '';
+                            if (pn.toLowerCase().includes('image')) acc = 'accept="image/*"';
+                            else if (pn.toLowerCase().includes('video')) acc = 'accept="video/*"';
+                            f += `<div class="param-group"><label class="param-label">${lbl}</label><input type="file" name="${pn}" ${acc}${isReq?' required':''}>${desc}</div>`;
+                        } else if (Array.isArray(p.enum)) {
+                            f += `<div class="param-group"><label class="param-label">${lbl}</label><select name="${pn}"${isReq?' required':''}>${p.enum.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>${desc}</div>`;
+                        } else {
+                            const t = (p.type==='number'||p.type==='integer')?'number':'text';
+                            f += `<div class="param-group"><label class="param-label">${lbl}</label><input type="${t}" name="${pn}" placeholder="${ph.replace(/"/g,'&quot;')}"${isReq?' required':''}>${desc}</div>`;
+                        }
+                    });
+                }
+                if (content['application/json']) {
+                    f += `<div class="param-group"><label class="param-label">Body (JSON)</label><textarea name="__raw_json__" placeholder='{"key":"value"}'></textarea><div class="param-desc">Enter valid JSON. This overrides other body fields.</div></div>`;
+                }
+            }
+            return f;
+        }
+
+        function buildDetailHTML(ci, ei, item) {
+            const formFields = buildFormFields(item);
+            return `
+                ${item.desc ? `<div class="ep-desc">${item.desc}</div>` : ''}
+                ${item.status !== 'deprecated' ? `
+                <div class="panel-title">Try It Out</div>
+                <form id="form-${ci}-${ei}" onsubmit="executeRequest(event,${ci},${ei},'${item.method}','${item.path}')">
+                    ${formFields}
+                    <div style="display:flex;gap:8px;margin-top:14px">
+                        <button type="submit" class="btn-exec"><span>Execute</span></button>
+                        <button type="button" id="clear-${ci}-${ei}" class="btn-clear" onclick="clearResponse(${ci},${ei})">Clear</button>
+                    </div>
+                </form>
+                <div class="resp-wrap" id="resp-${ci}-${ei}">
+                    <div class="resp-block" style="margin-top:14px">
+                        <div class="resp-label"><span>Request URL</span><button class="copy-btn" onclick="copyToClipboard(document.getElementById('resp-url-${ci}-${ei}').textContent,this)">Copy</button></div>
+                        <div class="code-box"><pre id="resp-url-${ci}-${ei}"></pre></div>
+                    </div>
+                    <div class="resp-block">
+                        <div class="resp-label"><span>cURL Command</span><button class="copy-btn" onclick="copyToClipboard(document.getElementById('resp-curl-${ci}-${ei}').textContent,this)">Copy</button></div>
+                        <div class="code-box"><pre id="resp-curl-${ci}-${ei}"></pre></div>
+                    </div>
+                    <div class="resp-block">
+                        <div class="resp-label"><span>Response</span><button class="copy-btn" onclick="copyToClipboard(document.getElementById('resp-body-${ci}-${ei}').innerText,this)">Copy</button></div>
+                        <div class="code-box" id="resp-body-${ci}-${ei}"></div>
+                    </div>
+                </div>
+                ` : `<div style="font-size:9px;color:var(--yellow);padding:10px;background:rgba(250,204,21,.06);border:1px solid rgba(250,204,21,.15)">This endpoint is deprecated.</div>`}
+                <div style="margin-top:16px">
+                    <div class="panel-title">HTTP Status Codes</div>
+                    <table class="status-table">
+                        <thead><tr><th>Code</th><th>Description</th></tr></thead>
+                        <tbody>
+                            <tr><td class="sc-200">200</td><td class="sc-desc">OK — Request successful</td></tr>
+                            <tr><td class="sc-200">201</td><td class="sc-desc">Created — Resource created (POST/PUT)</td></tr>
+                            <tr><td class="sc-4xx">400</td><td class="sc-desc">Bad Request — Invalid parameters</td></tr>
+                            <tr><td class="sc-4xx">401</td><td class="sc-desc">Unauthorized — Missing API key</td></tr>
+                            <tr><td class="sc-4xx">403</td><td class="sc-desc">Forbidden — Access denied</td></tr>
+                            <tr><td class="sc-4xx">404</td><td class="sc-desc">Not Found — Resource not found</td></tr>
+                            <tr><td class="sc-429">429</td><td class="sc-desc">Too Many Requests — Rate limited</td></tr>
+                            <tr><td class="sc-500">500</td><td class="sc-desc">Internal Server Error</td></tr>
+                        </tbody>
+                    </table>
+                </div>`;
+        }
+
+        async function loadApis() {
+            const apiList = document.getElementById('apiList');
+            const sideCats = document.getElementById('side-cats');
+            try {
+                const res = await fetch('/src/openapi.json');
+                const data = await res.json();
+
+                const categories = {};
+                if (data.tags) data.tags.forEach(t => { categories[t.name] = {name:t.name, items:[]}; });
+                Object.keys(data.paths||{}).forEach(path => {
+                    const pi = data.paths[path];
+                    Object.keys(pi).forEach(method => {
+                        const ep = pi[method];
+                        const tag = ep.tags?.[0] || 'Uncategorized';
+                        if (!categories[tag]) categories[tag] = {name:tag, items:[]};
+                        categories[tag].items.push({
+                            path, method: method.toUpperCase(),
+                            name: ep.summary || 'No summary',
+                            desc: ep.description || '',
+                            status: ep.deprecated ? 'deprecated' : 'ready',
+                            parameters: ep.parameters,
+                            requestBody: ep.requestBody
+                        });
+                    });
+                });
+
+                const frag = document.createDocumentFragment();
+                const sideFragHtml = [];
+
+                Object.values(categories).forEach((cat, ci) => {
+                    if (!cat.items.length) return;
+                    const catId = `cat-${ci}`;
+                    sideFragHtml.push(`<a href="#${catId}" class="side-link"><i class="fas fa-folder" style="font-size:8px;color:var(--muted)"></i> ${cat.name}</a>`);
+
+                    let itemsHtml = '';
+                    cat.items.forEach((item, ei) => {
+                        const statusCls = item.status === 'deprecated' ? 's-depr' : 's-ready';
+                        _epData[`${ci}-${ei}`] = item;
+                        itemsHtml += `
+                        <div class="ep-item api-item" data-path="${item.path}" data-alias="${item.name}" data-description="${item.desc}" data-category="${cat.name}">
+                            <button class="ep-toggle" onclick="toggleEndpoint(${ci},${ei})">
+                                <div class="ep-left">
+                                    <span class="method ${methodClass(item.method)}">${item.method}</span>
+                                    <div style="min-width:0;flex:1">
+                                        <div class="ep-path">${item.path}</div>
+                                        <div class="ep-name">${item.name}</div>
+                                    </div>
+                                    <span class="status-pill ${statusCls}">${item.status}</span>
+                                </div>
+                                <i class="fas fa-chevron-down ep-chevron" id="ep-chev-${ci}-${ei}"></i>
+                            </button>
+                            <div class="ep-detail" id="ep-detail-${ci}-${ei}"></div>
+                        </div>`;
+                    });
+
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'cat-group';
+                    wrapper.id = catId;
+                    wrapper.dataset.category = cat.name;
+                    wrapper.innerHTML = `
+                        <button class="cat-toggle" onclick="toggleCategory(${ci})">
+                            <div class="cat-left">
+                                <div class="cat-icon"><i class="fas fa-folder"></i></div>
+                                <div>
+                                    <div class="cat-name">${cat.name}</div>
+                                    <div class="cat-count">${cat.items.length} endpoint${cat.items.length!==1?'s':''}</div>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-down cat-chevron" id="cat-chev-${ci}"></i>
+                        </button>
+                        <div class="cat-body" id="cat-body-${ci}">${itemsHtml}</div>`;
+                    frag.appendChild(wrapper);
+                });
+
+                apiList.innerHTML = '';
+                apiList.appendChild(frag);
+                sideCats.innerHTML = sideFragHtml.join('');
+
+            } catch(err) {
+                apiList.innerHTML = '<p style="color:var(--red);font-size:10px">Failed to load API data.</p>';
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const q = this.value.toLowerCase();
+            let vis = 0;
+            document.querySelectorAll('.api-item').forEach(el => {
+                const match = el.dataset.path.toLowerCase().includes(q) ||
+                              el.dataset.alias.toLowerCase().includes(q) ||
+                              el.dataset.description.toLowerCase().includes(q);
+                el.style.display = match ? '' : 'none';
+            });
+            document.querySelectorAll('.cat-group').forEach(g => {
+                const hasVis = [...g.querySelectorAll('.api-item')].some(e => e.style.display !== 'none');
+                g.style.display = hasVis ? '' : 'none';
+                if (hasVis) vis++;
+            });
+            document.getElementById('noResults').style.display = vis === 0 && q ? 'block' : 'none';
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadApis();
+            loadNotifications();
+            document.getElementById('loader').classList.add('gone');
+        });
+    </script>
+</body>
+</html>

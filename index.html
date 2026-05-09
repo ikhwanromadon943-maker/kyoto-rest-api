@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Kyoto API - Powerful REST API platform for modern developers." />
+    <meta name="author" content="KyotoDev" />
+    <title>Kyoto API V1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com/" />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        :root {
+            --bg: #09090e;
+            --bg-card: rgba(255,255,255,0.03);
+            --bg-card-hover: rgba(255,255,255,0.055);
+            --border: rgba(255,255,255,0.07);
+            --border-hover: rgba(255,107,107,0.35);
+            --text: #e2e0f0;
+            --text-muted: rgba(226,224,240,0.42);
+            --accent: #ff6b6b;
+            --accent-2: #ff8e53;
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+        ::-webkit-scrollbar{display:none}
+
+        body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.7}
+
+        .blob{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0}
+        .blob-1{width:480px;height:480px;background:radial-gradient(circle,rgba(255,107,107,.07) 0%,transparent 70%);top:-180px;left:-120px;animation:blob1 22s ease-in-out infinite}
+        .blob-2{width:380px;height:380px;background:radial-gradient(circle,rgba(255,142,83,.05) 0%,transparent 70%);bottom:-80px;right:-80px;animation:blob2 28s ease-in-out infinite}
+        @keyframes blob1{0%,100%{transform:translate(0,0)}50%{transform:translate(50px,35px)}}
+        @keyframes blob2{0%,100%{transform:translate(0,0)}50%{transform:translate(-35px,-55px)}}
+
+        #cursor-glow{position:fixed;top:0;left:0;width:280px;height:280px;margin:-140px 0 0 -140px;background:radial-gradient(circle,rgba(255,107,107,.055) 0%,transparent 70%);pointer-events:none;z-index:0;border-radius:50%;will-change:transform}
+
+        #loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:18px;transition:opacity .6s ease,visibility .6s ease}
+        #loader.hidden{opacity:0;visibility:hidden}
+        .loader-ring{width:36px;height:36px;border:1px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite}
+        .loader-txt{font-size:9px;letter-spacing:.35em;color:var(--text-muted);text-transform:uppercase}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        header{position:sticky;top:0;z-index:50;background:rgba(9,9,14,.88);backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--border);padding:16px 0}
+        .hdr{max-width:720px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between}
+        .logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+        .logo-mark{width:26px;height:26px;border:1px solid rgba(255,107,107,.4);display:flex;align-items:center;justify-content:center;position:relative}
+        .logo-mark::before{content:'';position:absolute;inset:3px;background:var(--accent);opacity:.12}
+        .logo-mark i{font-size:9px;color:var(--accent);position:relative;z-index:1}
+        .logo-txt{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:.18em;color:var(--text);text-transform:uppercase}
+        .vpill{font-size:8px;letter-spacing:.22em;color:var(--accent);border:1px solid rgba(255,107,107,.25);padding:3px 8px;text-transform:uppercase}
+        .nav-links{display:flex;gap:22px}
+        .nav-links a{font-size:9px;letter-spacing:.15em;color:var(--text-muted);text-decoration:none;text-transform:uppercase;transition:color .2s}
+        .nav-links a:hover{color:var(--accent)}
+
+        main{max-width:720px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+
+        .hero{padding:72px 0 56px}
+        .eyebrow{font-size:9px;letter-spacing:.35em;color:var(--accent);text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:12px;opacity:0;animation:up .6s .2s forwards}
+        .eyebrow::before{content:'';width:22px;height:1px;background:var(--accent)}
+        .hero-title{font-family:'Syne',sans-serif;font-size:clamp(38px,9vw,60px);font-weight:800;line-height:.95;letter-spacing:-.025em;margin-bottom:22px;opacity:0;animation:up .6s .3s forwards}
+        .hi{background:linear-gradient(135deg,var(--accent) 0%,var(--accent-2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .hero-sub{font-size:11px;line-height:1.9;color:var(--text-muted);margin-bottom:36px;max-width:420px;opacity:0;animation:up .6s .4s forwards}
+        .actions{display:flex;gap:10px;flex-wrap:wrap;opacity:0;animation:up .6s .5s forwards}
+        @keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+        .btn-p{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;text-decoration:none;font-size:9px;letter-spacing:.22em;text-transform:uppercase;padding:11px 22px;font-family:'DM Mono',monospace;font-weight:500;transition:all .3s;position:relative;overflow:hidden}
+        .btn-p::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent),var(--accent-2));opacity:0;transition:opacity .3s}
+        .btn-p:hover::before{opacity:1}
+        .btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(255,107,107,.28)}
+        .btn-p span,.btn-p i{position:relative;z-index:1}
+        .btn-g{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--text-muted);text-decoration:none;font-size:9px;letter-spacing:.22em;text-transform:uppercase;padding:10px 22px;border:1px solid var(--border);font-family:'DM Mono',monospace;transition:all .3s}
+        .btn-g:hover{color:var(--text);border-color:var(--border-hover);background:var(--bg-card-hover)}
+
+        .sdiv{display:flex;align-items:center;gap:14px;margin:44px 0 28px;opacity:0;transform:translateY(10px);transition:opacity .6s,transform .6s}
+        .sdiv.v{opacity:1;transform:none}
+        .sdiv-lbl{font-size:8px;letter-spacing:.35em;color:var(--text-muted);text-transform:uppercase;white-space:nowrap}
+        .sdiv-line{flex:1;height:1px;background:var(--border)}
+
+        .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:44px;opacity:0;transform:translateY(10px);transition:opacity .6s .1s,transform .6s .1s}
+        .stats.v{opacity:1;transform:none}
+        @media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
+        .stat{background:var(--bg);padding:22px 16px;text-align:center;transition:background .3s}
+        .stat:hover{background:var(--bg-card-hover)}
+        .sv{font-family:'Syne',sans-serif;font-size:30px;font-weight:700;color:var(--text);line-height:1;margin-bottom:6px}
+        .sl{font-size:8px;letter-spacing:.25em;color:var(--text-muted);text-transform:uppercase}
+
+        /* HTTP Methods Grid */
+        .method-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:44px;opacity:0;transform:translateY(10px);transition:opacity .6s .15s,transform .6s .15s}
+        .method-grid.v{opacity:1;transform:none}
+        @media(max-width:600px){.method-grid{grid-template-columns:repeat(2,1fr)}}
+        .method-card{background:var(--bg);padding:20px 14px;text-align:center;transition:all .3s;cursor:default;position:relative;overflow:hidden}
+        .method-card:hover{background:var(--bg-card-hover);transform:translateY(-3px)}
+        .method-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;transition:all .3s}
+        .method-card:hover::before{height:3px}
+        .mc-get::before{background:#4ade80}
+        .mc-post::before{background:#ff6b6b}
+        .mc-put::before{background:#facc15}
+        .mc-delete::before{background:#f87171}
+        .mc-patch::before{background:#a78bfa}
+        .mc-head::before{background:#38bdf8}
+        .mc-options::before{background:#fb923c}
+        .mc-trace::before{background:#a3e635}
+        .method-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.15em;padding:5px 12px;margin-bottom:10px;text-transform:uppercase;border:1px solid}
+        .m-get{color:#4ade80;border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.08)}
+        .m-post{color:#ff6b6b;border-color:rgba(255,107,107,.25);background:rgba(255,107,107,.08)}
+        .m-put{color:#facc15;border-color:rgba(250,204,21,.25);background:rgba(250,204,21,.08)}
+        .m-delete{color:#f87171;border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.08)}
+        .m-patch{color:#a78bfa;border-color:rgba(167,139,250,.25);background:rgba(167,139,250,.08)}
+        .m-head{color:#38bdf8;border-color:rgba(56,189,248,.25);background:rgba(56,189,248,.08)}
+        .m-options{color:#fb923c;border-color:rgba(251,146,60,.25);background:rgba(251,146,60,.08)}
+        .m-trace{color:#a3e635;border-color:rgba(163,230,53,.25);background:rgba(163,230,53,.08)}
+        .method-label{font-size:8px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase}
+        .method-desc{font-size:8px;color:var(--text-muted);margin-top:6px;line-height:1.5;opacity:.7}
+
+        .feats{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border)}
+        .fc{background:var(--bg);padding:18px 22px;display:flex;align-items:center;gap:18px;opacity:0;transform:translateY(10px);transition:opacity .5s,transform .5s,background .3s,padding-left .25s}
+        .fc.v{opacity:1;transform:none}
+        .fc:hover{background:var(--bg-card-hover);padding-left:28px}
+        .ficon{width:34px;height:34px;flex-shrink:0;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:border-color .3s}
+        .fc:hover .ficon{border-color:var(--accent)}
+        .ficon i{font-size:12px;color:var(--accent)}
+        .fn{font-size:11px;font-weight:500;color:var(--text);margin-bottom:2px}
+        .fd{font-size:9px;color:var(--text-muted);line-height:1.65}
+
+        .steps{border:1px solid var(--border);padding:26px 22px;background:var(--bg);opacity:0;transform:translateY(10px);transition:opacity .6s,transform .6s}
+        .steps.v{opacity:1;transform:none}
+        .steps-hdr{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:.05em;margin-bottom:22px;display:flex;align-items:center;gap:10px;color:var(--text)}
+        .steps-hdr i{color:var(--accent)}
+        .srow{display:flex;align-items:flex-start;gap:14px;padding:13px 0;border-bottom:1px solid var(--border);transition:padding-left .2s}
+        .srow:last-child{border-bottom:none;padding-bottom:0}
+        .srow:hover{padding-left:8px}
+        .snum{width:26px;height:26px;flex-shrink:0;border:1px solid rgba(255,107,107,.3);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:var(--accent);transition:all .25s}
+        .srow:hover .snum{background:var(--accent);color:#fff;border-color:var(--accent)}
+        .stitle{font-size:10px;font-weight:500;color:var(--text);margin-bottom:3px}
+        .sdesc{font-size:9px;color:var(--text-muted);line-height:1.7}
+
+        .llinks{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);opacity:0;transform:translateY(10px);transition:opacity .6s,transform .6s}
+        .llinks.v{opacity:1;transform:none}
+        .ll{display:flex;align-items:center;justify-content:space-between;background:var(--bg);padding:13px 18px;text-decoration:none;color:var(--text-muted);font-size:10px;transition:all .25s}
+        .ll:hover{background:var(--bg-card-hover);color:var(--text);padding-left:26px}
+        .ll i.arr{font-size:9px;opacity:.4}
+
+        footer{position:relative;z-index:1;max-width:720px;margin:56px auto 0;padding:22px 32px 40px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+        .fcopy{font-size:9px;color:var(--text-muted);letter-spacing:.05em}
+        .flinks{display:flex;gap:18px}
+        .flinks a{font-size:9px;color:var(--text-muted);text-decoration:none;transition:color .2s}
+        .flinks a:hover{color:var(--accent)}
+
+        .marquee-wrap{overflow:hidden;border:1px solid var(--border);padding:12px 0;margin-bottom:44px;opacity:0;transform:translateY(10px);transition:opacity .6s .05s,transform .6s .05s}
+        .marquee-wrap.v{opacity:1;transform:none}
+        .marquee{display:flex;gap:40px;animation:marq 30s linear infinite;width:max-content}
+        @keyframes marq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+        .marq-item{font-size:9px;color:var(--text-muted);letter-spacing:.15em;white-space:nowrap;display:flex;align-items:center;gap:8px}
+        .marq-item::after{content:'';width:4px;height:4px;background:var(--accent);border-radius:50%;opacity:.6}
+    </style>
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div id="cursor-glow"></div>
+    <div id="loader">
+        <div class="loader-ring"></div>
+        <span class="loader-txt">Initializing</span>
+    </div>
+    <header>
+        <div class="hdr">
+            <a href="/" class="logo">
+                <div class="logo-mark"><i class="fas fa-torii-gate"></i></div>
+                <span class="logo-txt">Kyoto</span>
+            </a>
+            <div style="display:flex;align-items:center;gap:14px">
+                <span class="vpill">v1.0</span>
+                <nav class="nav-links">
+                    <a href="#methods">Methods</a>
+                    <a href="#features">Features</a>
+                    <a href="/docs">Docs</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <main>
+        <section class="hero">
+            <p class="eyebrow">REST API Platform</p>
+            <h1 class="hero-title">
+                <span class="hi">Kyoto</span><br />API V1
+            </h1>
+            <p class="hero-sub">
+                High-performance REST API platform with 30+ endpoints. Fast, secure, and built for modern developers.
+            </p>
+            <div class="actions">
+                <a href="/docs" class="btn-p"><i class="fas fa-rocket"></i><span>Explore Docs</span></a>
+                <a href="https://github.com" target="_blank" class="btn-g"><i class="fab fa-github"></i><span>GitHub</span></a>
+            </div>
+        </section>
+        <div class="stats animate-scroll">
+            <div class="stat">
+                <div id="total-endpoints" class="sv">—</div>
+                <div class="sl">Endpoints</div>
+            </div>
+            <div class="stat">
+                <div id="total-categories" class="sv">—</div>
+                <div class="sl">Categories</div>
+            </div>
+            <div class="stat">
+                <div class="sv">99.9%</div>
+                <div class="sl">Uptime</div>
+            </div>
+            <div class="stat">
+                <div class="sv">&lt;100ms</div>
+                <div class="sl">Latency</div>
+            </div>
+        </div>
+        <div class="marquee-wrap animate-scroll">
+            <div class="marquee" id="marquee">
+                <!-- filled by JS -->
+            </div>
+        </div>
+        <div class="sdiv animate-scroll" id="methods">
+            <span class="sdiv-lbl">HTTP Methods</span>
+            <div class="sdiv-line"></div>
+        </div>
+        <div class="method-grid animate-scroll">
+            <div class="method-card mc-get">
+                <div class="method-badge m-get">GET</div>
+                <div class="method-label">READ</div>
+                <div class="method-desc">Retrieve data from the server. Safe &amp; idempotent.</div>
+            </div>
+            <div class="method-card mc-post">
+                <div class="method-badge m-post">POST</div>
+                <div class="method-label">CREATE</div>
+                <div class="method-desc">Create new resources. Submits data to the API.</div>
+            </div>
+            <div class="method-card mc-put">
+                <div class="method-badge m-put">PUT</div>
+                <div class="method-label">UPDATE</div>
+                <div class="method-desc">Replace existing resource entirely. Idempotent.</div>
+            </div>
+            <div class="method-card mc-delete">
+                <div class="method-badge m-delete">DELETE</div>
+                <div class="method-label">REMOVE</div>
+                <div class="method-desc">Delete a specified resource permanently.</div>
+            </div>
+            <div class="method-card mc-patch">
+                <div class="method-badge m-patch">PATCH</div>
+                <div class="method-label">MODIFY</div>
+                <div class="method-desc">Partial update — modify specific fields only.</div>
+            </div>
+            <div class="method-card mc-head">
+                <div class="method-badge m-head">HEAD</div>
+                <div class="method-label">CHECK</div>
+                <div class="method-desc">Like GET but returns headers only, no body.</div>
+            </div>
+            <div class="method-card mc-options">
+                <div class="method-badge m-options">OPTIONS</div>
+                <div class="method-label">DISCOVER</div>
+                <div class="method-desc">CORS preflight + discover allowed methods.</div>
+            </div>
+            <div class="method-card mc-trace">
+                <div class="method-badge m-trace">TRACE</div>
+                <div class="method-label">DIAGNOSE</div>
+                <div class="method-desc">Echoes back the request — useful for debugging.</div>
+            </div>
+        </div>
+        <div class="sdiv animate-scroll" id="features">
+            <span class="sdiv-lbl">Core Features</span>
+            <div class="sdiv-line"></div>
+        </div>
+        <div class="feats">
+            <div class="fc animate-scroll" style="transition-delay:0s">
+                <div class="ficon"><i class="fas fa-bolt"></i></div>
+                <div><div class="fn">Lightning Fast</div><div class="fd">Sub-100ms average response across all endpoints.</div></div>
+            </div>
+            <div class="fc animate-scroll" style="transition-delay:.07s">
+                <div class="ficon"><i class="fas fa-shield-halved"></i></div>
+                <div><div class="fn">Secure</div><div class="fd">All endpoints enforce HTTPS, rate limiting &amp; CORS headers.</div></div>
+            </div>
+            <div class="fc animate-scroll" style="transition-delay:.14s">
+                <div class="ficon"><i class="fas fa-plug"></i></div>
+                <div><div class="fn">Easy Integration</div><div class="fd">RESTful JSON API — works with any language (cURL, fetch, axios, etc).</div></div>
+            </div>
+            <div class="fc animate-scroll" style="transition-delay:.21s">
+                <div class="ficon"><i class="fas fa-chart-mixed"></i></div>
+                <div><div class="fn">Full CRUD</div><div class="fd">GET, POST, PUT, DELETE, PATCH — complete data manipulation supported.</div></div>
+            </div>
+        </div>
+        <div class="sdiv animate-scroll">
+            <span class="sdiv-lbl">Quick Start</span>
+            <div class="sdiv-line"></div>
+        </div>
+        <div class="steps animate-scroll">
+            <div class="steps-hdr"><i class="fas fa-terminal"></i>Getting Started</div>
+            <div class="srow">
+                <div class="snum">01</div>
+                <div><div class="stitle">Browse Categories</div><div class="sdesc">Explore available API categories: AI, Downloader, Tools, Storage, Media &amp; Manga.</div></div>
+            </div>
+            <div class="srow">
+                <div class="snum">02</div>
+                <div><div class="stitle">Read the Docs</div><div class="sdesc">Check parameters, response formats, and usage examples in the interactive docs.</div></div>
+            </div>
+            <div class="srow">
+                <div class="snum">03</div>
+                <div><div class="stitle">Test &amp; Integrate</div><div class="sdesc">Use the built-in API tester or integrate using cURL, fetch, or any HTTP client.</div></div>
+            </div>
+        </div>
+        <div class="sdiv animate-scroll">
+            <span class="sdiv-lbl">Links</span>
+            <div class="sdiv-line"></div>
+        </div>
+        <div class="llinks animate-scroll">
+            <a href="https://wa.me/6283181644868" target="_blank" class="ll">
+                <span><i class="fab fa-whatsapp" style="margin-right:10px;color:#25D366"></i>WhatsApp</span>
+                <i class="fas fa-arrow-right arr"></i>
+            </a>
+            <a href="https://t.me/kyotodev" target="_blank" class="ll">
+                <span><i class="fab fa-telegram" style="margin-right:10px;color:#26A5E4"></i>Telegram Channel</span>
+                <i class="fas fa-arrow-right arr"></i>
+            </a>
+            <a href="https://github.com" target="_blank" class="ll">
+                <span><i class="fab fa-github" style="margin-right:10px;color:var(--accent)"></i>GitHub</span>
+                <i class="fas fa-arrow-right arr"></i>
+            </a>
+        </div>
+    </main>
+    <footer>
+        <span class="fcopy">© <span id="year"></span> Kyoto API — All Rights Reserved.</span>
+        <div class="flinks">
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+        </div>
+    </footer>
+    <script>
+        async function updateStats() {
+            try {
+                const r = await fetch('/src/openapi.json');
+                const d = await r.json();
+                let epCount = 0;
+                const cats = new Set();
+                Object.keys(d.paths||{}).forEach(path => {
+                    Object.keys(d.paths[path]).forEach(method => {
+                        const ep = d.paths[path][method];
+                        cats.add(ep.tags?.[0] || 'Uncategorized');
+                        epCount++;
+                    });
+                });
+                document.getElementById('total-endpoints').textContent = epCount || '—';
+                document.getElementById('total-categories').textContent = cats.size || '—';
+                
+                // Fill marquee
+                const marquee = document.getElementById('marquee');
+                const items = [];
+                Object.keys(d.paths||{}).slice(0, 15).forEach(path => {
+                    const methods = Object.keys(d.paths[path]).map(m => m.toUpperCase()).join(', ');
+                    items.push(`<span class="marq-item">${methods} ${path}</span>`);
+                });
+                marquee.innerHTML = items.concat(items).join('');
+            } catch(e) { console.error(e); }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('loader').classList.add('hidden');
+            document.getElementById('year').textContent = new Date().getFullYear();
+            updateStats();
+            const glow = document.getElementById('cursor-glow');
+            document.addEventListener('mousemove', e => {
+                glow.style.transform = `translate(${e.clientX}px,${e.clientY}px)`;
+            });
+            const obs = new IntersectionObserver(entries => {
+                entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('v');obs.unobserve(e.target);} });
+            },{threshold:.1});
+            document.querySelectorAll('.animate-scroll').forEach(el => obs.observe(el));
+        });
+    </script>
+</body>
+</html>

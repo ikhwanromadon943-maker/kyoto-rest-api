@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/docs", "destination": "/docs.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/api/ai/:path*", "destination": "/src/routes/ai" },
+    { "source": "/api/downloader/:path*", "destination": "/src/routes/downloader" },
+    { "source": "/api/tools/:path*", "destination": "/src/routes/tools" },
+    { "source": "/api/storage/:path*", "destination": "/src/routes/storage" },
+    { "source": "/api/media/:path*", "destination": "/src/routes/media" },
+    { "source": "/api/manga/:path*", "destination": "/src/routes/manga" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS, TRACE" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, X-API-Key" },
+        { "key": "Access-Control-Max-Age", "value": "86400" }
+      ]
+    }
+  ]
+}
