@@ -1,31 +1,25 @@
 {
   "version": 2,
-  "cleanUrls": true,
   "rewrites": [
     { "source": "/docs", "destination": "/docs.html" },
     { "source": "/status", "destination": "/status.html" },
     { "source": "/pricing", "destination": "/pricing.html" },
     { "source": "/changelog", "destination": "/changelog.html" },
     { "source": "/privacy", "destination": "/privacy.html" },
-    { "source": "/terms", "destination": "/terms.html" }
+    { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/api/ai/:path*", "destination": "/api/ai" },
+    { "source": "/api/tools/:path*", "destination": "/api/tools" },
+    { "source": "/api/media/:path*", "destination": "/api/media" },
+    { "source": "/api/manga/:path*", "destination": "/api/manga" }
   ],
   "headers": [
     {
       "source": "/api/(.*)",
       "headers": [
         { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS, TRACE" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, OPTIONS" },
         { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, X-API-Key" },
         { "key": "Access-Control-Max-Age", "value": "86400" }
-      ]
-    },
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
       ]
     }
   ]
