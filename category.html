@@ -8,7 +8,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://kyoto-rest-api.vercel.app/category" />
     <meta property="og:title" content="Category." />
-    <meta property="og:description" content="Browse and test 55+ live endpoints across 12 categories. Infrastructure for text generation, image processing, translation, and machine learning tasks." />
+    <meta property="og:description" content="Browse and test 55+ live endpoints across 12 categories." />
     <meta property="og:image" content="https://kyoto-rest-api.vercel.app/og-image.jpg" />
     <meta property="og:image:width" content="1440" />
     <meta property="og:image:height" content="600" />
@@ -69,42 +69,49 @@
       @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
       .method-badge {
-        display: inline-block; padding: 3px 10px; border-radius: 6px;
+        display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 8px;
         font-size: 11px; font-weight: 700; text-transform: uppercase;
-        letter-spacing: 0.5px; font-family: 'Ubuntu Mono', monospace;
+        letter-spacing: 0.5px; font-family: 'Ubuntu Mono', monospace; flex-shrink: 0;
       }
       .method-get { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
-
-      .status-ready { color: #4ade80; background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.2); font-size: 10px; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Ubuntu Mono', monospace; }
-      .status-depr { color: #facc15; background: rgba(250,204,21,0.08); border: 1px solid rgba(250,204,21,0.2); font-size: 10px; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Ubuntu Mono', monospace; }
-
-      .ep-detail-panel { background: #141414; border: 1px solid #2E2E2E; border-top: none; border-radius: 0 0 12px 12px; padding: 24px; display: none; }
-      .ep-detail-panel.open { display: block; animation: fadeIn 0.3s ease-out; }
+      .method-post { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.25); }
+      .method-put { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+      .method-delete { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+      .method-patch { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
 
       .ep-toggle-btn {
-        width: 100%; background: transparent; border: 1px solid #2E2E2E; color: #e2e0f0;
-        padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
-        cursor: pointer; font-family: 'Space Grotesk', sans-serif; font-size: 13px;
-        text-align: left; transition: all 0.2s; gap: 12px; border-radius: 12px;
+        width: 100%; background: #212121; border: 1px solid #2E2E2E; color: #fff;
+        padding: 16px 20px; display: flex; align-items: flex-start; justify-content: space-between;
+        cursor: pointer; font-family: 'Space Grotesk', sans-serif; text-align: left;
+        transition: all 0.2s; gap: 12px; border-radius: 12px;
       }
-      .ep-item { margin-bottom: 4px; }
-      .ep-item.active .ep-toggle-btn { border-radius: 12px 12px 0 0; border-bottom: none; background: #1c1c1c; }
+      .ep-item { margin-bottom: 6px; }
+      .ep-item.active .ep-toggle-btn { border-radius: 12px 12px 0 0; border-bottom: 1px solid #2E2E2E; background: #1a1a1a; }
       .ep-toggle-btn:hover { background: #1c1c1c; border-color: #383838; }
+
+      .ep-detail-panel {
+        background: #141414; border: 1px solid #2E2E2E; border-top: none;
+        border-radius: 0 0 12px 12px; display: none;
+      }
+      .ep-detail-panel.open { display: block; animation: fadeIn 0.3s ease-out; }
+
+      .detail-block { padding: 20px 24px; border-bottom: 1px solid #2E2E2E; }
+      .detail-block:last-child { border-bottom: none; }
 
       .cat-toggle-btn {
         width: 100%; background: #212121; border: 1px solid #2E2E2E; color: #fff;
         padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;
         cursor: pointer; font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600;
-        text-align: left; transition: all 0.2s; gap: 12px; border-radius: 12px; margin-bottom: 1px;
+        text-align: left; transition: all 0.2s; gap: 12px; border-radius: 12px; margin-bottom: 4px;
       }
       .cat-toggle-btn:hover { background: #262626; border-color: #383838; }
-      .cat-body { display: none; padding: 4px 0 12px 0; }
+      .cat-body { display: none; padding: 8px 0 16px 0; }
       .cat-body.show { display: block; }
 
       input[type="text"], input[type="number"], select, textarea {
         width: 100%; background: #181818; border: 1px solid #2E2E2E; color: #e2e0f0;
         font-family: 'Ubuntu Mono', monospace; font-size: 13px; padding: 10px 14px;
-        border-radius: 8px; outline: none; transition: border-color 0.2s;
+        border-radius: 10px; outline: none; transition: border-color 0.2s; box-sizing: border-box;
       }
       input:focus, select:focus, textarea:focus { border-color: #555; }
       input::placeholder, textarea::placeholder { color: #555; }
@@ -114,36 +121,54 @@
         background: #ffffff; color: #181818; border: none; padding: 10px 24px;
         font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
         letter-spacing: 0.3px; border-radius: 10px; cursor: pointer; transition: all 0.2s;
-        display: inline-flex; align-items: center; gap: 6px;
+        display: inline-flex; align-items: center; gap: 8px;
       }
       .btn-exec:hover { background: #e0e0e0; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
       .btn-exec:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-      .btn-clear {
-        background: transparent; color: #999; border: 1px solid #2E2E2E; padding: 10px 20px;
-        font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.3px;
-        border-radius: 10px; cursor: pointer; transition: all 0.2s; display: none;
-      }
-      .btn-clear:hover { color: #fff; border-color: #555; }
 
       .code-block {
-        background: #111; border: 1px solid #2E2E2E; border-radius: 8px;
-        padding: 14px; font-family: 'Ubuntu Mono', monospace; font-size: 12px;
+        background: #111; border: 1px solid #2E2E2E; border-radius: 10px;
+        padding: 16px; font-family: 'Ubuntu Mono', monospace; font-size: 12px;
         color: #e2e0f0; overflow-x: auto; white-space: pre-wrap; word-break: break-all;
-        max-height: 400px; overflow-y: auto; line-height: 1.7;
+        max-height: 500px; overflow-y: auto; line-height: 1.8;
       }
-      .code-block img { max-width: 100%; height: auto; border-radius: 4px; }
+      .code-block img, .code-block video, .code-block audio { max-width: 100%; border-radius: 6px; display: block; }
+
       .section-label {
-        font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #777;
-        margin-bottom: 10px; font-family: 'Ubuntu Mono', monospace; font-weight: 500;
+        font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888;
+        margin-bottom: 12px; font-family: 'Ubuntu Mono', monospace; font-weight: 500;
+        display: flex; align-items: center; gap: 8px;
       }
+      .section-label i { font-size: 16px; }
       .param-group { margin-bottom: 14px; }
-      .param-label { font-size: 13px; color: #ccc; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; font-weight: 500; }
+      .param-label { font-size: 13px; color: #ccc; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; font-weight: 500; }
       .req-star { color: #f87171; font-size: 14px; }
-      .param-desc { font-size: 11px; color: #666; margin-top: 4px; }
+      .param-desc { font-size: 11px; color: #666; margin-top: 5px; }
       .chevron { transition: transform 0.25s; }
       .chevron.open { transform: rotate(180deg); }
-      .resp-wrap { display: none; margin-top: 20px; }
-      .resp-wrap.show { display: block; }
+
+      .status-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+      .status-table th { text-align: left; padding: 10px 16px; border-bottom: 1px solid #2E2E2E; color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 500; font-family: 'Ubuntu Mono', monospace; }
+      .status-table td { padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+      .status-table td:first-child { font-family: 'Ubuntu Mono', monospace; }
+      .status-table tr:last-child td { border-bottom: none; }
+      .status-table tr:hover td { background: rgba(255,255,255,0.02); }
+      .sc-200 { color: #4ade80; }
+      .sc-err { color: #f87171; }
+      .sc-warn { color: #facc15; }
+
+      .ep-link { font-family: 'Ubuntu Mono', monospace; font-size: 13px; color: #bbb; word-break: break-all; }
+      .ep-summary { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+
+      .copy-btn {
+        background: transparent; border: 1px solid #2E2E2E; color: #999; padding: 8px 16px;
+        font-family: 'Space Grotesk', sans-serif; font-size: 11px; cursor: pointer;
+        border-radius: 8px; transition: all 0.2s; letter-spacing: 0.3px;
+      }
+      .copy-btn:hover { color: #fff; border-color: #555; }
+
+      .flex-row-btns { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+      .mb-16 { margin-bottom: 16px; }
     </style>
   </head>
   <body class="bg-[#181818] text-gray-200 antialiased font-sans min-h-screen">
@@ -185,41 +210,20 @@
             <span>Back to Categories</span>
           </a>
         </div>
-        <div id="search-wrap" class="mb-6 relative">
-          <i class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-lg">search</i>
-          <input type="text" id="searchInput" placeholder="Search endpoints..." class="w-full bg-[#212121] border border-[#2E2E2E] text-white font-mono text-sm py-3 pl-12 pr-4 rounded-xl outline-none focus:border-[#444] transition-colors" />
+        <div class="relative mb-6">
+          <i class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-lg pointer-events-none z-10">search</i>
+          <input type="text" id="searchInput" placeholder="    Search endpoints..." class="w-full bg-[#212121] border border-[#2E2E2E] text-white font-sans text-sm py-3 pl-12 pr-4 rounded-xl outline-none focus:border-[#444] transition-colors" style="text-indent:0;" />
         </div>
         <div id="content" class="space-y-3"></div>
       </main>
       <footer class="bg-[#212121] relative z-10 border-t border-[#2E2E2E] w-full">
         <div class="max-w-3xl mx-auto px-8 py-12">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div>
-              <h3 class="font-semibold text-white mb-3">About</h3>
-              <p class="text-sm text-gray-400 leading-relaxed">Interactive API explorer — browse endpoints and test them directly from this page.</p>
-            </div>
-            <div>
-              <h3 class="font-semibold text-white mb-3">Quick Links</h3>
-              <div class="flex flex-col items-start space-y-2">
-                <a href="/introduction" class="text-sm text-gray-400 hover:text-white transition-colors">Documentation</a>
-                <a href="/category" class="text-sm text-gray-400 hover:text-white transition-colors">All Categories</a>
-              </div>
-            </div>
-            <div>
-              <h3 class="font-semibold text-white mb-3">Connect</h3>
-              <div class="flex gap-3">
-                <a href="https://whatsapp.com/channel/0029Vb69z8n1dAvztHQTDu3r" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#1a1a1a] hover:bg-[#2a2a2a] text-gray-600 hover:text-white transition-all">
-                  <i class="fab fa-whatsapp text-lg"></i>
-                </a>
-                <a href="https://www.instagram.com/elrayyxml" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#1a1a1a] hover:bg-[#2a2a2a] text-gray-600 hover:text-white transition-all">
-                  <i class="fab fa-instagram text-lg"></i>
-                </a>
-              </div>
-            </div>
+            <div><h3 class="font-semibold text-white mb-3">About</h3><p class="text-sm text-gray-400 leading-relaxed">Interactive API explorer — browse endpoints and test them directly.</p></div>
+            <div><h3 class="font-semibold text-white mb-3">Quick Links</h3><div class="flex flex-col items-start space-y-2"><a href="/introduction" class="text-sm text-gray-400 hover:text-white transition-colors">Documentation</a><a href="/category" class="text-sm text-gray-400 hover:text-white transition-colors">All Categories</a></div></div>
+            <div><h3 class="font-semibold text-white mb-3">Connect</h3><div class="flex gap-3"><a href="https://whatsapp.com/channel/0029Vb69z8n1dAvztHQTDu3r" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#1a1a1a] hover:bg-[#2a2a2a] text-gray-600 hover:text-white transition-all"><i class="fab fa-whatsapp text-lg"></i></a><a href="https://www.instagram.com/elrayyxml" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#1a1a1a] hover:bg-[#2a2a2a] text-gray-600 hover:text-white transition-all"><i class="fab fa-instagram text-lg"></i></a></div></div>
           </div>
-          <div class="pt-8 border-t border-[#2E2E2E] text-center">
-            <p class="text-sm text-gray-400">&copy; 2026 Kyoto API, All rights reserved.</p>
-          </div>
+          <div class="pt-8 border-t border-[#2E2E2E] text-center"><p class="text-sm text-gray-400">&copy; 2026 Kyoto API, All rights reserved.</p></div>
         </div>
       </footer>
     </div>
@@ -234,9 +238,21 @@
       sidebarClose.addEventListener('click', closeSidebar);
       overlay.addEventListener('click', closeSidebar);
 
+      async function copyText(text, btn) {
+        const orig = btn.innerHTML;
+        try { await navigator.clipboard.writeText(text); btn.innerHTML = '<i class="material-icons text-sm">check</i> Copied'; }
+        catch(e) { btn.innerHTML = 'Failed'; }
+        setTimeout(() => { btn.innerHTML = orig; }, 2000);
+      }
+
       const _epStore = {};
 
-      function buildFormFields(item, ci, ei) {
+      function methodClass(m) {
+        const map = { GET:'method-get', POST:'method-post', PUT:'method-put', DELETE:'method-delete', PATCH:'method-patch' };
+        return map[m] || 'method-get';
+      }
+
+      function buildFormFields(item) {
         let html = '';
         if (item.parameters && item.parameters.length > 0) {
           item.parameters.forEach(param => {
@@ -262,42 +278,88 @@
       function buildDetailHTML(ci, ei, item) {
         const formFields = buildFormFields(item);
         return `
-          ${item.desc ? `<p class="text-sm text-gray-400 mb-5 leading-relaxed">${item.desc}</p>` : ''}
-          <div class="section-label">Try It Out</div>
-          <form id="form-${ci}-${ei}" onsubmit="executeRequest(event,${ci},${ei},'${item.method}','${item.path}')">
-            ${formFields || '<p class="text-sm text-gray-600 mb-4">No parameters needed.</p>'}
-            <div class="flex items-center gap-3 mt-4">
-              <button type="submit" class="btn-exec" id="exec-btn-${ci}-${ei}"><i class="material-icons text-base">play_arrow</i> Execute</button>
-              <button type="button" id="clear-${ci}-${ei}" class="btn-clear" onclick="clearResponse(${ci},${ei})">Clear</button>
+          <div class="detail-block">
+            <div class="section-label"><i class="material-icons">play_arrow</i> TRY IT OUT</div>
+            <p class="text-sm text-gray-400 mb-4">${item.description || item.summary || 'No description.'}</p>
+            ${formFields ? `
+              <div class="section-label" style="margin-top:16px;"><i class="material-icons">tune</i> Parameters</div>
+              ${formFields}
+            ` : '<p class="text-sm text-gray-600 mb-4">No parameters needed.</p>'}
+            <div class="flex-row-btns">
+              <button class="btn-exec" id="exec-btn-${ci}-${ei}" onclick="executeRequest(${ci},${ei},'${item.method}','${item.path}')"><i class="material-icons text-base">play_arrow</i> Execute</button>
             </div>
-          </form>
-          <div class="resp-wrap" id="resp-${ci}-${ei}">
-            <div class="section-label mt-6">Response</div>
-            <div class="code-block" id="resp-body-${ci}-${ei}"></div>
+            <div id="resp-wrap-${ci}-${ei}" style="display:none;margin-top:16px;">
+              <div class="section-label"><i class="material-icons">link</i> Request URL</div>
+              <div class="flex-row-btns mb-16">
+                <div class="code-block" style="flex:1;margin:0;" id="resp-url-${ci}-${ei}"></div>
+                <button class="copy-btn" id="copy-url-${ci}-${ei}" onclick="copyText(document.getElementById('resp-url-${ci}-${ei}').textContent, this)"><i class="material-icons text-sm">content_copy</i> Copy</button>
+              </div>
+              <div class="section-label"><i class="material-icons">terminal</i> cURL Command</div>
+              <div class="flex-row-btns mb-16">
+                <div class="code-block" style="flex:1;margin:0;" id="resp-curl-${ci}-${ei}"></div>
+                <button class="copy-btn" id="copy-curl-${ci}-${ei}" onclick="copyText(document.getElementById('resp-curl-${ci}-${ei}').textContent, this)"><i class="material-icons text-sm">content_copy</i> Copy</button>
+              </div>
+              <div class="section-label"><i class="material-icons">data_object</i> Response</div>
+              <div class="code-block" id="resp-body-${ci}-${ei}"></div>
+            </div>
+          </div>
+          <div class="detail-block">
+            <div class="section-label" style="margin-bottom:16px;"><i class="material-icons">list</i> HTTP STATUS CODES</div>
+            <table class="status-table">
+              <thead><tr><th>Code</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td class="sc-200"><i class="material-icons text-sm">check_circle</i> 200</td><td>OK — Request successful</td></tr>
+                <tr><td class="sc-err"><i class="material-icons text-sm">error</i> 400</td><td>Bad Request — Invalid parameters or missing required fields</td></tr>
+                <tr><td class="sc-err"><i class="material-icons text-sm">error</i> 405</td><td>Method Not Allowed — HTTP method not supported</td></tr>
+                <tr><td class="sc-warn"><i class="material-icons text-sm">warning</i> 429</td><td>Too Many Requests — Rate limit exceeded</td></tr>
+                <tr><td class="sc-err"><i class="material-icons text-sm">error</i> 500</td><td>Internal Server Error — Server encountered an error</td></tr>
+              </tbody>
+            </table>
           </div>`;
       }
 
-      async function executeRequest(event, ci, ei, method, path) {
-        event.preventDefault();
+      async function executeRequest(ci, ei, method, path) {
         const form = document.getElementById(`form-${ci}-${ei}`);
-        const respWrap = document.getElementById(`resp-${ci}-${ei}`);
-        const clearBtn = document.getElementById(`clear-${ci}-${ei}`);
+        const respWrap = document.getElementById(`resp-wrap-${ci}-${ei}`);
         const execBtn = document.getElementById(`exec-btn-${ci}-${ei}`);
+        const urlDiv = document.getElementById(`resp-url-${ci}-${ei}`);
+        const curlDiv = document.getElementById(`resp-curl-${ci}-${ei}`);
         const bodyDiv = document.getElementById(`resp-body-${ci}-${ei}`);
 
-        respWrap.classList.add('show');
-        clearBtn.style.display = 'inline-flex';
-        const formData = new FormData(form);
-        const params = new URLSearchParams();
-        for (const [k, v] of formData.entries()) { if (typeof v === 'string' && v) params.append(k, v); }
-        const qs = params.toString();
-        const fullPath = qs ? (path.includes('?') ? path + '&' + qs : path + '?' + qs) : path;
+        let fullPath = path;
+        let curlCmd = `curl -X ${method} "${window.location.origin}${path}"`;
+        const formData = form ? new FormData(form) : new FormData();
 
-        bodyDiv.innerHTML = '<span style="color:#666;font-size:13px">Loading...</span>';
+        if (['POST','PUT','PATCH'].includes(method)) {
+          fetchOpts = { method };
+          const rawJson = formData.get('__raw_json__');
+          if (rawJson && rawJson.trim()) {
+            fetchOpts.headers = {'Content-Type':'application/json'};
+            fetchOpts.body = rawJson.trim();
+            curlCmd += ` -H "Content-Type: application/json" -d '${rawJson.trim()}'`;
+          } else {
+            fetchOpts.body = formData;
+            for (const [k,v] of formData.entries()) {
+              curlCmd += v instanceof File && v.name ? ` -F "${k}=@${v.name}"` : ` -F "${k}=${v}"`;
+            }
+          }
+        } else {
+          const params = new URLSearchParams();
+          for (const [k,v] of formData.entries()) { if (typeof v === 'string' && v) params.append(k, v); }
+          const qs = params.toString();
+          if (qs) { fullPath += (path.includes('?')?'&':'?') + qs; }
+          curlCmd = `curl -X ${method} "${window.location.origin}${fullPath}"`;
+        }
+
+        respWrap.style.display = 'block';
+        urlDiv.textContent = `${window.location.origin}${fullPath}`;
+        curlDiv.textContent = curlCmd;
+        bodyDiv.innerHTML = '<span style="color:#666;font-size:13px;">Loading...</span>';
         execBtn.disabled = true;
 
         try {
-          const res = await fetch(fullPath);
+          const fetchOpts2 = ['POST','PUT','PATCH'].includes(method) ? (fetchOpts || {method}) : {};
+          const res = await fetch(fullPath, fetchOpts2);
           const ct = res.headers.get('content-type') || '';
           if (!res.ok) {
             const t = await res.text().catch(() => '');
@@ -309,19 +371,22 @@
           } else if (ct.startsWith('image/')) {
             const blob = await res.blob();
             const url = URL.createObjectURL(blob);
-            bodyDiv.innerHTML = `<img src="${url}" alt="response image"><br><a href="${url}" download style="color:#60a5fa;font-size:12px;margin-top:8px;display:inline-block">Download Image</a>`;
+            bodyDiv.innerHTML = `<img src="${url}" alt="Response Image"><div style="margin-top:12px;"><a href="${url}" download="response.${ct.split('/')[1] || 'png'}" style="color:#60a5fa;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;"><i class="material-icons text-sm">download</i> Download Image</a></div>`;
+          } else if (ct.startsWith('video/')) {
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            bodyDiv.innerHTML = `<video controls src="${url}" style="max-width:100%;border-radius:6px;"></video><div style="margin-top:12px;"><a href="${url}" download="response.${ct.split('/')[1] || 'mp4'}" style="color:#60a5fa;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;"><i class="material-icons text-sm">download</i> Download Video</a></div>`;
+          } else if (ct.startsWith('audio/')) {
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            bodyDiv.innerHTML = `<audio controls src="${url}" style="width:100%;"></audio><div style="margin-top:12px;"><a href="${url}" download="response.${ct.split('/')[1] || 'mp3'}" style="color:#60a5fa;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;"><i class="material-icons text-sm">download</i> Download Audio</a></div>`;
           } else {
             bodyDiv.textContent = await res.text();
           }
         } catch(err) {
-          bodyDiv.innerHTML = `<span style="color:#f87171">${err.message}</span>`;
+          bodyDiv.innerHTML = `<span style="color:#f87171;">${err.message}</span>`;
         }
         execBtn.disabled = false;
-      }
-
-      function clearResponse(ci, ei) {
-        document.getElementById(`resp-${ci}-${ei}`).classList.remove('show');
-        document.getElementById(`clear-${ci}-${ei}`).style.display = 'none';
       }
 
       function toggleCategory(ci) {
@@ -340,9 +405,12 @@
           if (item) panel.innerHTML = buildDetailHTML(ci, ei, item);
           panel.dataset.rendered = '1';
         }
-        panel.classList.toggle('open');
-        chev.classList.toggle('open');
-        itemEl.classList.toggle('active');
+        const isOpen = panel.classList.contains('open');
+        document.querySelectorAll('.ep-detail-panel.open').forEach(p => { if(p!==panel)p.classList.remove('open'); });
+        document.querySelectorAll('.ep-item.active').forEach(el => { if(el!==itemEl)el.classList.remove('active'); });
+        document.querySelectorAll('.chevron.open').forEach(c => { if(c!==chev)c.classList.remove('open'); });
+        if (!isOpen) { panel.classList.add('open'); chev.classList.add('open'); itemEl.classList.add('active'); }
+        else { panel.classList.remove('open'); chev.classList.remove('open'); itemEl.classList.remove('active'); }
       }
 
       async function loadContent() {
@@ -374,6 +442,7 @@
                 summary: ep.summary || 'No description',
                 description: ep.description || '',
                 parameters: ep.parameters || [],
+                requestBody: ep.requestBody || null,
                 deprecated: !!ep.deprecated
               });
             });
@@ -405,18 +474,20 @@
               category.endpoints.forEach((ep, ei) => {
                 const ci = cats.indexOf(category);
                 _epStore[`${ci}-${ei}`] = ep;
-                const statCls = ep.deprecated ? 'status-depr' : 'status-ready';
                 html += `
                   <div class="ep-item" id="ep-item-${ci}-${ei}" data-path="${ep.path}" data-summary="${ep.summary}">
                     <button class="ep-toggle-btn" onclick="toggleEndpoint(${ci},${ei})">
-                      <div class="flex items-center gap-3 flex-1 min-w-0">
-                        <span class="method-badge method-get">${ep.method}</span>
-                        <span class="font-mono text-sm text-white truncate">${ep.path}</span>
-                        <span class="${statCls} ml-auto flex-shrink-0">${ep.deprecated ? 'depr' : 'ready'}</span>
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-3 mb-1 flex-wrap">
+                          <span class="method-badge ${methodClass(ep.method)}">${ep.method}</span>
+                          <span class="ep-link">${ep.path}</span>
+                        </div>
+                        <div class="ep-summary">${ep.summary}</div>
                       </div>
                       <i class="material-icons chevron text-gray-500 flex-shrink-0" id="ep-chev-${ci}-${ei}">expand_more</i>
                     </button>
                     <div class="ep-detail-panel" id="ep-detail-${ci}-${ei}"></div>
+                    <form id="form-${ci}-${ei}" style="display:none;">${buildFormFields(ep)}</form>
                   </div>`;
               });
               html += '</div>';
@@ -441,23 +512,19 @@
 
       document.getElementById('searchInput').addEventListener('input', function() {
         const q = this.value.toLowerCase();
-        let any = false;
         document.querySelectorAll('.ep-item').forEach(el => {
-          const show = el.dataset.path.toLowerCase().includes(q) || el.dataset.summary.toLowerCase().includes(q);
-          el.style.display = show ? '' : 'none';
-          if (show) any = true;
+          el.style.display = (el.dataset.path.toLowerCase().includes(q) || el.dataset.summary.toLowerCase().includes(q)) ? '' : 'none';
         });
-        document.querySelectorAll('.cat-body').forEach(b => b.style.display = 'none');
-        document.querySelectorAll('.cat-chevron').forEach(c => c.classList.remove('open'));
+        document.querySelectorAll('.cat-body').forEach(b => { b.style.display = 'none'; b.classList.remove('show'); });
+        document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
         if (!q) {
           document.querySelectorAll('.cat-body.show').forEach(b => b.style.display = 'block');
-          document.querySelectorAll('.cat-chevron.open').forEach(c => c.classList.add('open'));
+          document.querySelectorAll('.chevron.open').forEach(c => c.classList.add('open'));
         } else {
           document.querySelectorAll('.cat-body').forEach(b => b.style.display = 'block');
-          document.querySelectorAll('.cat-chevron').forEach(c => c.classList.add('open'));
+          document.querySelectorAll('.cat-toggle-btn .chevron').forEach(c => c.classList.add('open'));
           document.querySelectorAll('.cat-group').forEach(g => {
-            const has = [...g.querySelectorAll('.ep-item')].some(e => e.style.display !== 'none');
-            g.style.display = has ? '' : 'none';
+            g.style.display = [...g.querySelectorAll('.ep-item')].some(e => e.style.display !== 'none') ? '' : 'none';
           });
         }
       });
@@ -467,8 +534,7 @@
         const link = e.target.closest('a');
         if (link && link.href && link.href.startsWith(window.location.origin + '/category')) {
           e.preventDefault();
-          const newPath = new URL(link.href).pathname;
-          window.history.pushState({}, '', newPath);
+          window.history.pushState({}, '', new URL(link.href).pathname);
           loadContent();
           closeSidebar();
         }
