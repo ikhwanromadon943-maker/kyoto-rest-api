@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     const endpoint = url.pathname.replace('/api/ai/', '');
     const text = url.searchParams.get('text');
 
-    // ---------- CHATGPT ----------
+    // ---------- CHATGPT (by Pollinations.AI) ----------
     if (endpoint === 'chatgpt') {
       if (!text) {
         return res.json({ status: false, author: 'Kyoto API', error: 'Parameter "text" is required' });
@@ -22,33 +22,37 @@ export default async function handler(req, res) {
 
       try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 8000);
+        const timeout = setTimeout(() => controller.abort(), 10000);
 
-        const ext = await fetch(
-          `https://free-unoficial-gpt4o-mini-api-g70n.onrender.com/chat/?query=${encodeURIComponent(text)}`,
-          { headers: { Accept: 'application/json' }, signal: controller.signal }
-        );
+        // API stabil untuk text generation
+        const apiUrl = `https://text.pollinations.ai/${encodeURIComponent(text)}`;
+        const ext = await fetch(apiUrl, { signal: controller.signal });
         clearTimeout(timeout);
 
         if (!ext.ok) {
-          return res.json({ status: false, author: 'Kyoto API', error: `Upstream API error: ${ext.status}` });
+          throw new Error(`Upstream API error: ${ext.status}`);
         }
 
-        const data = await ext.json();
+        const result = await ext.text();
+
         return res.json({
           status: true,
           author: 'Kyoto API',
-          provider: 'GPT-4o-mini',
-          result: data.response || data.result || JSON.stringify(data),
+          provider: 'Pollinations.AI',
+          result: result,
           timestamp: new Date().toISOString(),
           response_time: `${Date.now() - start}ms`
         });
       } catch (err) {
-        return res.json({ status: false, author: 'Kyoto API', error: err.name === 'AbortError' ? 'Timeout' : err.message });
+        return res.json({
+          status: false,
+          author: 'Kyoto API',
+          error: err.name === 'AbortError' ? 'Timeout' : `Request failed: ${err.message}`
+        });
       }
     }
 
-    // ---------- DALL·E ----------
+    // ---------- DALL·E (by Pollinations.AI) ----------
     if (endpoint === 'dalle') {
       const prompt = url.searchParams.get('prompt');
       const size = url.searchParams.get('size') || '512x512';
@@ -59,13 +63,13 @@ export default async function handler(req, res) {
       return res.json({
         status: true,
         author: 'Kyoto API',
-        provider: 'Pollinations.ai',
+        provider: 'Pollinations.AI',
         prompt,
         url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true`
       });
     }
 
-    // ---------- TRANSLATE ----------
+    // ---------- TRANSLATE (by Google Translate) ----------
     if (endpoint === 'translate') {
       const text = url.searchParams.get('text');
       const to = url.searchParams.get('to') || 'en';
@@ -73,15 +77,21 @@ export default async function handler(req, res) {
         return res.json({ status: false, author: 'Kyoto API', error: 'Parameter "text" is required' });
       }
       try {
-        const ext = await fetch(`https://lingva.ml/api/v1/auto/${to}/${encodeURIComponent(text)}`);
+        // API Google Translate paling stabil & tanpa key
+        const apiUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${to}&dt=t&q=${encodeURIComponent(text)}`;
+        const ext = await fetch(apiUrl);
         if (!ext.ok) throw new Error(`Status ${ext.status}`);
         const data = await ext.json();
+        
+        // Parse responsenya (agak unik)
+        const translatedText = data?.[0]?.[0]?.[0] || text;
+
         return res.json({
           status: true,
           author: 'Kyoto API',
-          provider: 'Lingva.ml',
+          provider: 'Google Translate',
           original: text,
-          translated: data.translation || text,
+          translated: translatedText,
           to
         });
       } catch (err) {
