@@ -1,4 +1,4 @@
-import { safeFetch, setCORS, errRes } from './_helper.js';
+import { safeFetch, setCORS, errRes, checkRateLimit, logRequest, logAbuse } from './_helper.js';
 import crypto from 'crypto';
 
 const CITY = {

@@ -1,4 +1,154 @@
-// Helper: Vercel-optimized fetch dengan timeout, retry, dan comprehensive error detection
+// ============================================
+// WEBHOOK CONFIG — GANTI URL INI
+// ============================================
+const WEBHOOK_URL = 'https://discord.com/api/webhooks/1500483284113555527/aQhFU951vjNTsThy_9Lj0gGSfHJkBkXxedoJAeW1CblxnTLfWg9xUuFAz3pNBNAx3YiW';
+
+// ============================================
+// INTERNAL: Kirim log ke Discord (async, non-blocking)
+// ============================================
+async function sendWebhook(title, description, color, fields = []) {
+  if (!WEBHOOK_URL || WEBHOOK_URL.includes('YOUR_WEBHOOK')) return; // Skip kalau belum diset
+  
+  try {
+    const embed = {
+      title,
+      description,
+      color,
+      fields,
+      timestamp: new Date().toISOString(),
+      footer: {
+        text: 'Kyoto API • Vercel Edge',
+        icon_url: 'https://kyoto-rest-api.vercel.app/favicon.ico'
+      }
+    };
+    
+    await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        embeds: [embed],
+        username: 'Kyoto API Monitor',
+        avatar_url: 'https://kyoto-rest-api.vercel.app/favicon.ico'
+      })
+    });
+  } catch (e) {
+    // Silent fail — jangan ganggu user
+    console.error('[Webhook] Failed:', e.message);
+  }
+}
+
+// ============================================
+// LOGGING FUNCTIONS
+// ============================================
+export async function logRequest(endpoint, ip, userAgent, responseTime) {
+  await sendWebhook(
+    '📡 API Request',
+    `**${endpoint}**`,
+    0x3B82F6, // Blue
+    [
+      { name: 'IP', value: ip || 'Unknown', inline: true },
+      { name: 'Response', value: `${responseTime}`, inline: true },
+      { name: 'UA', value: `\`${(userAgent || 'Unknown').slice(0, 100)}\``, inline: false }
+    ]
+  );
+}
+
+export async function logSpam(endpoint, ip, count) {
+  await sendWebhook(
+    '🔒 Rate Limit Hit',
+    `**${endpoint}** — User reached rate limit`,
+    0xFACC15, // Yellow
+    [
+      { name: 'IP', value: ip || 'Unknown', inline: true },
+      { name: 'Requests', value: `${count} in window`, inline: true },
+      { name: 'Action', value: '⏳ Temporarily blocked', inline: false }
+    ]
+  );
+}
+
+export async function logAbuse(endpoint, ip, reason) {
+  await sendWebhook(
+    '🚨 Abuse Detected',
+    `**${endpoint}** — Suspicious activity`,
+    0xF87171, // Red
+    [
+      { name: 'IP', value: ip || 'Unknown', inline: true },
+      { name: 'Reason', value: reason, inline: true },
+      { name: 'Action', value: '🛡️ Blocked temporarily', inline: false }
+    ]
+  );
+}
+
+export async function logError(endpoint, error, ip) {
+  await sendWebhook(
+    '⚠️ Endpoint Error',
+    `**${endpoint}** encountered an error`,
+    0xEF4444, // Red
+    [
+      { name: 'Error', value: `\`${error.slice(0, 200)}\``, inline: false },
+      { name: 'IP', value: ip || 'Unknown', inline: true },
+      { name: 'Time', value: new Date().toISOString(), inline: true }
+    ]
+  );
+}
+
+export async function logUpstreamDown(provider, endpoint) {
+  await sendWebhook(
+    '🔴 Upstream API Down',
+    `**${provider}** is not responding`,
+    0xFF0000, // Red
+    [
+      { name: 'Endpoint', value: `\`${endpoint}\``, inline: false },
+      { name: 'Status', value: '❌ Unreachable', inline: true }
+    ]
+  );
+}
+
+// ============================================
+// RATE LIMIT STORE (In-Memory, reset tiap cold start)
+// ============================================
+const rateStore = new Map();
+
+export function checkRateLimit(ip, endpoint) {
+  const key = `${ip}:${endpoint}`;
+  const now = Date.now();
+  const windowMs = 60_000; // 1 menit
+  const maxRequests = 30; // Maks 30 req/menit per endpoint
+  
+  if (!rateStore.has(key)) {
+    rateStore.set(key, { count: 1, resetAt: now + windowMs });
+    return { allowed: true };
+  }
+  
+  const data = rateStore.get(key);
+  
+  if (now > data.resetAt) {
+    rateStore.set(key, { count: 1, resetAt: now + windowMs });
+    return { allowed: true };
+  }
+  
+  data.count++;
+  
+  if (data.count > maxRequests) {
+    // Trigger spam log (async)
+    logSpam(endpoint, ip, data.count);
+    return { allowed: false, retryAfter: Math.ceil((data.resetAt - now) / 1000) };
+  }
+  
+  return { allowed: true };
+}
+
+// Cleanup rate store tiap 5 menit
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, data] of rateStore) {
+    if (now > data.resetAt) rateStore.delete(key);
+  }
+}, 300_000);
+
+// ============================================
+// CORE: safeFetch dengan timeout + retry
+// ============================================
 export async function safeFetch(url, options = {}, timeoutMs = 8000) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
@@ -8,7 +158,7 @@ export async function safeFetch(url, options = {}, timeoutMs = 8000) {
       ...options,
       signal: controller.signal,
       headers: {
-        'User-Agent': 'Kyoto-API/3.0',
+        'User-Agent': 'Kyoto-API/3.0 (Vercel Edge)',
         'Accept': 'application/json, text/plain, */*',
         ...options.headers
       }
@@ -17,45 +167,43 @@ export async function safeFetch(url, options = {}, timeoutMs = 8000) {
     clearTimeout(timeout);
     const contentType = response.headers.get('content-type') || '';
     
-    // Handle HTML responses (usually error pages)
+    // Deteksi block/halaman error
     if (contentType.includes('text/html')) {
       const text = await response.text();
       if (text.includes('Cloudflare') || text.includes('Access denied') || text.includes('cf-error')) {
-        throw new Error('Blocked by Cloudflare/WAF on upstream API');
+        logUpstreamDown('Cloudflare/WAF', url);
+        throw new Error('Blocked by Cloudflare or WAF on upstream API');
       }
       if (text.includes('Rate limit') || text.includes('Too Many Requests')) {
         throw new Error('Rate limited by upstream API — retry in 60s');
       }
-      if (text.includes('502 Bad Gateway') || text.includes('503 Service')) {
-        throw new Error('Upstream API temporarily unavailable');
-      }
       throw new Error(`Upstream returned HTML instead of JSON (HTTP ${response.status})`);
     }
     
-    // Handle HTTP errors
     if (response.status === 429) throw new Error('Rate limited — too many requests');
     if (response.status === 403) throw new Error('Access denied by upstream API');
     if (response.status === 404) throw new Error('Resource not found on upstream API');
-    if (response.status === 503) throw new Error('Upstream API is down (503)');
+    if (response.status === 503) {
+      logUpstreamDown(url.split('/').slice(0, 5).join('/'), url);
+      throw new Error('Upstream API is down (503)');
+    }
     if (!response.ok) throw new Error(`Upstream API error: HTTP ${response.status}`);
     
-    // Parse JSON
     const data = await response.json();
-    
-    // Check for API-level errors
     if (data?.status === false && data?.error) throw new Error(`Upstream: ${data.error}`);
     if (data?.message?.toLowerCase().includes('rate limit')) throw new Error('Rate limited by upstream');
-    if (data?.error) throw new Error(`API Error: ${data.error}`);
     
     return data;
   } catch (error) {
     clearTimeout(timeout);
-    if (error.name === 'AbortError') throw new Error(`Upstream API timeout after ${timeoutMs/1000}s`);
+    if (error.name === 'AbortError') throw new Error(`Upstream API timeout after ${timeoutMs / 1000}s`);
     throw error;
   }
 }
 
-// Set CORS headers untuk Vercel serverless
+// ============================================
+// CORE: CORS + Response Helpers
+// ============================================
 export function setCORS(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -63,7 +211,6 @@ export function setCORS(res) {
   res.setHeader('Access-Control-Max-Age', '86400');
 }
 
-// Standard error response
 export function errRes(res, message, status = 200) {
   return res.status(status).json({
     status: false,
@@ -71,16 +218,5 @@ export function errRes(res, message, status = 200) {
     error: message,
     hint: 'Check documentation at /category',
     timestamp: new Date().toISOString()
-  });
-}
-
-// Success response wrapper
-export function successRes(res, data, extra = {}) {
-  return res.status(200).json({
-    status: true,
-    author: 'Kyoto API',
-    timestamp: new Date().toISOString(),
-    ...data,
-    ...extra
   });
 }
