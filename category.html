@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
   <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script>
     tailwind.config = {
@@ -46,7 +47,6 @@
       pointer-events: none;
     }
 
-    /* Animations */
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
@@ -59,7 +59,7 @@
     
     @keyframes slideDown {
       from { opacity: 0; max-height: 0; }
-      to { opacity: 1; max-height: 2000px; }
+      to { opacity: 1; max-height: 3000px; }
     }
     
     .animate-fade-in-up {
@@ -71,7 +71,6 @@
       animation: fadeIn 0.3s ease-out forwards;
     }
 
-    /* Sidebar */
     #sidebar {
       transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -110,13 +109,11 @@
       }
     }
 
-    /* Category Header Card */
     .cat-header-card {
       background: linear-gradient(135deg, #1e1e1e 0%, #1a1a1a 100%);
       border: 1px solid #2e2e2e;
     }
 
-    /* Method Badge */
     .method-badge {
       display: inline-flex;
       align-items: center;
@@ -136,7 +133,6 @@
       border: 1px solid rgba(59,130,246,0.25);
     }
 
-    /* Endpoint Item */
     .ep-toggle-btn {
       width: 100%;
       background: #212121;
@@ -170,7 +166,6 @@
       border-color: #383838;
     }
 
-    /* Endpoint Detail Panel */
     .ep-detail-panel {
       background: #141414;
       border: 1px solid #2e2e2e;
@@ -194,7 +189,6 @@
       border-bottom: none;
     }
 
-    /* Stat Mini Cards */
     .stat-mini {
       background: #212121;
       border: 1px solid #2e2e2e;
@@ -203,7 +197,6 @@
       text-align: center;
     }
 
-    /* Inputs & Buttons */
     input[type="text"],
     input[type="number"],
     select,
@@ -267,12 +260,11 @@
       box-shadow: none;
     }
 
-    /* Code Block */
     .code-block {
       background: #111;
       border: 1px solid #2e2e2e;
       border-radius: 10px;
-      padding: 16px;
+      padding: 12px 16px;
       font-family: "Ubuntu Mono", monospace;
       font-size: 12px;
       color: #e2e0f0;
@@ -284,7 +276,6 @@
       line-height: 1.8;
     }
 
-    /* Section Label */
     .section-label {
       font-size: 10px;
       text-transform: uppercase;
@@ -302,7 +293,6 @@
       font-size: 16px;
     }
 
-    /* Chevron */
     .chevron {
       transition: transform 0.25s;
     }
@@ -311,12 +301,11 @@
       transform: rotate(180deg);
     }
 
-    /* Copy Button */
     .copy-btn {
       background: transparent;
       border: 1px solid #2e2e2e;
       color: #999;
-      padding: 8px 16px;
+      padding: 8px 14px;
       font-family: "Space Grotesk", sans-serif;
       font-size: 11px;
       cursor: pointer;
@@ -324,6 +313,9 @@
       transition: all 0.2s;
       letter-spacing: 0.3px;
       white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
     
     .copy-btn:hover {
@@ -331,7 +323,6 @@
       border-color: #555;
     }
 
-    /* Category Grid Cards */
     .cat-grid-card {
       background: #212121;
       border: 1px solid #2e2e2e;
@@ -349,11 +340,77 @@
       transform: translateY(-2px);
     }
 
-    .flex-row-btns {
+    /* Status table */
+    .status-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    
+    .status-table th {
+      text-align: left;
+      padding: 10px 16px;
+      border-bottom: 1px solid #2e2e2e;
+      color: #888;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 500;
+      font-family: "Ubuntu Mono", monospace;
+    }
+    
+    .status-table td {
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    
+    .status-table td:first-child {
+      font-family: "Ubuntu Mono", monospace;
+    }
+    
+    .status-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .sc-200 { color: #4ade80; }
+    .sc-err { color: #f87171; }
+    .sc-warn { color: #facc15; }
+
+    /* URL bar style (compact, copy di kanan) */
+    .url-bar {
+      background: #111;
+      border: 1px solid #2e2e2e;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: "Ubuntu Mono", monospace;
+      font-size: 13px;
       display: flex;
-      gap: 8px;
       align-items: center;
-      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    
+    .url-bar span {
+      color: #e2e0f0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Response media */
+    .response-media {
+      max-width: 100%;
+      max-height: 400px;
+      border-radius: 8px;
+      display: block;
+    }
+    
+    .response-media.audio {
+      width: 100%;
+      max-height: 60px;
     }
   </style>
 </head>
@@ -493,15 +550,79 @@
     }).join('');
   }
 
+  // ===== DETECT & RENDER RESPONSE =====
+  function renderResponse(bodyDiv, data, contentType, responseUrl) {
+    // Jika response adalah object dengan URL (seperti DiceBear, Pollinations, dll)
+    if (data && typeof data === 'object') {
+      // Cek berbagai kemungkinan key URL
+      const urlKeys = ['url', 'image', 'qr', 'barcode', 'audio_url', 'screenshot', 'png', 'svg', 'result'];
+      let foundUrl = null;
+      
+      for (const key of urlKeys) {
+        if (data[key] && typeof data[key] === 'string' && data[key].startsWith('http')) {
+          foundUrl = data[key];
+          break;
+        }
+      }
+      
+      if (foundUrl) {
+        const ext = foundUrl.split('.').pop().split('?')[0].toLowerCase();
+        const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico'];
+        const videoExts = ['mp4', 'webm', 'ogg', 'mov'];
+        const audioExts = ['mp3', 'wav', 'ogg', 'flac', 'aac', 'm4a'];
+        
+        if (imageExts.includes(ext) || foundUrl.includes('image') || foundUrl.includes('pollinations')) {
+          bodyDiv.innerHTML = `
+            <div class="mb-3">
+              <img src="${foundUrl}" alt="Response Image" class="response-media" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
+              <p class="text-xs text-gray-600 mt-2 hidden">Image failed to load. <a href="${foundUrl}" target="_blank" class="text-blue-400 hover:underline">Open directly</a></p>
+            </div>
+            <a href="${foundUrl}" download class="inline-flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors">
+              <i class="material-icons text-sm">download</i> Download Image
+            </a>`;
+        } else if (videoExts.includes(ext) || foundUrl.includes('video')) {
+          bodyDiv.innerHTML = `
+            <video controls class="response-media mb-2" style="max-height:300px;">
+              <source src="${foundUrl}" type="video/${ext}">
+              Your browser does not support the video tag.
+            </video>
+            <a href="${foundUrl}" download class="inline-flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors">
+              <i class="material-icons text-sm">download</i> Download Video
+            </a>`;
+        } else if (audioExts.includes(ext) || foundUrl.includes('audio') || foundUrl.includes('speech')) {
+          bodyDiv.innerHTML = `
+            <audio controls class="response-media audio mb-2">
+              <source src="${foundUrl}" type="audio/${ext}">
+              Your browser does not support the audio tag.
+            </audio>
+            <a href="${foundUrl}" download class="inline-flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors">
+              <i class="material-icons text-sm">download</i> Download Audio
+            </a>`;
+        } else {
+          // URL yang perlu dibuka
+          bodyDiv.innerHTML = `
+            <p class="text-sm text-gray-300 mb-2">Response contains URL:</p>
+            <a href="${foundUrl}" target="_blank" class="text-blue-400 hover:text-blue-300 text-sm break-all inline-flex items-center gap-1">
+              <i class="material-icons text-sm">open_in_new</i> ${foundUrl}
+            </a>`;
+        }
+        return;
+      }
+    }
+    
+    // Default: tampilkan JSON
+    bodyDiv.textContent = JSON.stringify(data, null, 2);
+  }
+
   // ===== EXECUTE ENDPOINT =====
   async function exec(ci, ei) {
     const item = EP[`${ci}-${ei}`];
     const panel = document.getElementById(`ep-detail-${ci}-${ei}`);
-    const wrap = document.getElementById(`resp-wrap-${ci}-${ei}`);
-    const uDiv = document.getElementById(`resp-url-${ci}-${ei}`);
-    const cDiv = document.getElementById(`resp-curl-${ci}-${ei}`);
+    const uDiv = document.getElementById(`resp-url-text-${ci}-${ei}`);
+    const cDiv = document.getElementById(`resp-curl-text-${ci}-${ei}`);
     const bDiv = document.getElementById(`resp-body-${ci}-${ei}`);
     const btn = document.getElementById(`exec-btn-${ci}-${ei}`);
+    const wrap = document.getElementById(`resp-wrap-${ci}-${ei}`);
 
     let fp = item.path;
     const pr = new URLSearchParams();
@@ -510,10 +631,11 @@
     });
     const qs = pr.toString();
     if (qs) fp += (item.path.includes('?') ? '&' : '?') + qs;
-    const curl = `curl -X GET "${location.origin}${fp}"`;
+    const fullUrl = location.origin + fp;
+    const curl = `curl -X GET "${fullUrl}"`;
 
     wrap.style.display = 'block';
-    uDiv.textContent = location.origin + fp;
+    uDiv.textContent = fullUrl;
     cDiv.textContent = curl;
     bDiv.innerHTML = '<span style="color:#666">Loading...</span>';
     btn.disabled = true;
@@ -521,24 +643,43 @@
     try {
       const r = await fetch(fp);
       const ct = r.headers.get('content-type') || '';
+      
       if (!r.ok) {
         const t = await r.text().catch(() => '');
         throw new Error(r.status + ' ' + r.statusText + '\n' + t.slice(0, 500));
       }
+      
       if (ct.includes('json')) {
-        bDiv.textContent = JSON.stringify(await r.json(), null, 2);
+        const data = await r.json();
+        renderResponse(bDiv, data, ct, fullUrl);
       } else if (ct.startsWith('image/')) {
         const blob = await r.blob();
-        const url = URL.createObjectURL(blob);
-        bDiv.innerHTML = `<img src="${url}" alt="response image" style="max-width:100%;border-radius:8px;" /><br/><a href="${url}" download style="color:#60a5fa;font-size:12px;"><i class="material-icons text-sm">download</i> Download</a>`;
+        const blobUrl = URL.createObjectURL(blob);
+        bDiv.innerHTML = `
+          <img src="${blobUrl}" alt="Response" class="response-media" />
+          <a href="${blobUrl}" download class="inline-flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors mt-2">
+            <i class="material-icons text-sm">download</i> Download
+          </a>`;
       } else if (ct.startsWith('video/')) {
         const blob = await r.blob();
-        const url = URL.createObjectURL(blob);
-        bDiv.innerHTML = `<video controls src="${url}" style="max-width:100%;border-radius:8px;"></video><br/><a href="${url}" download style="color:#60a5fa;font-size:12px;"><i class="material-icons text-sm">download</i> Download</a>`;
+        const blobUrl = URL.createObjectURL(blob);
+        bDiv.innerHTML = `
+          <video controls class="response-media mb-2">
+            <source src="${blobUrl}" type="${ct}">
+          </video>
+          <a href="${blobUrl}" download class="inline-flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors">
+            <i class="material-icons text-sm">download</i> Download
+          </a>`;
       } else if (ct.startsWith('audio/')) {
         const blob = await r.blob();
-        const url = URL.createObjectURL(blob);
-        bDiv.innerHTML = `<audio controls src="${url}" style="width:100%;"></audio><br/><a href="${url}" download style="color:#60a5fa;font-size:12px;"><i class="material-icons text-sm">download</i> Download</a>`;
+        const blobUrl = URL.createObjectURL(blob);
+        bDiv.innerHTML = `
+          <audio controls class="response-media audio mb-2">
+            <source src="${blobUrl}" type="${ct}">
+          </audio>
+          <a href="${blobUrl}" download class="inline-flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors">
+            <i class="material-icons text-sm">download</i> Download
+          </a>`;
       } else {
         bDiv.textContent = await r.text();
       }
@@ -549,15 +690,15 @@
   }
 
   // ===== COPY TO CLIPBOARD =====
-  async function copyText(t, btn) {
-    const o = btn.innerHTML;
+  async function copyText(text, btn) {
+    const originalHTML = btn.innerHTML;
     try {
-      await navigator.clipboard.writeText(t);
-      btn.innerHTML = '<i class="material-icons text-sm">check</i> Copied';
+      await navigator.clipboard.writeText(text);
+      btn.innerHTML = '<i class="bi bi-check-lg"></i> Copied';
     } catch (e) {
       btn.innerHTML = 'Failed';
     }
-    setTimeout(() => (btn.innerHTML = o), 2000);
+    setTimeout(() => (btn.innerHTML = originalHTML), 2000);
   }
 
   // ===== TOGGLE ENDPOINT DETAIL =====
@@ -582,18 +723,18 @@
           
           <div id="resp-wrap-${ci}-${ei}" style="display:none;margin-top:20px;">
             <div class="section-label"><i class="material-icons">link</i> Request URL</div>
-            <div class="flex-row-btns mb-4">
-              <div class="code-block" style="flex:1;margin:0;" id="resp-url-${ci}-${ei}"></div>
-              <button class="copy-btn" onclick="window._k.copy(document.getElementById('resp-url-${ci}-${ei}').textContent,this)">
-                <i class="material-icons text-sm">content_copy</i> Copy
+            <div class="url-bar">
+              <span id="resp-url-text-${ci}-${ei}"></span>
+              <button class="copy-btn" onclick="window._k.copy(document.getElementById('resp-url-text-${ci}-${ei}').textContent, this)">
+                <i class="bi bi-copy text-xs"></i> Copy
               </button>
             </div>
             
             <div class="section-label"><i class="material-icons">terminal</i> cURL</div>
-            <div class="flex-row-btns mb-4">
-              <div class="code-block" style="flex:1;margin:0;" id="resp-curl-${ci}-${ei}"></div>
-              <button class="copy-btn" onclick="window._k.copy(document.getElementById('resp-curl-${ci}-${ei}').textContent,this)">
-                <i class="material-icons text-sm">content_copy</i> Copy
+            <div class="url-bar">
+              <span id="resp-curl-text-${ci}-${ei}"></span>
+              <button class="copy-btn" onclick="window._k.copy(document.getElementById('resp-curl-text-${ci}-${ei}').textContent, this)">
+                <i class="bi bi-copy text-xs"></i> Copy
               </button>
             </div>
             
@@ -601,7 +742,20 @@
             <div class="code-block" id="resp-body-${ci}-${ei}"></div>
           </div>
         </div>
-      `;
+        
+        <div class="detail-block">
+          <div class="section-label"><i class="material-icons">list</i> HTTP Status Codes</div>
+          <table class="status-table">
+            <thead><tr><th>Code</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="sc-200"><i class="material-icons text-sm">check_circle</i> 200</td><td>OK — Request successful</td></tr>
+              <tr><td class="sc-err"><i class="material-icons text-sm">error</i> 400</td><td>Bad Request — Missing or invalid parameters</td></tr>
+              <tr><td class="sc-err"><i class="material-icons text-sm">error</i> 405</td><td>Method Not Allowed — Only GET is supported</td></tr>
+              <tr><td class="sc-warn"><i class="material-icons text-sm">warning</i> 429</td><td>Too Many Requests — Rate limit exceeded</td></tr>
+              <tr><td class="sc-err"><i class="material-icons text-sm">error</i> 500</td><td>Internal Server Error — Upstream API failure</td></tr>
+            </tbody>
+          </table>
+        </div>`;
       panel.dataset.rendered = '1';
     }
     
@@ -621,7 +775,6 @@
       const r = await fetch('/src/openapi.json');
       const d = await r.json();
       
-      // Group by tags
       const cats = {};
       d.tags?.forEach(t => { cats[t.name] = { name: t.name, desc: t.description || '', eps: [] }; });
       
@@ -658,7 +811,6 @@
           document.title = `${cat.name} — Kyoto API`;
           bc.textContent = cat.name;
           
-          // Category Header
           let h = `
             <div class="cat-header-card rounded-2xl p-8 mb-8 animate-fade-in-up" style="animation-delay:0ms">
               <div class="flex items-start justify-between flex-wrap gap-4">
@@ -676,7 +828,6 @@
             </div>
           `;
           
-          // Endpoint list
           h += `<div class="space-y-1">`;
           cat.eps.forEach((ep, ei) => {
             const ci = cl.indexOf(cat);
@@ -703,7 +854,6 @@
           cont.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Category not found.</p>';
         }
       } else {
-        // All categories grid
         document.title = 'Categories — Kyoto API';
         bc.textContent = 'All Categories';
         
