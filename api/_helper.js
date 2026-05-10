@@ -18,7 +18,7 @@ async function sendWebhook(title, description, color, fields = []) {
       timestamp: new Date().toISOString(),
       footer: {
         text: 'Kyoto API • Security',
-        icon_url: 'https://kyoto-rest-api.vercel.app/favicon.ico'
+        icon_url: 'https://kyoto-rest-api.vercel.app/favicon.png'
       }
     };
     
@@ -28,7 +28,7 @@ async function sendWebhook(title, description, color, fields = []) {
       body: JSON.stringify({
         embeds: [embed],
         username: 'Kyoto API Monitor',
-        avatar_url: 'https://kyoto-rest-api.vercel.app/favicon.ico'
+        avatar_url: 'https://kyoto-rest-api.vercel.app/favicon.png'
       })
     });
   } catch (e) {
