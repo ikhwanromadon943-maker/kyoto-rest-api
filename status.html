@@ -2,34 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Kyoto API Status — Real-time system health and uptime monitoring for 55+ live endpoints." />
-    <meta name="theme-color" content="#1a1a1a" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="Kyoto API Status — Real-time system health and uptime monitoring for all live endpoints." />
+    <meta name="theme-color" content="#181818" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://kyoto-rest-api.vercel.app/status" />
     <meta property="og:title" content="Status — Kyoto API." />
-    <meta property="og:description" content="Real-time system health and uptime monitoring for 55+ live endpoints." />
+    <meta property="og:description" content="Real-time system health and uptime monitoring for all live endpoints." />
     <meta property="og:image" content="https://kyoto-rest-api.vercel.app/og-image.jpg" />
-    <meta property="og:image:width" content="1440" />
-    <meta property="og:image:height" content="600" />
-    <meta property="og:site_name" content="Kyoto API." />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://kyoto-rest-api.vercel.app/status" />
-    <meta name="twitter:title" content="Status — Kyoto API." />
-    <meta name="twitter:description" content="Real-time system health and uptime monitoring for 55+ live endpoints." />
-    <meta name="twitter:image" content="https://kyoto-rest-api.vercel.app/og-image.jpg" />
     <meta name="twitter:creator" content="@kyotodev" />
     <meta name="author" content="KyotoDev." />
-    <meta name="keywords" content="API, status, uptime, monitoring, Kyoto, endpoints" />
     <link rel="canonical" href="https://kyoto-rest-api.vercel.app/status" />
     <title>Status — Kyoto API.</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&amp;family=Inter:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <script>
       tailwind.config = {
         theme: {
@@ -43,210 +32,277 @@
       }
     </script>
     <style>
+      * { -webkit-tap-highlight-color: transparent; }
       ::-webkit-scrollbar { display: none !important; }
-      body { position: relative; scroll-behavior: smooth; letter-spacing: 0.025em; background-color: #181818; }
-      body::before {
-        content: '';
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%; min-height: 100vh; z-index: -1;
-        background-image: linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
-        background-size: 40px 40px; pointer-events: none;
+      body { 
+        position: relative; scroll-behavior: smooth; letter-spacing: 0.025em; 
+        background-color: #181818; overscroll-behavior: none; -webkit-font-smoothing: antialiased;
       }
-      @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-      .pulse-dot { animation: pulse 2s infinite; }
-      .pulse-dot-slow { animation: pulse 3s infinite; }
-      .fade-in { animation: fadeIn 0.4s ease-out forwards; opacity: 0; }
-      @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+      body::before {
+        content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+        background-image: linear-gradient(rgba(148,163,184,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.04) 1px, transparent 1px);
+        background-size: 32px 32px; pointer-events: none;
+      }
+      @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+      @keyframes pulse-fast { 0%,100%{opacity:1} 50%{opacity:.3} }
+      @keyframes slideIn { from{opacity:0;transform:translateX(-6px)} to{opacity:1;transform:translateX(0)} }
+      @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+      .pulse-dot{animation:pulse 2s infinite}
+      .pulse-dot-slow{animation:pulse 3s infinite}
+      .pulse-dot-fast{animation:pulse-fast 1s infinite}
+      .fade-in{animation:fadeIn .35s ease-out forwards;opacity:0}
+      .slide-in{animation:slideIn .25s ease-out}
+      .live-glow{box-shadow:0 0 6px rgba(74,222,128,.4)}
+      .degraded-glow{box-shadow:0 0 6px rgba(250,204,21,.4)}
+      .offline-glow{box-shadow:0 0 6px rgba(248,113,113,.4)}
+      .safe-bottom{padding-bottom:env(safe-area-inset-bottom,16px)}
     </style>
   </head>
   <body class="bg-[#181818] text-gray-200 antialiased font-sans min-h-screen">
-    <header id="navbar" class="sticky top-0 z-50 bg-[#181818] border-b border-[#2E2E2E]">
-      <div class="max-w-4xl mx-auto px-8 py-4 flex items-center justify-between">
-        <a href="/" class="font-bold text-white text-lg" style="font-family: 'Space Grotesk', sans-serif;">Kyoto API</a>
-        <div class="flex items-center gap-6 text-sm">
+    
+    <header id="navbar" class="sticky top-0 z-50 bg-[#181818]/95 backdrop-blur-sm border-b border-[#2E2E2E]">
+      <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="/" class="font-bold text-white text-base flex items-center gap-1.5" style="font-family: 'Space Grotesk', sans-serif;">
+          Kyoto API
+          <span class="text-[9px] text-green-400 bg-green-400/10 px-1.5 py-0.5 rounded-full flex items-center gap-1">
+            <span class="w-1 h-1 bg-green-400 rounded-full pulse-dot-fast"></span> LIVE
+          </span>
+        </a>
+        <div class="flex items-center gap-4 text-xs">
           <a href="/" class="text-gray-400 hover:text-white transition-colors">Home</a>
           <a href="/category" class="text-gray-400 hover:text-white transition-colors">Category</a>
-          <a href="/status" class="text-white transition-colors">Status</a>
+          <a href="/status" class="text-white transition-colors font-medium">Status</a>
         </div>
       </div>
     </header>
 
-    <main class="max-w-4xl mx-auto px-8 py-8">
-      <!-- Overall Status Banner -->
-      <div id="overall-banner" class="bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 mb-8 flex items-center gap-4 transition-all duration-500 fade-in">
-        <div id="overall-dot" class="w-4 h-4 rounded-full bg-green-400 pulse-dot flex-shrink-0"></div>
-        <div>
-          <h2 class="text-lg font-semibold text-white" id="overall-title">Checking all systems...</h2>
-          <p class="text-sm text-gray-400 mt-1">
+    <main class="max-w-4xl mx-auto px-4 py-4 safe-bottom">
+      
+      <div id="overall-banner" class="bg-[#212121] border border-[#2E2E2E] rounded-lg p-3 mb-4 flex items-center gap-3 transition-all duration-300 fade-in">
+        <div id="overall-dot" class="w-3 h-3 rounded-full bg-blue-400 pulse-dot-fast flex-shrink-0"></div>
+        <div class="flex-1 min-w-0">
+          <h2 class="text-sm font-semibold text-white truncate" id="overall-title">Checking systems...</h2>
+          <p class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1.5 flex-wrap">
             <span id="overall-sub">Initializing...</span>
-            <span class="mx-2 text-gray-600">·</span>
-            <span id="last-checked">--</span>
+            <span class="text-gray-600">·</span>
+            <span id="last-checked" class="text-gray-500">--</span>
           </p>
         </div>
-      </div>
-
-      <!-- Stats Grid -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div class="bg-[#212121] border border-[#2E2E2E] hover:border-[#383838] transition-colors p-6 rounded-xl text-center group fade-in">
-          <div class="text-3xl font-bold text-green-400 mb-1" id="stat-online">—</div>
-          <div class="text-xs text-gray-500 uppercase tracking-wider">Online</div>
-          <i class="fa-solid fa-check-circle absolute top-3 right-3 text-4xl text-[#1a1a1a] opacity-50 group-hover:scale-110 transition-transform"></i>
-        </div>
-        <div class="bg-[#212121] border border-[#2E2E2E] hover:border-[#383838] transition-colors p-6 rounded-xl text-center group relative overflow-hidden fade-in">
-          <div class="text-3xl font-bold text-yellow-400 mb-1" id="stat-degraded">—</div>
-          <div class="text-xs text-gray-500 uppercase tracking-wider">Degraded</div>
-        </div>
-        <div class="bg-[#212121] border border-[#2E2E2E] hover:border-[#383838] transition-colors p-6 rounded-xl text-center group relative overflow-hidden fade-in">
-          <div class="text-3xl font-bold text-red-400 mb-1" id="stat-offline">—</div>
-          <div class="text-xs text-gray-500 uppercase tracking-wider">Offline</div>
-        </div>
-        <div class="bg-[#212121] border border-[#2E2E2E] hover:border-[#383838] transition-colors p-6 rounded-xl text-center group relative overflow-hidden fade-in">
-          <div class="text-3xl font-bold text-blue-400 mb-1" id="stat-avg-latency">—</div>
-          <div class="text-xs text-gray-500 uppercase tracking-wider">Avg Latency</div>
+        <div class="text-right flex-shrink-0">
+          <div class="text-lg font-bold text-white font-mono" id="uptime-percent">--</div>
+          <div class="text-[9px] text-gray-500">24h</div>
         </div>
       </div>
 
-      <!-- Section Title -->
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold text-white flex items-center gap-2">
-          <i class="fas fa-server text-gray-400"></i> Service Status
+      <div class="grid grid-cols-2 gap-2 mb-4">
+        <div class="bg-[#212121] border border-[#2E2E2E] rounded-lg p-3 text-center fade-in">
+          <div class="text-xl font-bold text-green-400 font-mono" id="stat-online">0</div>
+          <div class="text-[10px] text-gray-500 uppercase tracking-wider">Online</div>
+          <div class="mt-1.5 h-0.5 bg-[#2E2E2E] rounded-full overflow-hidden">
+            <div class="h-full bg-green-400 rounded-full transition-all duration-500" id="bar-online" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="bg-[#212121] border border-[#2E2E2E] rounded-lg p-3 text-center fade-in">
+          <div class="text-xl font-bold text-yellow-400 font-mono" id="stat-degraded">0</div>
+          <div class="text-[10px] text-gray-500 uppercase tracking-wider">Degraded</div>
+          <div class="mt-1.5 h-0.5 bg-[#2E2E2E] rounded-full overflow-hidden">
+            <div class="h-full bg-yellow-400 rounded-full transition-all duration-500" id="bar-degraded" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="bg-[#212121] border border-[#2E2E2E] rounded-lg p-3 text-center fade-in">
+          <div class="text-xl font-bold text-red-400 font-mono" id="stat-offline">0</div>
+          <div class="text-[10px] text-gray-500 uppercase tracking-wider">Offline</div>
+          <div class="mt-1.5 h-0.5 bg-[#2E2E2E] rounded-full overflow-hidden">
+            <div class="h-full bg-red-400 rounded-full transition-all duration-500" id="bar-offline" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="bg-[#212121] border border-[#2E2E2E] rounded-lg p-3 text-center fade-in">
+          <div class="text-xl font-bold text-blue-400 font-mono" id="stat-avg-latency">0ms</div>
+          <div class="text-[10px] text-gray-500 uppercase tracking-wider">Latency</div>
+          <div class="mt-1.5 h-0.5 bg-[#2E2E2E] rounded-full overflow-hidden">
+            <div class="h-full bg-blue-400 rounded-full transition-all duration-500" id="bar-latency" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm font-semibold text-white flex items-center gap-1.5">
+          <i class="fas fa-server text-gray-400 text-xs"></i> Services
         </h3>
-        <span class="text-xs text-green-400 flex items-center gap-1.5">
-          <span class="w-1.5 h-1.5 bg-green-400 rounded-full pulse-dot"></span> Auto-refresh 30s
+        <span class="text-[9px] text-gray-500 flex items-center gap-1">
+          <span class="w-1.5 h-1.5 bg-green-400 rounded-full pulse-dot-fast"></span> 5s refresh
         </span>
       </div>
 
-      <!-- Service List -->
-      <div id="service-container" class="space-y-6 mb-8"></div>
+      <div id="service-container" class="space-y-2 mb-4"></div>
 
-      <!-- Recent Incidents -->
-      <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-        <i class="fas fa-history text-gray-400"></i> Recent Incidents
+      <h3 class="text-sm font-semibold text-white mb-3 flex items-center gap-1.5">
+        <i class="fas fa-history text-gray-400 text-xs"></i> Incidents
       </h3>
-      <div id="incident-list" class="space-y-2 mb-8"></div>
+      <div id="incident-list" class="space-y-1.5 mb-4"></div>
 
-      <!-- Footer Bar -->
-      <div class="flex items-center justify-between pt-6 border-t border-[#2E2E2E]">
-        <span class="text-sm text-gray-500">Last checked: <strong id="last-checked-footer" class="text-gray-300">--</strong></span>
-        <button onclick="checkAllEndpoints()" class="flex items-center gap-2 bg-[#212121] border border-[#2E2E2E] text-gray-400 hover:text-white hover:border-[#383838] text-sm py-2 px-4 rounded-lg transition-all">
-          <i class="fas fa-rotate-right text-xs"></i> Refresh Now
+      <div class="flex items-center justify-between pt-4 border-t border-[#2E2E2E]">
+        <div class="text-[10px] text-gray-500 min-w-0">
+          <span id="last-checked-footer" class="text-gray-400">--</span>
+          <span class="mx-1.5 text-gray-600">·</span>
+          <span class="truncate" id="total-checks-footer">0 checks</span>
+        </div>
+        <button onclick="manualRefresh()" id="refresh-btn" class="flex items-center gap-1.5 bg-[#212121] border border-[#2E2E2E] text-gray-400 active:text-white active:border-[#383838] text-xs py-1.5 px-3 rounded-lg transition-all touch-manipulation">
+          <i class="fas fa-rotate-right text-[10px]"></i> Refresh
         </button>
       </div>
     </main>
 
-    <footer class="bg-[#212121] relative z-10 border-t border-[#2E2E2E] w-full mt-12">
-      <div class="max-w-4xl mx-auto px-8 py-8">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-          <p class="text-sm text-gray-400">&copy; 2026 Kyoto API, All rights reserved.</p>
-          <div class="flex gap-6">
-            <a href="/privacy" class="text-sm text-gray-400 hover:text-white transition-colors">Privacy</a>
-            <a href="/terms" class="text-sm text-gray-400 hover:text-white transition-colors">Terms</a>
-            <a href="/status" class="text-sm text-white transition-colors">Status</a>
-          </div>
+    <footer class="bg-[#212121] border-t border-[#2E2E2E] w-full mt-8">
+      <div class="max-w-4xl mx-auto px-4 py-5 text-center">
+        <p class="text-[11px] text-gray-400">&copy; 2026 Kyoto API. All rights reserved.</p>
+        <div class="flex justify-center gap-5 mt-2">
+          <a href="/privacy" class="text-[11px] text-gray-400 hover:text-white transition-colors">Privacy</a>
+          <a href="/terms" class="text-[11px] text-gray-400 hover:text-white transition-colors">Terms</a>
+          <a href="/status" class="text-[11px] text-white transition-colors">Status</a>
         </div>
       </div>
     </footer>
 
     <script>
       const BASE_URL = 'https://kyoto-rest-api.vercel.app';
-      const CHECK_INTERVAL = 30000;
+      const CHECK_INTERVAL = 5000;
+      let serviceStatuses = {};
+      let totalChecks = 0;
+      let isChecking = false;
+      let uptimeData = { online: 0, total: 0 };
 
+      // DIAMBIL PERSIS DARI OPENAPI.JSON & FILE .JS — GA ADA TAMBAHAN
       const serviceCategories = [
-        { name: 'AI', services: [
+        { name: 'AI', icon: 'fa-brain', services: [
           { name: 'ChatGPT', path: '/api/ai/chatgpt?text=ping' },
           { name: 'DALLE', path: '/api/ai/dalle?prompt=ping' },
           { name: 'Translate', path: '/api/ai/translate?text=hello&to=id' },
           { name: 'Text to Speech', path: '/api/ai/text-to-speech?text=ping' },
           { name: 'Image Variation', path: '/api/ai/image-variation?prompt=ping' },
+          { name: 'Summarize', path: '/api/ai/summarize?text=test' },
+          { name: 'Roast', path: '/api/ai/roast?text=test' },
+          { name: 'ELI5', path: '/api/ai/eli5?text=test' },
+          { name: 'Detect Language', path: '/api/ai/detect-language?text=hello' },
+          { name: 'Ask', path: '/api/ai/ask?q=ping' },
+          { name: 'Random Image', path: '/api/ai/random-image' },
         ]},
-        { name: 'Anime', services: [
-          { name: 'Manga Search', path: '/api/anime/search?query=One+Piece' },
-          { name: 'Anime Info', path: '/api/anime/anime?title=Jujutsu+Kaisen' },
-          { name: 'Random Manga', path: '/api/anime/random' },
+        { name: 'Anime', icon: 'fa-dragon', services: [
+          { name: 'Search', path: '/api/anime/search?query=One+Piece' },
+          { name: 'Anime', path: '/api/anime/anime?title=Jujutsu+Kaisen' },
+          { name: 'Random', path: '/api/anime/random' },
           { name: 'Waifu', path: '/api/anime/waifu?category=waifu' },
           { name: 'Character', path: '/api/anime/character?query=Naruto' },
+          { name: 'Top', path: '/api/anime/top' },
+          { name: 'Genre', path: '/api/anime/genre?id=1' },
+          { name: 'Schedule', path: '/api/anime/schedule' },
+          { name: 'Random Waifu', path: '/api/anime/random-waifu' },
+          { name: 'News', path: '/api/anime/news' },
         ]},
-        { name: 'News', services: [
-          { name: 'CNN Indonesia', path: '/api/news/cnn' },
-          { name: 'CNBC Indonesia', path: '/api/news/cnbc' },
-          { name: 'Detik.com', path: '/api/news/detik' },
+        { name: 'News', icon: 'fa-newspaper', services: [
+          { name: 'CNN', path: '/api/news/cnn' },
+          { name: 'CNBC', path: '/api/news/cnbc' },
+          { name: 'Detik', path: '/api/news/detik' },
+          { name: 'Antara', path: '/api/news/antara' },
+          { name: 'Kumparan', path: '/api/news/kumparan' },
+          { name: 'Republika', path: '/api/news/republika' },
+          { name: 'Tempo', path: '/api/news/tempo' },
         ]},
-        { name: 'Fun', services: [
+        { name: 'Fun', icon: 'fa-face-laugh', services: [
           { name: 'Joke', path: '/api/fun/joke' },
           { name: 'Dad Joke', path: '/api/fun/dadjoke' },
-          { name: 'Random Fact', path: '/api/fun/fact' },
+          { name: 'Fact', path: '/api/fun/fact' },
           { name: 'Chuck Norris', path: '/api/fun/chuck-norris' },
           { name: 'Quote', path: '/api/fun/quote' },
           { name: 'Cat Fact', path: '/api/fun/cat-fact' },
           { name: 'Bored', path: '/api/fun/bored' },
         ]},
-        { name: 'Games', services: [
-          { name: 'Games List', path: '/api/games/list' },
-          { name: 'Game Detail', path: '/api/games/detail?id=452' },
+        { name: 'Games', icon: 'fa-gamepad', services: [
+          { name: 'List', path: '/api/games/list' },
+          { name: 'Detail', path: '/api/games/detail?id=452' },
         ]},
-        { name: 'Info', services: [
+        { name: 'Info', icon: 'fa-circle-info', services: [
           { name: 'Wikipedia', path: '/api/info/wikipedia?title=Indonesia' },
           { name: 'Dictionary', path: '/api/info/dictionary?word=hello' },
-          { name: 'GitHub User', path: '/api/info/github?username=torvalds' },
-          { name: 'NPM Package', path: '/api/info/npm?package=express' },
-          { name: 'Country Info', path: '/api/info/country?name=Japan' },
-          { name: 'Holidays', path: '/api/info/holiday?year=2026&country=ID' },
+          { name: 'GitHub', path: '/api/info/github?username=torvalds' },
+          { name: 'NPM', path: '/api/info/npm?package=express' },
+          { name: 'Country', path: '/api/info/country?name=Japan' },
+          { name: 'Holiday', path: '/api/info/holiday?year=2026&country=ID' },
         ]},
-        { name: 'Maker', services: [
+        { name: 'Maker', icon: 'fa-wand-magic-sparkles', services: [
           { name: 'Canvas', path: '/api/maker/canvas?text=ping' },
           { name: 'Meme', path: '/api/maker/meme?top=hi&bottom=test' },
           { name: 'Quote Image', path: '/api/maker/quote-image?text=ping&author=test' },
           { name: 'Password', path: '/api/maker/password?length=16' },
         ]},
-        { name: 'Stalker', services: [
-          { name: 'My IP', path: '/api/stalker/my-ip' },
+        { name: 'Stalker', icon: 'fa-magnifying-glass', services: [
           { name: 'IP Lookup', path: '/api/stalker/ip?ip=8.8.8.8' },
-          { name: 'DNS Lookup', path: '/api/stalker/dns?domain=google.com' },
+          { name: 'My IP', path: '/api/stalker/my-ip' },
+          { name: 'DNS', path: '/api/stalker/dns?domain=google.com' },
         ]},
-        { name: 'Zodiak', services: [
+        { name: 'Zodiak', icon: 'fa-star', services: [
           { name: 'Horoscope', path: '/api/zodiak/horoscope?sign=aries' },
         ]},
-        { name: 'Tools', services: [
-          { name: 'QR Code', path: '/api/tools/qr?text=ping' },
+        { name: 'Tools', icon: 'fa-screwdriver-wrench', services: [
+          { name: 'QR', path: '/api/tools/qr?text=ping' },
           { name: 'Shortlink', path: '/api/tools/shortlink?url=https://google.com' },
-          { name: 'Weather', path: '/api/tools/cuaca?city=Tokyo' },
+          { name: 'Cuaca', path: '/api/tools/cuaca?city=Tokyo' },
           { name: 'Calculator', path: '/api/tools/calculator?expr=2+2' },
-          { name: 'Screenshot', path: '/api/tools/ssweb?url=https://google.com' },
+          { name: 'SS Web', path: '/api/tools/ssweb?url=https://google.com' },
         ]},
-        { name: 'Media', services: [
+        { name: 'Media', icon: 'fa-image', services: [
           { name: 'Canvas', path: '/api/media/canvas?text=ping' },
           { name: 'Meme', path: '/api/media/meme?top=hi&bottom=test' },
           { name: 'Quote Image', path: '/api/media/quote-image?text=ping' },
         ]},
-        { name: 'Quran', services: [
-          { name: 'Surah Info', path: '/api/quran/surah?number=1' },
-          { name: 'Search Quran', path: '/api/quran/search?keyword=Allah' },
+        { name: 'Quran', icon: 'fa-book-quran', services: [
+          { name: 'Surah', path: '/api/quran/surah?number=1' },
+          { name: 'Search', path: '/api/quran/search?keyword=Allah' },
         ]},
       ];
 
       const incidents = [
-        { title: 'Kyoto API v2.0 Deployed', date: 'May 10, 2026 · 12:00 UTC', desc: 'Major update! 55+ live endpoints across 16 categories. All free, no API key required.', status: 'resolved' },
-        { title: 'Minor outage — AI ChatGPT endpoint', date: 'May 1, 2026 · 09:15 UTC', desc: 'Brief 3-minute error on /api/ai/chatgpt caused by upstream API restart. Resolved automatically.', status: 'resolved' },
+        { title: 'v2.1 — Zodiak Consolidated', date: 'May 10, 2026', desc: 'Zodiak endpoint merged into Tools. All systems operational.', status: 'resolved' },
+        { title: 'v2.0 — 55+ Endpoints Live', date: 'May 10, 2026', desc: 'Major release. Free, no API key required.', status: 'resolved' },
       ];
 
-      let serviceStatuses = {};
+      function getServiceCount() {
+        return serviceCategories.reduce((sum, cat) => sum + cat.services.length, 0);
+      }
 
       function renderServiceList() {
         const container = document.getElementById('service-container');
         let html = '';
         let globalIndex = 0;
         serviceCategories.forEach(cat => {
-          html += `<div class="mb-6 fade-in"><div class="flex items-center gap-3 mb-3"><span class="text-xs text-gray-500 uppercase tracking-widest">${cat.name}</span><div class="flex-1 h-px bg-[#2E2E2E]"></div></div><div class="bg-[#212121] border border-[#2E2E2E] rounded-xl overflow-hidden">`;
+          html += `<div class="mb-2 fade-in">
+            <div class="flex items-center gap-2 mb-1.5 px-0.5">
+              <i class="fas ${cat.icon} text-gray-500 text-[10px]"></i>
+              <span class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">${cat.name}</span>
+              <span class="text-[9px] text-gray-600">${cat.services.length}</span>
+            </div>
+            <div class="bg-[#212121] border border-[#2E2E2E] rounded-lg overflow-hidden">`;
           cat.services.forEach(svc => {
             const idx = globalIndex;
-            const status = serviceStatuses[idx] || { status: 'checking', latency: '—' };
-            html += `<div class="flex items-center justify-between py-3 px-4 border-b border-[#2E2E2E] last:border-b-0 hover:bg-[#1a1a1a] transition-colors" id="svc-row-${idx}">
-              <div class="flex items-center gap-3 min-w-0">
-                <div id="svc-dot-${idx}" class="w-2 h-2 rounded-full flex-shrink-0 ${status.status === 'online' ? 'bg-green-400 pulse-dot' : status.status === 'degraded' ? 'bg-yellow-400 pulse-dot-slow' : status.status === 'offline' ? 'bg-red-400' : 'bg-blue-400 pulse-dot'}"></div>
-                <span class="text-sm text-gray-200">${svc.name}</span>
+            const status = serviceStatuses[idx] || { status: 'pending', latency: '—' };
+            html += `<div class="flex items-center justify-between py-2 px-3 border-b border-[#2E2E2E] last:border-b-0 active:bg-[#1a1a1a] transition-colors" id="svc-row-${idx}">
+              <div class="flex items-center gap-2 min-w-0 flex-1">
+                <div id="svc-dot-${idx}" class="w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300 ${
+                  status.status === 'online' ? 'bg-green-400 live-glow' : 
+                  status.status === 'degraded' ? 'bg-yellow-400 degraded-glow' : 
+                  status.status === 'offline' ? 'bg-red-400 offline-glow' : 
+                  'bg-blue-400 animate-pulse'
+                }"></div>
+                <span class="text-xs text-gray-200 truncate">${svc.name}</span>
               </div>
-              <div class="flex items-center gap-4 flex-shrink-0">
-                <span class="text-xs text-gray-500 font-mono" id="svc-latency-${idx}">${status.latency}</span>
-                <span id="svc-status-${idx}" class="text-xs uppercase tracking-wider px-2 py-0.5 rounded ${status.status === 'online' ? 'text-green-400 bg-green-400/10' : status.status === 'degraded' ? 'text-yellow-400 bg-yellow-400/10' : status.status === 'offline' ? 'text-red-400 bg-red-400/10' : 'text-blue-400 bg-blue-400/10'}">${status.status}</span>
+              <div class="flex items-center gap-2 flex-shrink-0">
+                <span class="text-[10px] text-gray-500 font-mono w-12 text-right" id="svc-latency-${idx}">${status.latency}</span>
+                <span id="svc-status-${idx}" class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded font-semibold transition-all duration-300 ${
+                  status.status === 'online' ? 'text-green-400 bg-green-400/10' : 
+                  status.status === 'degraded' ? 'text-yellow-400 bg-yellow-400/10' : 
+                  status.status === 'offline' ? 'text-red-400 bg-red-400/10' : 
+                  'text-blue-400 bg-blue-400/10'
+                }">${status.status}</span>
               </div>
             </div>`;
             globalIndex++;
@@ -258,72 +314,82 @@
 
       function renderIncidents() {
         document.getElementById('incident-list').innerHTML = incidents.map(i => `
-          <div class="bg-[#212121] border border-[#2E2E2E] rounded-xl p-4 hover:border-[#383838] transition-colors fade-in">
-            <div class="flex items-start justify-between gap-4 mb-1">
-              <span class="text-sm font-medium text-white">${i.title}</span>
-              <span class="text-xs text-green-400 bg-green-400/10 px-2 py-0.5 rounded uppercase flex-shrink-0">${i.status}</span>
+          <div class="bg-[#212121] border border-[#2E2E2E] rounded-lg p-3 active:border-[#383838] transition-colors fade-in">
+            <div class="flex items-start justify-between gap-2 mb-1">
+              <span class="text-xs font-medium text-white leading-tight">${i.title}</span>
+              <span class="text-[9px] text-green-400 bg-green-400/10 px-1.5 py-0.5 rounded uppercase font-semibold flex-shrink-0">${i.status}</span>
             </div>
-            <div class="text-xs text-gray-500 mb-2">${i.date}</div>
-            <p class="text-sm text-gray-400">${i.desc}</p>
+            <div class="text-[10px] text-gray-600 mb-1">${i.date}</div>
+            <p class="text-[11px] text-gray-400 leading-relaxed">${i.desc}</p>
           </div>
         `).join('');
       }
 
       function updateSummary() {
         let online = 0, degraded = 0, offline = 0, totalLatency = 0, count = 0;
+        const total = getServiceCount();
         Object.entries(serviceStatuses).forEach(([, s]) => {
           if (s.status === 'online') online++;
           else if (s.status === 'degraded') degraded++;
           else if (s.status === 'offline') offline++;
           if (s.latencyMs) { totalLatency += s.latencyMs; count++; }
         });
+        const avgLatency = count > 0 ? Math.round(totalLatency / count) : 0;
         document.getElementById('stat-online').textContent = online;
         document.getElementById('stat-degraded').textContent = degraded;
         document.getElementById('stat-offline').textContent = offline;
-        document.getElementById('stat-avg-latency').textContent = count > 0 ? `${Math.round(totalLatency / count)}ms` : '—';
-        
+        document.getElementById('stat-avg-latency').textContent = avgLatency > 0 ? `${avgLatency}ms` : '—';
+        document.getElementById('bar-online').style.width = total > 0 ? `${(online/total)*100}%` : '0%';
+        document.getElementById('bar-degraded').style.width = total > 0 ? `${(degraded/total)*100}%` : '0%';
+        document.getElementById('bar-offline').style.width = total > 0 ? `${(offline/total)*100}%` : '0%';
+        document.getElementById('bar-latency').style.width = avgLatency > 0 ? `${Math.min(avgLatency/10, 100)}%` : '0%';
+        if (count > 0) { uptimeData.total++; if (offline === 0) uptimeData.online++; }
+        const uptimePercent = uptimeData.total > 0 ? ((uptimeData.online / uptimeData.total) * 100).toFixed(1) : '100';
+        document.getElementById('uptime-percent').textContent = `${uptimePercent}%`;
         const banner = document.getElementById('overall-banner');
         const dot = document.getElementById('overall-dot');
         const title = document.getElementById('overall-title');
-        
         if (offline > 3) {
-          banner.className = 'bg-[#212121] border border-red-500/20 rounded-xl p-6 mb-8 flex items-center gap-4 transition-all duration-500';
-          dot.className = 'w-4 h-4 rounded-full bg-red-400 flex-shrink-0';
+          banner.className = 'bg-[#212121] border border-red-500/30 rounded-lg p-3 mb-4 flex items-center gap-3 transition-all duration-300';
+          dot.className = 'w-3 h-3 rounded-full bg-red-400 animate-pulse flex-shrink-0';
           title.textContent = `${offline} services down`;
         } else if (offline > 0 || degraded > 3) {
-          banner.className = 'bg-[#212121] border border-yellow-500/20 rounded-xl p-6 mb-8 flex items-center gap-4 transition-all duration-500';
-          dot.className = 'w-4 h-4 rounded-full bg-yellow-400 pulse-dot-slow flex-shrink-0';
+          banner.className = 'bg-[#212121] border border-yellow-500/30 rounded-lg p-3 mb-4 flex items-center gap-3 transition-all duration-300';
+          dot.className = 'w-3 h-3 rounded-full bg-yellow-400 pulse-dot-slow flex-shrink-0';
           title.textContent = 'Some systems degraded';
         } else {
-          banner.className = 'bg-[#212121] border border-[#2E2E2E] rounded-xl p-6 mb-8 flex items-center gap-4 transition-all duration-500';
-          dot.className = 'w-4 h-4 rounded-full bg-green-400 pulse-dot flex-shrink-0';
+          banner.className = 'bg-[#212121] border border-green-500/30 rounded-lg p-3 mb-4 flex items-center gap-3 transition-all duration-300';
+          dot.className = 'w-3 h-3 rounded-full bg-green-400 pulse-dot flex-shrink-0';
           title.textContent = 'All Systems Operational';
         }
       }
 
       function updateTimeDisplay() {
-        const now = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'UTC', hour12: false }) + ' UTC';
-        document.getElementById('last-checked').textContent = now;
-        document.getElementById('last-checked-footer').textContent = now;
-        document.getElementById('overall-sub').textContent = `Last checked: ${now}`;
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'UTC', hour12: false });
+        document.getElementById('last-checked').textContent = timeStr + ' UTC';
+        document.getElementById('last-checked-footer').textContent = timeStr + ' UTC';
+        document.getElementById('overall-sub').textContent = 'Auto-refresh 5s';
+        document.getElementById('total-checks-footer').textContent = `${totalChecks} checks`;
       }
 
       async function pingEndpoint(service, index) {
         const startTime = performance.now();
         const url = `${BASE_URL}${service.path}`;
-        serviceStatuses[index] = { status: 'checking', latency: '...' };
-        updateServiceUI(index, 'checking', '...');
         try {
           const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 10000);
-          const res = await fetch(url, { method: 'GET', signal: controller.signal });
+          const timeout = setTimeout(() => controller.abort(), 8000);
+          const res = await fetch(url, { method: 'GET', signal: controller.signal, cache: 'no-store' });
           clearTimeout(timeout);
           const latency = Math.round(performance.now() - startTime);
-          const status = latency > 800 ? 'degraded' : 'online';
+          let status = 'online';
+          if (!res.ok) status = 'offline';
+          else if (latency > 1500) status = 'degraded';
           serviceStatuses[index] = { status, latency: `${latency}ms`, latencyMs: latency };
         } catch (err) {
           serviceStatuses[index] = { status: 'offline', latency: err.name === 'AbortError' ? 'timeout' : 'error', latencyMs: null };
         }
+        totalChecks++;
         updateServiceUI(index, serviceStatuses[index].status, serviceStatuses[index].latency);
       }
 
@@ -331,23 +397,41 @@
         const dot = document.getElementById(`svc-dot-${index}`);
         const statusEl = document.getElementById(`svc-status-${index}`);
         const latencyEl = document.getElementById(`svc-latency-${index}`);
+        const row = document.getElementById(`svc-row-${index}`);
+        if (row) { row.classList.add('slide-in'); setTimeout(() => row.classList.remove('slide-in'), 250); }
         if (dot) {
-          dot.className = `w-2 h-2 rounded-full flex-shrink-0 ${status === 'online' ? 'bg-green-400 pulse-dot' : status === 'degraded' ? 'bg-yellow-400 pulse-dot-slow' : status === 'offline' ? 'bg-red-400' : 'bg-blue-400 pulse-dot'}`;
+          dot.className = `w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300 ${
+            status === 'online' ? 'bg-green-400 live-glow' : status === 'degraded' ? 'bg-yellow-400 degraded-glow' : status === 'offline' ? 'bg-red-400 offline-glow' : 'bg-blue-400 animate-pulse'
+          }`;
         }
         if (statusEl) {
-          statusEl.className = `text-xs uppercase tracking-wider px-2 py-0.5 rounded ${status === 'online' ? 'text-green-400 bg-green-400/10' : status === 'degraded' ? 'text-yellow-400 bg-yellow-400/10' : status === 'offline' ? 'text-red-400 bg-red-400/10' : 'text-blue-400 bg-blue-400/10'}`;
+          statusEl.className = `text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded font-semibold transition-all duration-300 ${
+            status === 'online' ? 'text-green-400 bg-green-400/10' : status === 'degraded' ? 'text-yellow-400 bg-yellow-400/10' : status === 'offline' ? 'text-red-400 bg-red-400/10' : 'text-blue-400 bg-blue-400/10'
+          }`;
           statusEl.textContent = status;
         }
         if (latencyEl) latencyEl.textContent = latency;
       }
 
       async function checkAllEndpoints() {
+        if (isChecking) return;
+        isChecking = true;
+        const btn = document.getElementById('refresh-btn');
+        btn.classList.add('opacity-40', 'pointer-events-none');
         updateTimeDisplay();
         const allServices = serviceCategories.flatMap(c => c.services);
-        const promises = allServices.map((service, index) => pingEndpoint(service, index));
-        await Promise.allSettled(promises);
-        updateSummary();
+        const batchSize = 8;
+        for (let i = 0; i < allServices.length; i += batchSize) {
+          const batch = allServices.slice(i, i + batchSize);
+          const promises = batch.map((service, batchIndex) => pingEndpoint(service, i + batchIndex));
+          await Promise.allSettled(promises);
+          updateSummary();
+        }
+        btn.classList.remove('opacity-40', 'pointer-events-none');
+        isChecking = false;
       }
+
+      function manualRefresh() { if (!isChecking) checkAllEndpoints(); }
 
       document.addEventListener('DOMContentLoaded', () => {
         renderServiceList();
