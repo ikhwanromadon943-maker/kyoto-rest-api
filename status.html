@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Kyoto API Status — Real-time system health and uptime monitoring for all live endpoints." />
   <meta name="theme-color" content="#181818" />
   <meta property="og:type" content="website" />
@@ -10,17 +10,18 @@
   <meta property="og:title" content="Status — Kyoto API." />
   <meta property="og:description" content="Real-time system health and uptime monitoring for all live endpoints." />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:creator" content="@kyotodev" />
-  <meta name="author" content="KyotoDev." />
+  <meta name="twitter:creator" content="@wtf.w4n_" />
+  <meta name="author" content="wtf.w4n_" />
   <link rel="canonical" href="https://kyoto-rest-api.vercel.app/status" />
   <title>Status — Kyoto API.</title>
-  <link rel="icon" href="/favicon.png" type="image/x-icon" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script>
     tailwind.config = {
       theme: {
@@ -31,477 +32,935 @@
           }
         }
       }
-    }
+    };
   </script>
   <style>
-    * { -webkit-tap-highlight-color: transparent; }
-    ::-webkit-scrollbar { display: none !important; }
-    
-    body { 
-      position: relative; scroll-behavior: smooth; letter-spacing: 0.025em; 
-      background-color: #181818; overscroll-behavior: none; -webkit-font-smoothing: antialiased;
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #555; }
+    * { -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+
+    /* ===== BASE ===== */
+    body {
+      background-color: #181818;
+      letter-spacing: 0.025em;
+      -webkit-font-smoothing: antialiased;
     }
-    
     body::before {
-      content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-      background-image: linear-gradient(rgba(148,163,184,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.04) 1px, transparent 1px);
-      background-size: 32px 32px; pointer-events: none;
+      content: '';
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%; z-index: -1;
+      background-image:
+        linear-gradient(rgba(148,163,184,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148,163,184,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
     }
-    
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-    @keyframes pulse-fast { 0%,100%{opacity:1} 50%{opacity:.3} }
-    @keyframes slideIn { from{opacity:0;transform:translateX(-6px)} to{opacity:1;transform:translateX(0)} }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
-    
-    .pulse-dot{animation:pulse 2s infinite}
-    .pulse-dot-slow{animation:pulse 3s infinite}
-    .pulse-dot-fast{animation:pulse-fast 1s infinite}
-    .fade-in{animation:fadeIn .35s ease-out forwards;opacity:0}
-    .slide-in{animation:slideIn .25s ease-out}
-    
-    .live-glow{box-shadow:0 0 6px rgba(74,222,128,.4)}
-    .degraded-glow{box-shadow:0 0 6px rgba(250,204,21,.4)}
-    .offline-glow{box-shadow:0 0 6px rgba(248,113,113,.4)}
-    
-    .safe-bottom{padding-bottom:env(safe-area-inset-bottom,16px)}
-    
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeInUp   { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn     { from{opacity:0} to{opacity:1} }
+    @keyframes slideDown  { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes slideIn    { from{opacity:0;transform:translateX(-6px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes shimmer    { 0%{background-position:-400px 0} 100%{background-position:400px 0} }
+    @keyframes pulse      { 0%,100%{opacity:1} 50%{opacity:.4} }
+    @keyframes pulse-fast { 0%,100%{opacity:1} 50%{opacity:.25} }
+    @keyframes spin       { to{transform:rotate(360deg)} }
+    @keyframes blink      { 0%,100%{opacity:1} 50%{opacity:0} }
+    @keyframes countUp    { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+    .animate-fade-in-up { animation: fadeInUp 0.45s ease-out forwards; opacity: 0; }
+    .animate-fade-in    { animation: fadeIn 0.3s ease-out forwards; }
+    .slide-in           { animation: slideIn 0.22s ease-out; }
+    .pulse-dot          { animation: pulse 2s infinite; }
+    .pulse-dot-fast     { animation: pulse-fast 0.9s infinite; }
+    .pulse-dot-slow     { animation: pulse 3.5s infinite; }
+
+    /* Status glows */
+    .glow-green  { box-shadow: 0 0 7px rgba(74,222,128,.5); }
+    .glow-yellow { box-shadow: 0 0 7px rgba(250,204,21,.5); }
+    .glow-red    { box-shadow: 0 0 7px rgba(248,113,113,.5); }
+    .glow-blue   { box-shadow: 0 0 7px rgba(96,165,250,.4); }
+
+    /* ===== SKELETON ===== */
+    .skeleton {
+      background: linear-gradient(90deg, #1e1e1e 25%, #262626 50%, #1e1e1e 75%);
+      background-size: 400px 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 8px;
+    }
+
+    /* ===== SIDEBAR ===== */
+    #sidebar { transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+    #overlay  { transition: opacity 0.3s, visibility 0.3s; }
+    #overlay.show { opacity:1!important; visibility:visible!important; }
+    @media (max-width: 767px) {
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+    }
+    @media (min-width: 768px) {
+      body { padding-left: 16rem; }
+      #sidebar { transform: translateX(0)!important; }
+      #overlay { display: none!important; }
+      #sidebarToggle, #sidebarClose { display: none!important; }
+    }
+
+    /* ===== OVERALL BANNER ===== */
+    .overall-banner {
+      background: #212121;
+      border: 1px solid #2e2e2e;
+      border-radius: 16px;
+      padding: 20px 24px;
+      transition: border-color 0.4s, background 0.4s;
+    }
+    .overall-banner.ok       { border-color: rgba(74,222,128,.3); }
+    .overall-banner.degraded { border-color: rgba(250,204,21,.3); }
+    .overall-banner.down     { border-color: rgba(248,113,113,.3); }
+    .overall-banner.loading  { border-color: rgba(96,165,250,.2); }
+
+    /* ===== STAT CARDS ===== */
     .stat-card {
       background: #212121;
       border: 1px solid #2e2e2e;
       border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-      transition: border-color 0.3s;
+      padding: 18px 16px;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
     }
-    
-    .stat-card:hover {
-      border-color: #383838;
+    .stat-card:hover { border-color: #3a3a3a; transform: translateY(-1px); }
+    .stat-card .icon-bg {
+      position: absolute;
+      bottom: -8px; right: -6px;
+      font-size: 4rem;
+      color: #1c1c1c;
+      pointer-events: none;
+      transition: all 0.3s;
     }
-    
-    .service-row {
+    .stat-card:hover .icon-bg { color: #222; transform: scale(1.08); }
+
+    /* ===== SERVICE GROUP ===== */
+    .svc-group {
       background: #212121;
       border: 1px solid #2e2e2e;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .svc-group:hover { border-color: #333; }
+    .svc-group-header {
+      padding: 14px 20px 12px;
+      border-bottom: 1px solid #2a2a2a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e1e1e;
+    }
+    .svc-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      transition: background 0.15s;
+    }
+    .svc-row:last-child { border-bottom: none; }
+    .svc-row:hover { background: rgba(255,255,255,0.02); }
+
+    /* ===== METHOD/STATUS BADGE ===== */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-family: "Ubuntu Mono", monospace;
       transition: all 0.2s;
     }
-    
-    .service-row:hover {
-      background: #1c1c1c;
-      border-color: #383838;
+    .badge-online   { background: rgba(74,222,128,.1);  color: #4ade80; border: 1px solid rgba(74,222,128,.2); }
+    .badge-degraded { background: rgba(250,204,21,.1);  color: #facc15; border: 1px solid rgba(250,204,21,.2); }
+    .badge-offline  { background: rgba(248,113,113,.1); color: #f87171; border: 1px solid rgba(248,113,113,.2); }
+    .badge-pending  { background: rgba(96,165,250,.1);  color: #60a5fa; border: 1px solid rgba(96,165,250,.2); }
+
+    /* ===== UPTIME BAR ===== */
+    .uptime-bar-track {
+      height: 5px;
+      background: #252525;
+      border-radius: 3px;
+      overflow: hidden;
     }
-    
-    .shimmer-effect {
-      background: linear-gradient(90deg, #212121 0%, #2a2a2a 50%, #212121 100%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
+    .uptime-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.5s ease;
     }
+
+    /* ===== SECTION LABEL ===== */
+    .section-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #555;
+      font-family: "Ubuntu Mono", monospace;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .section-divider {
+      width: 40px; height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      margin: 10px 0 16px;
+    }
+
+    /* ===== INCIDENT CARD ===== */
+    .incident-card {
+      background: #212121;
+      border: 1px solid #2e2e2e;
+      border-radius: 12px;
+      padding: 16px 20px;
+      transition: border-color 0.2s;
+    }
+    .incident-card:hover { border-color: #3a3a3a; }
+
+    /* ===== TOAST ===== */
+    #toast {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: #212121;
+      border: 1px solid #383838;
+      color: #e2e0f0;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      z-index: 9998;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      animation: fadeInUp 0.3s;
+    }
+    #toast.show { display: flex; }
+
+    /* ===== BACK TO TOP ===== */
+    #backToTop {
+      opacity: 0; visibility: hidden;
+      transition: all 0.3s;
+    }
+    #backToTop.show { opacity: 1; visibility: visible; }
+
+    /* Refresh spin */
+    .spin { animation: spin 0.7s linear infinite; }
+
+    /* Latency color */
+    .lat-fast   { color: #4ade80; }
+    .lat-medium { color: #facc15; }
+    .lat-slow   { color: #f87171; }
   </style>
 </head>
 <body class="bg-[#181818] text-gray-200 antialiased font-sans min-h-screen">
-  
-  <!-- Header -->
-  <header class="sticky top-0 z-50 bg-[#181818]/95 backdrop-blur-sm border-b border-[#2E2E2E]">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="/" class="font-bold text-white text-base flex items-center gap-2" style="font-family: 'Space Grotesk', sans-serif;">
-        Kyoto<span class="text-gray-400">API</span>
-        <span class="text-[9px] text-green-400 bg-green-400/10 px-1.5 py-0.5 rounded-full flex items-center gap-1">
-          <span class="w-1 h-1 bg-green-400 rounded-full pulse-dot-fast"></span> LIVE
-        </span>
+
+  <!-- Toast -->
+  <div id="toast">
+    <i class="material-icons text-base" style="color:#4ade80">check_circle</i>
+    <span id="toast-msg"></span>
+  </div>
+
+  <!-- Overlay -->
+  <div id="overlay" class="fixed inset-0 bg-black/70 opacity-0 invisible z-[90] md:hidden transition-all"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-[#181818] text-gray-200 border-r border-[#2e2e2e] z-[100] overflow-y-auto flex flex-col">
+    <div class="px-6 py-6 flex items-center justify-between md:hidden border-b border-[#2e2e2e]">
+      <a href="/" class="text-white font-bold text-base" style="font-family:'Space Grotesk',sans-serif;">
+        Kyoto<span class="text-gray-500">API</span>
       </a>
-      <div class="flex items-center gap-4 text-xs">
-        <a href="/" class="text-gray-400 hover:text-white transition-colors">Home</a>
-        <a href="/category" class="text-gray-400 hover:text-white transition-colors">Category</a>
-        <a href="/status" class="text-white font-medium transition-colors">Status</a>
+      <button id="sidebarClose" class="text-gray-400 hover:text-white transition-colors">
+        <i class="material-icons text-xl">close</i>
+      </button>
+    </div>
+
+    <div class="px-5 pb-8 pt-0 md:pt-8 flex-1">
+      <div class="mb-6 px-4 hidden md:block">
+        <a href="/" class="text-white font-bold text-lg" style="font-family:'Space Grotesk',sans-serif;">
+          Kyoto<span class="text-gray-500">API</span>
+        </a>
+      </div>
+      <nav>
+        <p class="font-medium text-xs text-gray-500 mb-3 px-4 uppercase tracking-widest">Navigation</p>
+        <div class="space-y-0.5 mb-6">
+          <a href="/" class="flex items-center py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-[#222] rounded-xl transition-colors">
+            <i class="material-icons text-base mr-3 opacity-70">home</i>Home
+          </a>
+          <a href="/category" class="flex items-center py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-[#222] rounded-xl transition-colors">
+            <i class="material-icons text-base mr-3 opacity-70">explore</i>Categories
+          </a>
+          <a href="/status" class="flex items-center py-2 px-4 text-sm text-white bg-[#222] rounded-xl">
+            <i class="material-icons text-base mr-3">monitor_heart</i>Status
+          </a>
+        </div>
+        <p class="font-medium text-xs text-gray-500 mb-3 px-4 uppercase tracking-widest">Live Status</p>
+        <div class="space-y-0.5" id="sidebar-cat-list">
+          <div class="space-y-2 px-4">
+            <div class="skeleton h-7 w-full rounded-xl"></div>
+            <div class="skeleton h-7 w-4/5 rounded-xl"></div>
+            <div class="skeleton h-7 w-full rounded-xl"></div>
+            <div class="skeleton h-7 w-3/4 rounded-xl"></div>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Sidebar footer: last check -->
+    <div class="px-5 py-4 border-t border-[#2e2e2e] flex-shrink-0">
+      <div class="bg-[#1a1a1a] border border-[#2e2e2e] rounded-xl px-4 py-3">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-green-400 pulse-dot-fast flex-shrink-0"></span>
+          <span class="text-xs font-semibold text-white">Auto-refresh</span>
+        </div>
+        <p class="text-[10px] text-gray-500 font-mono">Every 5 seconds</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-[#181818]/95 backdrop-blur-sm border-b border-[#2e2e2e]">
+    <div class="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <button id="sidebarToggle" class="text-gray-400 hover:text-white transition-colors md:hidden">
+          <i class="material-icons text-2xl">menu</i>
+        </button>
+        <div class="hidden md:flex items-center gap-2 text-sm text-gray-500">
+          <a href="/" class="hover:text-white transition-colors">Home</a>
+          <span class="text-gray-700">/</span>
+          <span class="text-white">Status</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-2 text-xs font-mono text-gray-600">
+          <span id="header-time">--:--:-- UTC</span>
+          <span class="text-gray-700">·</span>
+          <span id="header-checks">0 checks</span>
+        </div>
+        <button onclick="manualRefresh()" id="refresh-btn"
+          class="flex items-center gap-1.5 bg-[#212121] border border-[#2e2e2e] hover:bg-[#1c1c1c] hover:border-[#3a3a3a] text-gray-400 hover:text-white text-xs py-1.5 px-3 rounded-lg transition-all">
+          <i class="material-icons text-sm" id="refresh-icon">refresh</i>
+          <span class="hidden sm:inline">Refresh</span>
+        </button>
       </div>
     </div>
   </header>
 
-  <main class="max-w-4xl mx-auto px-4 py-4 safe-bottom">
-    
-    <!-- Overall Status Banner -->
-    <div id="overall-banner" class="bg-[#212121] border border-[#2E2E2E] rounded-xl p-4 mb-6 flex items-center gap-4 transition-all duration-300 fade-in">
-      <div id="overall-dot" class="w-3 h-3 rounded-full bg-blue-400 pulse-dot-fast flex-shrink-0"></div>
-      <div class="flex-1 min-w-0">
-        <h2 class="text-sm font-semibold text-white truncate" id="overall-title">Checking systems...</h2>
-        <p class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1.5 flex-wrap">
-          <span id="overall-sub">Initializing...</span>
-          <span class="text-gray-600">·</span>
-          <span id="last-checked" class="text-gray-500">--</span>
-        </p>
-      </div>
-      <div class="text-right flex-shrink-0">
-        <div class="text-lg font-bold text-white font-mono" id="uptime-percent">--</div>
-        <div class="text-[9px] text-gray-500">24h uptime</div>
-      </div>
-    </div>
+  <!-- Main -->
+  <main class="max-w-5xl mx-auto px-6 py-8">
 
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-      <div class="stat-card fade-in">
-        <div class="text-2xl font-bold text-green-400 font-mono" id="stat-online">0</div>
-        <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1">Online</div>
-        <div class="mt-2 h-1 bg-[#2E2E2E] rounded-full overflow-hidden">
-          <div class="h-full bg-green-400 rounded-full transition-all duration-500" id="bar-online" style="width:0%"></div>
+    <!-- ===== OVERALL BANNER ===== -->
+    <div id="overall-banner" class="overall-banner loading mb-8 animate-fade-in-up">
+      <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div class="flex items-center gap-4 min-w-0">
+          <div id="overall-icon" class="w-10 h-10 rounded-xl bg-[#1a1a1a] border border-[#2e2e2e] flex items-center justify-center flex-shrink-0">
+            <span id="overall-dot" class="w-3 h-3 rounded-full bg-blue-400 pulse-dot-fast glow-blue"></span>
+          </div>
+          <div class="min-w-0">
+            <h2 class="text-base font-semibold text-white" id="overall-title">Checking systems…</h2>
+            <p class="text-xs text-gray-500 mt-0.5 flex items-center gap-2 flex-wrap">
+              <span id="overall-sub">Initializing health checks</span>
+              <span class="text-gray-700">·</span>
+              <span id="last-checked" class="font-mono">--:-- UTC</span>
+            </p>
+          </div>
         </div>
-      </div>
-      <div class="stat-card fade-in">
-        <div class="text-2xl font-bold text-yellow-400 font-mono" id="stat-degraded">0</div>
-        <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1">Degraded</div>
-        <div class="mt-2 h-1 bg-[#2E2E2E] rounded-full overflow-hidden">
-          <div class="h-full bg-yellow-400 rounded-full transition-all duration-500" id="bar-degraded" style="width:0%"></div>
-        </div>
-      </div>
-      <div class="stat-card fade-in">
-        <div class="text-2xl font-bold text-red-400 font-mono" id="stat-offline">0</div>
-        <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1">Offline</div>
-        <div class="mt-2 h-1 bg-[#2E2E2E] rounded-full overflow-hidden">
-          <div class="h-full bg-red-400 rounded-full transition-all duration-500" id="bar-offline" style="width:0%"></div>
-        </div>
-      </div>
-      <div class="stat-card fade-in">
-        <div class="text-2xl font-bold text-blue-400 font-mono" id="stat-avg-latency">0ms</div>
-        <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1">Avg Latency</div>
-        <div class="mt-2 h-1 bg-[#2E2E2E] rounded-full overflow-hidden">
-          <div class="h-full bg-blue-400 rounded-full transition-all duration-500" id="bar-latency" style="width:0%"></div>
+        <div class="flex items-center gap-4 flex-shrink-0">
+          <div class="text-right">
+            <div class="text-2xl font-bold text-white font-mono" id="uptime-percent">--</div>
+            <div class="text-[9px] text-gray-500 uppercase tracking-wider">24h uptime</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Services Section -->
-    <div class="flex items-center justify-between mb-4">
-      <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-        <i class="fas fa-server text-gray-400 text-xs"></i> All Services
-      </h3>
-      <span class="text-[9px] text-gray-500 flex items-center gap-1">
-        <span class="w-1.5 h-1.5 bg-green-400 rounded-full pulse-dot-fast"></span> Auto-refresh 5s
-      </span>
-    </div>
-
-    <div id="service-container" class="space-y-2 mb-6"></div>
-
-    <!-- Incidents Section -->
-    <h3 class="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-      <i class="fas fa-history text-gray-400 text-xs"></i> Recent Incidents
-    </h3>
-    <div id="incident-list" class="space-y-2 mb-6"></div>
-
-    <!-- Footer Bar -->
-    <div class="flex items-center justify-between pt-4 border-t border-[#2E2E2E]">
-      <div class="text-[10px] text-gray-500 min-w-0">
-        <span id="last-checked-footer" class="text-gray-400">--</span>
-        <span class="mx-1.5 text-gray-600">·</span>
-        <span id="total-checks-footer">0 checks</span>
+    <!-- ===== STATS ===== -->
+    <section class="mb-10">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="stat-card animate-fade-in-up" style="animation-delay:0ms">
+          <div class="relative z-10">
+            <div class="text-2xl font-bold text-green-400 font-mono" id="stat-online">0</div>
+            <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1">Online</div>
+            <div class="uptime-bar-track mt-3">
+              <div class="uptime-bar-fill bg-green-400" id="bar-online" style="width:0%"></div>
+            </div>
+          </div>
+          <i class="material-icons icon-bg" style="color:#1c1c1c;font-size:4rem;position:absolute;bottom:-8px;right:-6px;">check_circle</i>
+        </div>
+        <div class="stat-card animate-fade-in-up" style="animation-delay:60ms">
+          <div class="relative z-10">
+            <div class="text-2xl font-bold text-yellow-400 font-mono" id="stat-degraded">0</div>
+            <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1">Degraded</div>
+            <div class="uptime-bar-track mt-3">
+              <div class="uptime-bar-fill bg-yellow-400" id="bar-degraded" style="width:0%"></div>
+            </div>
+          </div>
+          <i class="material-icons icon-bg" style="color:#1c1c1c;font-size:4rem;position:absolute;bottom:-8px;right:-6px;">warning</i>
+        </div>
+        <div class="stat-card animate-fade-in-up" style="animation-delay:120ms">
+          <div class="relative z-10">
+            <div class="text-2xl font-bold text-red-400 font-mono" id="stat-offline">0</div>
+            <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1">Offline</div>
+            <div class="uptime-bar-track mt-3">
+              <div class="uptime-bar-fill bg-red-400" id="bar-offline" style="width:0%"></div>
+            </div>
+          </div>
+          <i class="material-icons icon-bg" style="color:#1c1c1c;font-size:4rem;position:absolute;bottom:-8px;right:-6px;">cancel</i>
+        </div>
+        <div class="stat-card animate-fade-in-up" style="animation-delay:180ms">
+          <div class="relative z-10">
+            <div class="text-2xl font-bold text-blue-400 font-mono" id="stat-avg-latency">—</div>
+            <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1">Avg Latency</div>
+            <div class="uptime-bar-track mt-3">
+              <div class="uptime-bar-fill bg-blue-400" id="bar-latency" style="width:0%"></div>
+            </div>
+          </div>
+          <i class="material-icons icon-bg" style="color:#1c1c1c;font-size:4rem;position:absolute;bottom:-8px;right:-6px;">speed</i>
+        </div>
       </div>
-      <button onclick="manualRefresh()" id="refresh-btn" class="flex items-center gap-1.5 bg-[#212121] border border-[#2E2E2E] text-gray-400 active:text-white active:border-[#383838] text-xs py-1.5 px-3 rounded-lg transition-all touch-manipulation">
-        <i class="fas fa-rotate-right text-[10px]"></i> Refresh
-      </button>
-    </div>
+    </section>
+
+    <!-- ===== SERVICES ===== -->
+    <section class="mb-10">
+      <div class="flex items-end justify-between mb-6 animate-fade-in-up">
+        <div>
+          <p class="section-label">Live Monitoring</p>
+          <h2 class="text-xl md:text-2xl font-bold text-white mb-1">All Services</h2>
+          <div class="section-divider"></div>
+          <p class="text-gray-500 text-sm">Real-time health checks across all endpoints.</p>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <span class="w-1.5 h-1.5 rounded-full bg-green-400 pulse-dot-fast flex-shrink-0"></span>
+          <span class="text-xs text-gray-500 font-mono hidden sm:inline">auto-refresh 5s</span>
+        </div>
+      </div>
+
+      <div id="service-container" class="space-y-4"></div>
+    </section>
+
+    <!-- ===== INCIDENTS ===== -->
+    <section class="mb-10">
+      <div class="mb-6 animate-fade-in-up">
+        <p class="section-label">History</p>
+        <h2 class="text-xl md:text-2xl font-bold text-white mb-1">Recent Incidents</h2>
+        <div class="section-divider"></div>
+        <p class="text-gray-500 text-sm">Changelog and past incidents.</p>
+      </div>
+      <div id="incident-list" class="space-y-3"></div>
+    </section>
+
   </main>
 
   <!-- Footer -->
-  <footer class="bg-[#212121] border-t border-[#2E2E2E] w-full mt-8">
-    <div class="max-w-4xl mx-auto px-4 py-5 text-center">
-      <p class="text-[11px] text-gray-400">&copy; 2026 Kyoto API. All rights reserved.</p>
-      <div class="flex justify-center gap-5 mt-2">
-        <a href="/" class="text-[11px] text-gray-400 hover:text-white transition-colors">Home</a>
-        <a href="/category" class="text-[11px] text-gray-400 hover:text-white transition-colors">Category</a>
-        <a href="/status" class="text-[11px] text-white transition-colors">Status</a>
+  <footer class="bg-[#212121] border-t border-[#2e2e2e] w-full mt-4">
+    <div class="max-w-5xl mx-auto px-6 py-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <p class="text-xs text-gray-600">&copy; 2026 Kyoto API. All rights reserved.</p>
+          <span class="text-gray-700 hidden md:inline">·</span>
+          <p class="text-xs text-gray-600 font-mono hidden md:inline">
+            Last: <span id="last-checked-footer">--</span>
+            <span class="mx-1.5 text-gray-700">·</span>
+            <span id="total-checks-footer">0 checks</span>
+          </p>
+        </div>
+        <div class="flex gap-5">
+          <a href="/" class="text-xs text-gray-500 hover:text-white transition-colors">Home</a>
+          <a href="/category" class="text-xs text-gray-500 hover:text-white transition-colors">Categories</a>
+          <a href="/status" class="text-xs text-white">Status</a>
+        </div>
       </div>
     </div>
   </footer>
 
-  <script>
-    const BASE_URL = 'https://kyoto-rest-api.vercel.app';
-    const CHECK_INTERVAL = 5000;
-    let serviceStatuses = {};
-    let totalChecks = 0;
-    let isChecking = false;
-    let uptimeData = { online: 0, total: 0 };
+  <!-- Back to Top -->
+  <button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+    class="fixed bottom-6 right-6 w-10 h-10 bg-white text-black rounded-full flex items-center justify-center z-50 hover:bg-gray-100 transition-all shadow-lg">
+    <i class="material-icons text-base">arrow_upward</i>
+  </button>
 
-    const serviceCategories = [
-      { name: 'AI', icon: 'fa-brain', services: [
-        { name: 'ChatGPT', path: '/api/ai/chatgpt?text=ping' },
-        { name: 'DALLE', path: '/api/ai/dalle?prompt=ping' },
-        { name: 'Translate', path: '/api/ai/translate?text=hello&to=id' },
-        { name: 'Text to Speech', path: '/api/ai/text-to-speech?text=ping' },
-        { name: 'Summarize', path: '/api/ai/summarize?text=test' },
-        { name: 'Roast', path: '/api/ai/roast?text=test' },
-        { name: 'ELI5', path: '/api/ai/eli5?text=test' },
-        { name: 'Sentiment', path: '/api/ai/sentiment?text=I+love+this' },
-        { name: 'Grammar', path: '/api/ai/grammar?text=He+go+to+school' },
-        { name: 'Ask', path: '/api/ai/ask?q=ping' },
-      ]},
-      { name: 'Anime', icon: 'fa-dragon', services: [
-        { name: 'Search', path: '/api/anime/search?query=Naruto&type=anime' },
-        { name: 'Anime Info', path: '/api/anime/anime?title=One+Piece' },
-        { name: 'Random', path: '/api/anime/random' },
-        { name: 'Waifu', path: '/api/anime/waifu?category=waifu' },
-        { name: 'Quotes', path: '/api/anime/quotes' },
-        { name: 'Seasonal', path: '/api/anime/seasonal' },
-        { name: 'Top', path: '/api/anime/top' },
-        { name: 'News', path: '/api/anime/news' },
-      ]},
-      { name: 'News', icon: 'fa-newspaper', services: [
-        { name: 'CNN', path: '/api/news/cnn' },
-        { name: 'CNBC', path: '/api/news/cnbc' },
-        { name: 'Detik', path: '/api/news/detik' },
-        { name: 'HackerNews', path: '/api/news/hackernews' },
-        { name: 'Dev.to', path: '/api/news/devto' },
-      ]},
-      { name: 'Internet', icon: 'fa-globe', services: [
-        { name: 'Meta Tags', path: '/api/internet/meta?url=https://example.com' },
-        { name: 'Headers', path: '/api/internet/headers?url=https://example.com' },
-        { name: 'Robots.txt', path: '/api/internet/robots?domain=google.com' },
-        { name: 'Email Check', path: '/api/internet/email-check?email=test@gmail.com' },
-      ]},
-      { name: 'Games', icon: 'fa-gamepad', services: [
-        { name: 'List', path: '/api/games/list' },
-        { name: 'Detail', path: '/api/games/detail?id=452' },
-        { name: 'Pokédex', path: '/api/games/pokedex?name=pikachu' },
-        { name: 'Chess', path: '/api/games/chess-puzzle' },
-      ]},
-      { name: 'Info', icon: 'fa-circle-info', services: [
-        { name: 'Wikipedia', path: '/api/info/wikipedia?title=Indonesia' },
-        { name: 'Dictionary', path: '/api/info/dictionary?word=hello' },
-        { name: 'GitHub', path: '/api/info/github?username=torvalds' },
-        { name: 'Crypto', path: '/api/info/crypto?coin=bitcoin' },
-        { name: 'Movie', path: '/api/info/movie?title=Inception' },
-        { name: 'Lyrics', path: '/api/info/lyrics?artist=Coldplay&song=Yellow' },
-      ]},
-      { name: 'Maker', icon: 'fa-wand-magic-sparkles', services: [
-        { name: 'Canvas', path: '/api/maker/canvas?text=test' },
-        { name: 'Avatar', path: '/api/maker/avatar?seed=test' },
-        { name: 'QR Code', path: '/api/maker/qr-styled?text=test' },
-      ]},
-      { name: 'Stalker', icon: 'fa-magnifying-glass', services: [
-        { name: 'IP Lookup', path: '/api/stalker/ip?ip=8.8.8.8' },
-        { name: 'My IP', path: '/api/stalker/my-ip' },
-        { name: 'DNS', path: '/api/stalker/dns?domain=google.com' },
-        { name: 'Website Status', path: '/api/stalker/website-status?url=https://google.com' },
-      ]},
-      { name: 'Tools', icon: 'fa-screwdriver-wrench', services: [
-        { name: 'QR', path: '/api/tools/qr?text=test' },
-        { name: 'Shortlink', path: '/api/tools/shortlink?url=https://google.com' },
-        { name: 'Weather', path: '/api/tools/cuaca?city=Tokyo' },
-        { name: 'Calculator', path: '/api/tools/calculator?expr=2+2' },
-        { name: 'NGL Spammer', path: '/api/tools/ngl?username=test&message=ping&count=1' },
-      ]},
-      { name: 'Media', icon: 'fa-image', services: [
-        { name: 'Wallpaper', path: '/api/media/wallpaper?theme=nature' },
-        { name: 'Art', path: '/api/media/art?subject=cat&style=oil+painting' },
-        { name: 'YouTube', path: '/api/media/youtube?url=https://youtube.com/watch?v=dQw4w9WgXcQ' },
-        { name: 'Unsplash', path: '/api/media/unsplash?query=nature' },
-      ]},
-    ];
+<script>
+(function () {
+  'use strict';
 
-    const incidents = [
-      { title: 'v3.0 — Major Rebuild', date: 'May 2026', desc: 'Complete restructure. 100+ endpoints, 10 categories. New Internet category. Removed Fun & Quran.', status: 'resolved' },
-      { title: 'v2.1 — Zodiak Consolidated', date: 'May 2026', desc: 'Zodiak endpoint merged into Tools. All systems operational.', status: 'resolved' },
-      { title: 'v2.0 — 55+ Endpoints Live', date: 'May 2026', desc: 'Major release. Free, no API key required.', status: 'resolved' },
-    ];
+  /* =========================================
+     CONFIG
+  ========================================= */
+  const BASE_URL       = 'https://kyoto-rest-api.vercel.app';
+  const CHECK_INTERVAL = 5000;
 
-    function getServiceCount() {
-      return serviceCategories.reduce((sum, cat) => sum + cat.services.length, 0);
-    }
+  /* =========================================
+     DATA
+  ========================================= */
+  const serviceCategories = [
+    { name: 'AI', icon: 'fa-brain', services: [
+      { name: 'ChatGPT',       path: '/api/ai/chatgpt?text=ping' },
+      { name: 'DALLE',         path: '/api/ai/dalle?prompt=ping' },
+      { name: 'Translate',     path: '/api/ai/translate?text=hello&to=id' },
+      { name: 'Text to Speech',path: '/api/ai/text-to-speech?text=ping' },
+      { name: 'Summarize',     path: '/api/ai/summarize?text=test' },
+      { name: 'Roast',         path: '/api/ai/roast?text=test' },
+      { name: 'ELI5',          path: '/api/ai/eli5?text=test' },
+      { name: 'Sentiment',     path: '/api/ai/sentiment?text=I+love+this' },
+      { name: 'Grammar',       path: '/api/ai/grammar?text=He+go+to+school' },
+      { name: 'Ask',           path: '/api/ai/ask?q=ping' },
+    ]},
+    { name: 'Anime', icon: 'fa-dragon', services: [
+      { name: 'Search',      path: '/api/anime/search?query=Naruto&type=anime' },
+      { name: 'Anime Info',  path: '/api/anime/anime?title=One+Piece' },
+      { name: 'Random',      path: '/api/anime/random' },
+      { name: 'Waifu',       path: '/api/anime/waifu?category=waifu' },
+      { name: 'Quotes',      path: '/api/anime/quotes' },
+      { name: 'Seasonal',    path: '/api/anime/seasonal' },
+      { name: 'Top',         path: '/api/anime/top' },
+      { name: 'News',        path: '/api/anime/news' },
+    ]},
+    { name: 'News', icon: 'fa-newspaper', services: [
+      { name: 'CNN',         path: '/api/news/cnn' },
+      { name: 'CNBC',        path: '/api/news/cnbc' },
+      { name: 'Detik',       path: '/api/news/detik' },
+      { name: 'HackerNews',  path: '/api/news/hackernews' },
+      { name: 'Dev.to',      path: '/api/news/devto' },
+    ]},
+    { name: 'Internet', icon: 'fa-globe', services: [
+      { name: 'Meta Tags',       path: '/api/internet/meta?url=https://example.com' },
+      { name: 'Headers',         path: '/api/internet/headers?url=https://example.com' },
+      { name: 'Robots.txt',      path: '/api/internet/robots?domain=google.com' },
+      { name: 'Email Check',     path: '/api/internet/email-check?email=test@gmail.com' },
+    ]},
+    { name: 'Games', icon: 'fa-gamepad', services: [
+      { name: 'List',        path: '/api/games/list' },
+      { name: 'Detail',      path: '/api/games/detail?id=452' },
+      { name: 'Pokédex',     path: '/api/games/pokedex?name=pikachu' },
+      { name: 'Chess',       path: '/api/games/chess-puzzle' },
+    ]},
+    { name: 'Info', icon: 'fa-circle-info', services: [
+      { name: 'Wikipedia',   path: '/api/info/wikipedia?title=Indonesia' },
+      { name: 'Dictionary',  path: '/api/info/dictionary?word=hello' },
+      { name: 'GitHub',      path: '/api/info/github?username=torvalds' },
+      { name: 'Crypto',      path: '/api/info/crypto?coin=bitcoin' },
+      { name: 'Movie',       path: '/api/info/movie?title=Inception' },
+      { name: 'Lyrics',      path: '/api/info/lyrics?artist=Coldplay&song=Yellow' },
+    ]},
+    { name: 'Maker', icon: 'fa-wand-magic-sparkles', services: [
+      { name: 'Canvas',      path: '/api/maker/canvas?text=test' },
+      { name: 'Avatar',      path: '/api/maker/avatar?seed=test' },
+      { name: 'QR Code',     path: '/api/maker/qr-styled?text=test' },
+    ]},
+    { name: 'Stalker', icon: 'fa-magnifying-glass', services: [
+      { name: 'IP Lookup',       path: '/api/stalker/ip?ip=8.8.8.8' },
+      { name: 'My IP',           path: '/api/stalker/my-ip' },
+      { name: 'DNS',             path: '/api/stalker/dns?domain=google.com' },
+      { name: 'Website Status',  path: '/api/stalker/website-status?url=https://google.com' },
+    ]},
+    { name: 'Tools', icon: 'fa-screwdriver-wrench', services: [
+      { name: 'QR',          path: '/api/tools/qr?text=test' },
+      { name: 'Shortlink',   path: '/api/tools/shortlink?url=https://google.com' },
+      { name: 'Weather',     path: '/api/tools/cuaca?city=Tokyo' },
+      { name: 'Calculator',  path: '/api/tools/calculator?expr=2+2' },
+      { name: 'NGL Spammer', path: '/api/tools/ngl?username=test&message=ping&count=1' },
+    ]},
+    { name: 'Media', icon: 'fa-image', services: [
+      { name: 'Wallpaper',   path: '/api/media/wallpaper?theme=nature' },
+      { name: 'Art',         path: '/api/media/art?subject=cat&style=oil+painting' },
+      { name: 'YouTube',     path: '/api/media/youtube?url=https://youtube.com/watch?v=dQw4w9WgXcQ' },
+      { name: 'Unsplash',    path: '/api/media/unsplash?query=nature' },
+    ]},
+  ];
 
-    function renderServiceList() {
-      const container = document.getElementById('service-container');
-      let html = '';
-      let globalIndex = 0;
-      
-      serviceCategories.forEach(cat => {
-        html += `
-          <div class="mb-3 fade-in">
-            <div class="flex items-center gap-2 mb-2 px-1">
-              <i class="fas ${cat.icon} text-gray-500 text-[10px]"></i>
-              <span class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">${cat.name}</span>
-              <span class="text-[9px] text-gray-600">${cat.services.length}</span>
+  const incidents = [
+    { title: 'v3.0 — Major Rebuild', date: 'May 2026', desc: 'Complete restructure. 100+ endpoints, 10 categories. New Internet category. Removed Fun & Quran.', status: 'resolved' },
+    { title: 'v2.1 — Zodiak Consolidated', date: 'May 2026', desc: 'Zodiak endpoint merged into Tools. All systems operational.', status: 'resolved' },
+    { title: 'v2.0 — 55+ Endpoints Live', date: 'May 2026', desc: 'Major release. Free, no API key required.', status: 'resolved' },
+  ];
+
+  /* =========================================
+     STATE
+  ========================================= */
+  let serviceStatuses = {};
+  let totalChecks     = 0;
+  let isChecking      = false;
+  let uptimeData      = { online: 0, total: 0 };
+
+  /* =========================================
+     HELPERS
+  ========================================= */
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  function getTotalServices() {
+    return serviceCategories.reduce((s, c) => s + c.services.length, 0);
+  }
+
+  function latClass(ms) {
+    if (!ms) return '';
+    if (ms < 400)  return 'lat-fast';
+    if (ms < 1000) return 'lat-medium';
+    return 'lat-slow';
+  }
+
+  function dotClass(status) {
+    const base = 'w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300 ';
+    if (status === 'online')   return base + 'bg-green-400 glow-green';
+    if (status === 'degraded') return base + 'bg-yellow-400 glow-yellow';
+    if (status === 'offline')  return base + 'bg-red-400 glow-red';
+    return base + 'bg-blue-400 pulse-dot-fast';
+  }
+
+  function badgeClass(status) {
+    if (status === 'online')   return 'status-badge badge-online';
+    if (status === 'degraded') return 'status-badge badge-degraded';
+    if (status === 'offline')  return 'status-badge badge-offline';
+    return 'status-badge badge-pending';
+  }
+
+  /* =========================================
+     RENDER
+  ========================================= */
+  function renderServiceList() {
+    const container  = document.getElementById('service-container');
+    const sideList   = document.getElementById('sidebar-cat-list');
+    let html         = '';
+    let sideHtml     = '';
+    let globalIndex  = 0;
+
+    serviceCategories.forEach((cat, ci) => {
+      const startIdx = globalIndex;
+      html += `
+        <div class="svc-group animate-fade-in-up" style="animation-delay:${Math.min(ci*40,400)}ms">
+          <div class="svc-group-header">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-[#141414] border border-[#2e2e2e] flex items-center justify-center flex-shrink-0">
+                <i class="fas ${cat.icon} text-gray-500 text-[10px]"></i>
+              </div>
+              <div>
+                <span class="text-sm font-semibold text-white">${cat.name}</span>
+                <span class="text-[10px] text-gray-600 ml-2 font-mono">${cat.services.length} services</span>
+              </div>
             </div>
-            <div class="rounded-xl overflow-hidden border border-[#2E2E2E]">`;
-        
-        cat.services.forEach(svc => {
-          const idx = globalIndex;
-          const status = serviceStatuses[idx] || { status: 'pending', latency: '—' };
-          
-          html += `
-            <div class="service-row flex items-center justify-between py-2.5 px-4 border-b border-[#2e2e2e] last:border-b-0" id="svc-row-${idx}">
-              <div class="flex items-center gap-3 min-w-0 flex-1">
-                <div id="svc-dot-${idx}" class="w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300 ${
-                  status.status === 'online' ? 'bg-green-400 live-glow' : 
-                  status.status === 'degraded' ? 'bg-yellow-400 degraded-glow' : 
-                  status.status === 'offline' ? 'bg-red-400 offline-glow' : 
-                  'bg-blue-400 animate-pulse'
-                }"></div>
-                <span class="text-xs text-gray-200 truncate">${svc.name}</span>
-              </div>
-              <div class="flex items-center gap-3 flex-shrink-0">
-                <span class="text-[10px] text-gray-500 font-mono w-14 text-right" id="svc-latency-${idx}">${status.latency}</span>
-                <span id="svc-status-${idx}" class="text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full font-semibold transition-all duration-300 ${
-                  status.status === 'online' ? 'text-green-400 bg-green-400/10' : 
-                  status.status === 'degraded' ? 'text-yellow-400 bg-yellow-400/10' : 
-                  status.status === 'offline' ? 'text-red-400 bg-red-400/10' : 
-                  'text-blue-400 bg-blue-400/10'
-                }">${status.status}</span>
-              </div>
-            </div>`;
-          globalIndex++;
-        });
-        
-        html += `</div></div>`;
-      });
-      
-      container.innerHTML = html;
-    }
-
-    function renderIncidents() {
-      document.getElementById('incident-list').innerHTML = incidents.map(i => `
-        <div class="bg-[#212121] border border-[#2E2E2E] rounded-lg p-3 fade-in">
-          <div class="flex items-start justify-between gap-2 mb-1">
-            <span class="text-xs font-medium text-white leading-tight">${i.title}</span>
-            <span class="text-[9px] text-green-400 bg-green-400/10 px-1.5 py-0.5 rounded-full uppercase font-semibold flex-shrink-0">${i.status}</span>
+            <div class="flex items-center gap-2" id="group-stat-${ci}">
+              <span class="skeleton h-4 w-16 rounded"></span>
+            </div>
           </div>
-          <div class="text-[10px] text-gray-600 mb-1">${i.date}</div>
-          <p class="text-[11px] text-gray-400 leading-relaxed">${i.desc}</p>
-        </div>
-      `).join('');
-    }
+          <div>`;
 
-    function updateSummary() {
-      let online = 0, degraded = 0, offline = 0, totalLatency = 0, count = 0;
-      const total = getServiceCount();
-      
-      Object.entries(serviceStatuses).forEach(([, s]) => {
-        if (s.status === 'online') online++;
-        else if (s.status === 'degraded') degraded++;
-        else if (s.status === 'offline') offline++;
-        if (s.latencyMs) { totalLatency += s.latencyMs; count++; }
+      cat.services.forEach(svc => {
+        const idx    = globalIndex;
+        const status = serviceStatuses[idx] || { status: 'pending', latency: '—', latencyMs: null };
+        html += `
+          <div class="svc-row" id="svc-row-${idx}">
+            <div class="flex items-center gap-3 min-w-0 flex-1">
+              <div id="svc-dot-${idx}" class="${dotClass(status.status)}"></div>
+              <span class="text-xs text-gray-300 truncate">${svc.name}</span>
+            </div>
+            <div class="flex items-center gap-3 flex-shrink-0">
+              <span class="text-[10px] font-mono w-16 text-right ${latClass(status.latencyMs)}" id="svc-latency-${idx}">${status.latency || '—'}</span>
+              <span id="svc-status-${idx}" class="${badgeClass(status.status)}">${status.status}</span>
+            </div>
+          </div>`;
+        globalIndex++;
       });
-      
-      const avgLatency = count > 0 ? Math.round(totalLatency / count) : 0;
-      
-      document.getElementById('stat-online').textContent = online;
-      document.getElementById('stat-degraded').textContent = degraded;
-      document.getElementById('stat-offline').textContent = offline;
-      document.getElementById('stat-avg-latency').textContent = avgLatency > 0 ? `${avgLatency}ms` : '—';
-      
-      document.getElementById('bar-online').style.width = total > 0 ? `${(online/total)*100}%` : '0%';
-      document.getElementById('bar-degraded').style.width = total > 0 ? `${(degraded/total)*100}%` : '0%';
-      document.getElementById('bar-offline').style.width = total > 0 ? `${(offline/total)*100}%` : '0%';
-      document.getElementById('bar-latency').style.width = avgLatency > 0 ? `${Math.min(avgLatency/10, 100)}%` : '0%';
-      
-      if (count > 0) { uptimeData.total++; if (offline === 0) uptimeData.online++; }
-      
-      const uptimePercent = uptimeData.total > 0 ? ((uptimeData.online / uptimeData.total) * 100).toFixed(1) : '100.0';
-      document.getElementById('uptime-percent').textContent = `${uptimePercent}%`;
-      
-      const banner = document.getElementById('overall-banner');
-      const dot = document.getElementById('overall-dot');
-      const title = document.getElementById('overall-title');
-      const sub = document.getElementById('overall-sub');
-      
-      if (offline > 3) {
-        banner.className = 'bg-[#212121] border border-red-500/30 rounded-xl p-4 mb-6 flex items-center gap-4 transition-all duration-300';
-        dot.className = 'w-3 h-3 rounded-full bg-red-400 animate-pulse flex-shrink-0';
-        title.textContent = `${offline} services offline`;
-        sub.textContent = 'Major outage detected';
-      } else if (offline > 0 || degraded > 3) {
-        banner.className = 'bg-[#212121] border border-yellow-500/30 rounded-xl p-4 mb-6 flex items-center gap-4 transition-all duration-300';
-        dot.className = 'w-3 h-3 rounded-full bg-yellow-400 pulse-dot-slow flex-shrink-0';
-        title.textContent = 'Some systems degraded';
-        sub.textContent = 'Minor performance issues';
-      } else {
-        banner.className = 'bg-[#212121] border border-green-500/30 rounded-xl p-4 mb-6 flex items-center gap-4 transition-all duration-300';
-        dot.className = 'w-3 h-3 rounded-full bg-green-400 pulse-dot flex-shrink-0';
-        title.textContent = 'All Systems Operational';
-        sub.textContent = 'No incidents reported';
-      }
-    }
 
-    function updateTimeDisplay() {
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'UTC', hour12: false });
-      document.getElementById('last-checked').textContent = timeStr + ' UTC';
-      document.getElementById('last-checked-footer').textContent = timeStr + ' UTC';
-      document.getElementById('total-checks-footer').textContent = `${totalChecks} checks`;
-    }
+      html += `</div></div>`;
 
-    async function pingEndpoint(service, index) {
-      const startTime = performance.now();
-      const url = `${BASE_URL}${service.path}`;
-      try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 8000);
-        const res = await fetch(url, { method: 'GET', signal: controller.signal, cache: 'no-store' });
-        clearTimeout(timeout);
-        const latency = Math.round(performance.now() - startTime);
-        let status = res.ok ? 'online' : 'offline';
-        if (res.ok && latency > 1500) status = 'degraded';
-        serviceStatuses[index] = { status, latency: `${latency}ms`, latencyMs: latency };
-      } catch (err) {
-        serviceStatuses[index] = { status: 'offline', latency: err.name === 'AbortError' ? 'timeout' : 'error', latencyMs: null };
-      }
-      totalChecks++;
-      updateServiceUI(index, serviceStatuses[index].status, serviceStatuses[index].latency);
-    }
-
-    function updateServiceUI(index, status, latency) {
-      const dot = document.getElementById(`svc-dot-${index}`);
-      const statusEl = document.getElementById(`svc-status-${index}`);
-      const latencyEl = document.getElementById(`svc-latency-${index}`);
-      const row = document.getElementById(`svc-row-${index}`);
-      
-      if (row) { row.classList.add('slide-in'); setTimeout(() => row.classList.remove('slide-in'), 250); }
-      if (dot) {
-        dot.className = `w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300 ${
-          status === 'online' ? 'bg-green-400 live-glow' : 
-          status === 'degraded' ? 'bg-yellow-400 degraded-glow' : 
-          status === 'offline' ? 'bg-red-400 offline-glow' : 
-          'bg-blue-400 animate-pulse'
-        }`;
-      }
-      if (statusEl) {
-        statusEl.className = `text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full font-semibold transition-all duration-300 ${
-          status === 'online' ? 'text-green-400 bg-green-400/10' : 
-          status === 'degraded' ? 'text-yellow-400 bg-yellow-400/10' : 
-          status === 'offline' ? 'text-red-400 bg-red-400/10' : 
-          'text-blue-400 bg-blue-400/10'
-        }`;
-        statusEl.textContent = status;
-      }
-      if (latencyEl) latencyEl.textContent = latency;
-    }
-
-    async function checkAllEndpoints() {
-      if (isChecking) return;
-      isChecking = true;
-      const btn = document.getElementById('refresh-btn');
-      btn.classList.add('opacity-40', 'pointer-events-none');
-      updateTimeDisplay();
-      
-      const allServices = serviceCategories.flatMap(c => c.services);
-      const batchSize = 6;
-      
-      for (let i = 0; i < allServices.length; i += batchSize) {
-        const batch = allServices.slice(i, i + batchSize);
-        const promises = batch.map((service, batchIndex) => pingEndpoint(service, i + batchIndex));
-        await Promise.allSettled(promises);
-        updateSummary();
-      }
-      
-      btn.classList.remove('opacity-40', 'pointer-events-none');
-      isChecking = false;
-    }
-
-    function manualRefresh() {
-      if (!isChecking) checkAllEndpoints();
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      renderServiceList();
-      renderIncidents();
-      checkAllEndpoints();
-      setInterval(checkAllEndpoints, CHECK_INTERVAL);
+      // Sidebar entry
+      sideHtml += `
+        <a href="#" onclick="scrollToGroup(${ci});return false;"
+           class="flex items-center justify-between py-2 px-4 text-sm rounded-xl transition-colors text-gray-500 hover:text-white hover:bg-[#1e1e1e]">
+          <div class="flex items-center gap-2.5">
+            <i class="fas ${cat.icon} text-[10px]"></i>
+            <span>${cat.name}</span>
+          </div>
+          <span class="text-xs text-gray-700 font-mono" id="sidebar-count-${ci}">—</span>
+        </a>`;
     });
-  </script>
+
+    container.innerHTML = html;
+    sideList.innerHTML  = sideHtml;
+  }
+
+  function renderIncidents() {
+    document.getElementById('incident-list').innerHTML = incidents.map((inc, i) => `
+      <div class="incident-card animate-fade-in-up" style="animation-delay:${i*60}ms">
+        <div class="flex items-start justify-between gap-3 mb-2">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-1.5 h-1.5 rounded-full bg-green-400 flex-shrink-0 mt-1"></div>
+            <span class="text-sm font-semibold text-white leading-tight">${inc.title}</span>
+          </div>
+          <span class="status-badge badge-online flex-shrink-0">${inc.status}</span>
+        </div>
+        <p class="text-[10px] text-gray-600 font-mono mb-2">${inc.date}</p>
+        <p class="text-xs text-gray-400 leading-relaxed">${inc.desc}</p>
+      </div>`).join('');
+  }
+
+  /* =========================================
+     UPDATE UI
+  ========================================= */
+  function updateServiceUI(index, status, latency, latencyMs) {
+    const dot      = document.getElementById(`svc-dot-${index}`);
+    const statusEl = document.getElementById(`svc-status-${index}`);
+    const latEl    = document.getElementById(`svc-latency-${index}`);
+    const row      = document.getElementById(`svc-row-${index}`);
+
+    if (row) { row.classList.add('slide-in'); setTimeout(() => row.classList.remove('slide-in'), 220); }
+    if (dot)      dot.className      = dotClass(status);
+    if (statusEl) { statusEl.className = badgeClass(status); statusEl.textContent = status; }
+    if (latEl)    { latEl.textContent  = latency; latEl.className = `text-[10px] font-mono w-16 text-right ${latClass(latencyMs)}`; }
+  }
+
+  function updateSummary() {
+    let online = 0, degraded = 0, offline = 0, pending = 0;
+    let totalLat = 0, latCount = 0;
+    const total = getTotalServices();
+
+    // Per-category counts for sidebar
+    let globalIdx = 0;
+    serviceCategories.forEach((cat, ci) => {
+      let catOnline = 0;
+      cat.services.forEach(() => {
+        const s = serviceStatuses[globalIdx];
+        if (s) {
+          if (s.status === 'online') catOnline++;
+          if (s.status === 'online')   online++;
+          else if (s.status === 'degraded') degraded++;
+          else if (s.status === 'offline')  offline++;
+          else pending++;
+          if (s.latencyMs) { totalLat += s.latencyMs; latCount++; }
+        }
+        globalIdx++;
+      });
+
+      // Update sidebar count
+      const sideCount = document.getElementById(`sidebar-count-${ci}`);
+      if (sideCount) sideCount.textContent = catOnline + '/' + cat.services.length;
+
+      // Update group header stat
+      const groupStat = document.getElementById(`group-stat-${ci}`);
+      if (groupStat) {
+        const allDone = cat.services.every((_, i2) => {
+          const idx2 = serviceCategories.slice(0,ci).reduce((s,c)=>s+c.services.length,0) + i2;
+          return serviceStatuses[idx2];
+        });
+        if (allDone) {
+          const catStatuses = cat.services.map((_, i2) => {
+            const idx2 = serviceCategories.slice(0,ci).reduce((s,c)=>s+c.services.length,0) + i2;
+            return serviceStatuses[idx2]?.status;
+          });
+          const hasOffline  = catStatuses.includes('offline');
+          const hasDegraded = catStatuses.includes('degraded');
+          const allOnline   = catStatuses.every(s => s === 'online');
+          let txt, cls;
+          if (allOnline)   { txt = 'All Operational'; cls = 'text-green-400 text-[10px] font-mono'; }
+          else if (hasOffline) { txt = 'Partial Outage'; cls = 'text-red-400 text-[10px] font-mono'; }
+          else if (hasDegraded){ txt = 'Degraded'; cls = 'text-yellow-400 text-[10px] font-mono'; }
+          else               { txt = 'Checking…'; cls = 'text-blue-400 text-[10px] font-mono'; }
+          groupStat.innerHTML = `<span class="${cls}">${txt}</span>`;
+        }
+      }
+    });
+
+    const avgLat = latCount > 0 ? Math.round(totalLat / latCount) : 0;
+
+    // Stat cards
+    animateNumber('stat-online',    online);
+    animateNumber('stat-degraded',  degraded);
+    animateNumber('stat-offline',   offline);
+    document.getElementById('stat-avg-latency').textContent = avgLat > 0 ? `${avgLat}ms` : '—';
+
+    // Bars
+    const pct = v => total > 0 ? `${(v/total)*100}%` : '0%';
+    document.getElementById('bar-online').style.width   = pct(online);
+    document.getElementById('bar-degraded').style.width = pct(degraded);
+    document.getElementById('bar-offline').style.width  = pct(offline);
+    document.getElementById('bar-latency').style.width  = avgLat > 0 ? `${Math.min(avgLat/10,100)}%` : '0%';
+
+    // Uptime tracking
+    if (latCount > 0) { uptimeData.total++; if (offline === 0) uptimeData.online++; }
+    const uptimePct = uptimeData.total > 0 ? ((uptimeData.online/uptimeData.total)*100).toFixed(1) : '100.0';
+    document.getElementById('uptime-percent').textContent = uptimePct + '%';
+
+    // Banner
+    const banner = document.getElementById('overall-banner');
+    const dot    = document.getElementById('overall-dot');
+    const title  = document.getElementById('overall-title');
+    const sub    = document.getElementById('overall-sub');
+
+    if (offline > 3) {
+      banner.className = 'overall-banner down mb-8 animate-fade-in-up';
+      dot.className    = 'w-3 h-3 rounded-full bg-red-400 pulse-dot-fast glow-red';
+      title.textContent = `${offline} services offline`;
+      sub.textContent   = 'Major outage detected';
+    } else if (offline > 0 || degraded > 3) {
+      banner.className = 'overall-banner degraded mb-8 animate-fade-in-up';
+      dot.className    = 'w-3 h-3 rounded-full bg-yellow-400 pulse-dot-slow glow-yellow';
+      title.textContent = 'Some systems degraded';
+      sub.textContent   = 'Minor performance issues';
+    } else if (pending === 0) {
+      banner.className = 'overall-banner ok mb-8 animate-fade-in-up';
+      dot.className    = 'w-3 h-3 rounded-full bg-green-400 pulse-dot glow-green';
+      title.textContent = 'All Systems Operational';
+      sub.textContent   = 'No incidents reported';
+    }
+  }
+
+  // Subtle number animation
+  function animateNumber(id, target) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const current = parseInt(el.textContent) || 0;
+    if (current === target) return;
+    el.style.animation = 'none';
+    el.offsetHeight; // reflow
+    el.style.animation = 'countUp 0.3s ease-out';
+    el.textContent = target;
+  }
+
+  /* =========================================
+     TIME
+  ========================================= */
+  function updateTime() {
+    const now = new Date();
+    const t   = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'UTC' }) + ' UTC';
+    const setEl = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+    setEl('last-checked', t);
+    setEl('last-checked-footer', t);
+    setEl('header-time', t);
+    setEl('total-checks-footer', `${totalChecks} checks`);
+    setEl('header-checks', `${totalChecks} checks`);
+  }
+
+  /* =========================================
+     PING
+  ========================================= */
+  async function pingEndpoint(service, index) {
+    const t0 = performance.now();
+    const url = BASE_URL + service.path;
+    try {
+      const ctrl = new AbortController();
+      const tid  = setTimeout(() => ctrl.abort(), 8000);
+      const res  = await fetch(url, { method: 'GET', signal: ctrl.signal, cache: 'no-store' });
+      clearTimeout(tid);
+      const lat  = Math.round(performance.now() - t0);
+      let status = res.ok ? 'online' : 'offline';
+      if (res.ok && lat > 1500) status = 'degraded';
+      serviceStatuses[index] = { status, latency: `${lat}ms`, latencyMs: lat };
+    } catch (err) {
+      const lat = Math.round(performance.now() - t0);
+      serviceStatuses[index] = {
+        status: 'offline',
+        latency: err.name === 'AbortError' ? 'timeout' : 'error',
+        latencyMs: null
+      };
+    }
+    totalChecks++;
+    const s = serviceStatuses[index];
+    updateServiceUI(index, s.status, s.latency, s.latencyMs);
+  }
+
+  /* =========================================
+     CHECK ALL
+  ========================================= */
+  async function checkAllEndpoints() {
+    if (isChecking) return;
+    isChecking = true;
+
+    const icon = document.getElementById('refresh-icon');
+    const btn  = document.getElementById('refresh-btn');
+    icon.classList.add('spin');
+    btn.classList.add('opacity-50', 'pointer-events-none');
+
+    updateTime();
+
+    const allServices = serviceCategories.flatMap(c => c.services);
+    const BATCH = 6;
+
+    for (let i = 0; i < allServices.length; i += BATCH) {
+      const batch = allServices.slice(i, i + BATCH);
+      await Promise.allSettled(batch.map((svc, bi) => pingEndpoint(svc, i + bi)));
+      updateSummary();
+      updateTime();
+    }
+
+    icon.classList.remove('spin');
+    btn.classList.remove('opacity-50', 'pointer-events-none');
+    isChecking = false;
+  }
+
+  window.manualRefresh = function () {
+    if (!isChecking) {
+      checkAllEndpoints();
+      showToast('Refreshing all services…');
+    }
+  };
+
+  /* =========================================
+     SIDEBAR SCROLL
+  ========================================= */
+  window.scrollToGroup = function (ci) {
+    const groups = document.querySelectorAll('.svc-group');
+    if (groups[ci]) groups[ci].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  /* =========================================
+     SIDEBAR TOGGLE
+  ========================================= */
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  function openSb()  {
+    sidebar.classList.add('open');
+    overlay.classList.remove('opacity-0','invisible');
+    overlay.classList.add('opacity-100','visible','show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSb() {
+    sidebar.classList.remove('open');
+    overlay.classList.add('opacity-0','invisible');
+    overlay.classList.remove('opacity-100','visible','show');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('sidebarToggle')?.addEventListener('click', openSb);
+  document.getElementById('sidebarClose')?.addEventListener('click', closeSb);
+  overlay.addEventListener('click', closeSb);
+
+  /* =========================================
+     BACK TO TOP
+  ========================================= */
+  window.addEventListener('scroll', () => {
+    const b = document.getElementById('backToTop');
+    if (window.scrollY > 400) b.classList.add('show');
+    else b.classList.remove('show');
+  });
+
+  /* =========================================
+     INIT
+  ========================================= */
+  renderServiceList();
+  renderIncidents();
+  checkAllEndpoints();
+  setInterval(checkAllEndpoints, CHECK_INTERVAL);
+  setInterval(updateTime, 1000);
+
+})();
+</script>
 </body>
 </html>

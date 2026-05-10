@@ -23,12 +23,11 @@
   <meta name="keywords" content="API, endpoints, documentation, Kyoto, REST, free API, AI, anime, news, tools" />
   <link rel="canonical" href="https://kyoto-rest-api.vercel.app" />
   <title>Kyoto API — Free REST API for Developers</title>
-  <link rel="icon" href="/favicon.png" type="image/x-icon" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -45,570 +44,1309 @@
     };
   </script>
   <style>
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #181818; }
-    ::-webkit-scrollbar-thumb { background: #2e2e2e; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #404040; }
-    
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #555; }
+
     * { scroll-behavior: smooth; }
-    
+
+    /* ===== BASE ===== */
     body {
       background-color: #181818;
       letter-spacing: 0.025em;
     }
-    
+
     body::before {
       content: "";
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: -1;
       background-image:
-        linear-gradient(rgba(148,163,184,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(148,163,184,0.04) 1px, transparent 1px);
+        linear-gradient(rgba(148,163,184,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148,163,184,0.05) 1px, transparent 1px);
       background-size: 40px 40px;
       pointer-events: none;
     }
 
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position:  400px 0; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      33%       { transform: translateY(-12px) rotate(1deg); }
+      66%       { transform: translateY(-6px) rotate(-1deg); }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50%       { background-position: 100% 50%; }
+    }
+
+    .animate-fade-in-up {
+      animation: fadeInUp 0.5s ease-out forwards;
+      opacity: 0;
+    }
+    .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+
+    /* ===== SIDEBAR (mobile) ===== */
     #sidebar {
-      transform: translateX(-100%);
       transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       flex-direction: column;
       height: 100dvh;
     }
-    
-    #sidebar.open {
-      transform: translateX(0);
+    #sidebar { transform: translateX(-100%); }
+    #sidebar.open { transform: translateX(0); }
+    #overlay { transition: opacity 0.3s, visibility 0.3s; }
+    #overlay.show { opacity: 1 !important; visibility: visible !important; }
+
+    /* ===== NAVBAR ===== */
+    #navbar {
+      transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
+    }
+    #navbar.scrolled {
+      background: rgba(24,24,24,0.85) !important;
+      backdrop-filter: blur(12px);
+      border-bottom-color: #2e2e2e !important;
     }
 
-    .faq-answer {
-      transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-      max-height: 0;
-      opacity: 0;
+    /* ===== HERO ===== */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px;
+      border: 1px solid #2e2e2e;
+      background: #212121;
+      border-radius: 999px;
+      font-size: 12px;
+      color: #888;
+      font-family: "Ubuntu Mono", monospace;
+      animation: fadeInUp 0.5s ease-out 0.1s both;
+    }
+    .hero-badge .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 700;
+      line-height: 1.12;
+      color: #fff;
+      animation: fadeInUp 0.5s ease-out 0.2s both;
+    }
+    .hero-title .accent {
+      background: linear-gradient(90deg, #fff 0%, #888 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      animation: fadeInUp 0.5s ease-out 0.3s both;
+    }
+    .hero-actions {
+      animation: fadeInUp 0.5s ease-out 0.4s both;
+    }
+
+    /* Terminal hero visual */
+    .hero-terminal {
+      background: #111;
+      border: 1px solid #2e2e2e;
+      border-radius: 16px;
+      overflow: hidden;
+      animation: fadeInUp 0.5s ease-out 0.3s both;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    }
+    .hero-terminal .bar {
+      background: #1a1a1a;
+      border-bottom: 1px solid #222;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-terminal .dots { display: flex; gap: 6px; }
+    .hero-terminal .dots span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .hero-terminal .dots .r { background: #ef4444; }
+    .hero-terminal .dots .y { background: #f59e0b; }
+    .hero-terminal .dots .g { background: #22c55e; }
+    .hero-terminal .bar-title {
+      font-size: 11px;
+      font-family: "Ubuntu Mono", monospace;
+      color: #555;
+      flex: 1;
+      text-align: center;
+    }
+    .hero-terminal .body {
+      padding: 20px;
+      font-family: "Ubuntu Mono", monospace;
+      font-size: 12px;
+      line-height: 2;
+      color: #888;
+    }
+    .hero-terminal .body .cmd { color: #c4b5fd; }
+    .hero-terminal .body .url { color: #7dd3fc; }
+    .hero-terminal .body .ok  { color: #4ade80; }
+    .hero-terminal .body .key { color: #7dd3fc; }
+    .hero-terminal .body .val { color: #86efac; }
+    .hero-terminal .body .num { color: #fbbf24; }
+    .hero-terminal .body .comment { color: #555; }
+    .hero-terminal .cursor {
+      display: inline-block;
+      width: 8px; height: 14px;
+      background: #4ade80;
+      vertical-align: middle;
+      border-radius: 1px;
+      animation: blink 1s ease-in-out infinite;
+    }
+
+    /* ===== STATS ===== */
+    .stat-card {
+      background: #212121;
+      border: 1px solid #2e2e2e;
+      border-radius: 12px;
+      padding: 20px 18px;
+      transition: all 0.2s;
+      position: relative;
       overflow: hidden;
     }
-    
-    .faq-answer.active {
-      opacity: 1;
+    .stat-card:hover {
+      border-color: #3a3a3a;
+      transform: translateY(-2px);
     }
-    
-    .faq-icon {
-      transition: transform 0.3s ease;
+    .stat-card .icon-bg {
+      position: absolute;
+      bottom: -10px; right: -8px;
+      font-size: 4.5rem;
+      color: #1c1c1c;
+      pointer-events: none;
+      transition: all 0.3s;
     }
-    
-    .faq-btn[aria-expanded="true"] .faq-icon {
-      transform: rotate(180deg);
-    }
-
-    [data-aos] {
-      transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
-      will-change: transform, opacity;
-    }
-    
-    [data-aos].aos-animate {
-      transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
+    .stat-card:hover .icon-bg {
+      color: #252525;
+      transform: scale(1.08);
     }
 
-    .cat-card {
+    /* ===== SKELETON ===== */
+    .skeleton {
+      background: linear-gradient(90deg, #1e1e1e 25%, #262626 50%, #1e1e1e 75%);
+      background-size: 400px 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 8px;
+    }
+
+    /* ===== FEATURE CARDS ===== */
+    .feature-card {
       background: #212121;
       border: 1px solid #2e2e2e;
       border-radius: 16px;
       padding: 24px;
       transition: all 0.25s;
-      cursor: pointer;
     }
-    
-    .cat-card:hover {
+    .feature-card:hover {
+      border-color: #3a3a3a;
+      background: #1e1e1e;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+    .feature-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: #1a1a1a;
+      border: 1px solid #2e2e2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      font-size: 16px;
+      color: #999;
+      transition: all 0.2s;
+    }
+    .feature-card:hover .feature-icon {
+      background: #222;
+      color: #fff;
+    }
+
+    /* ===== CATEGORY GRID ===== */
+    .cat-grid-card {
+      background: #212121;
+      border: 1px solid #2e2e2e;
+      border-radius: 16px;
+      padding: 22px;
+      transition: all 0.25s;
+      cursor: pointer;
+      display: block;
+      text-decoration: none;
+    }
+    .cat-grid-card:hover {
       border-color: #444;
       background: #1c1c1c;
       transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
     }
 
-    .stat-card {
+    /* ===== CODE BLOCK ===== */
+    .code-block {
+      background: #111;
+      border: 1px solid #252525;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-family: "Ubuntu Mono", monospace;
+      font-size: 12px;
+      color: #d4d0f0;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Copy button */
+    .copy-btn {
+      background: transparent;
+      border: 1px solid #2e2e2e;
+      color: #888;
+      padding: 6px 12px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 11px;
+      cursor: pointer;
+      border-radius: 7px;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .copy-btn:hover { color: #fff; border-color: #555; background: rgba(255,255,255,0.04); }
+    .copy-btn.copied { color: #4ade80; border-color: #4ade80; }
+
+    /* ===== PRICING ===== */
+    .price-card {
       background: #212121;
       border: 1px solid #2e2e2e;
-      border-radius: 12px;
-      padding: 20px;
+      border-radius: 20px;
+      padding: 36px 32px;
       transition: all 0.25s;
       position: relative;
       overflow: hidden;
     }
-    
-    .stat-card:hover {
-      border-color: #383838;
+    .price-card:hover {
+      border-color: #3a3a3a;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.4);
     }
-    
-    .stat-card .icon-bg {
+    .price-badge {
       position: absolute;
-      bottom: -10px;
-      right: -10px;
-      font-size: 5rem;
-      color: #1a1a1a;
-      opacity: 0.5;
-      transition: all 0.3s;
-    }
-    
-    .stat-card:hover .icon-bg {
-      transform: scale(1.1);
-      color: #2a2a2a;
+      top: 0; right: 0;
+      background: #fff;
+      color: #111;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 0 20px 0 10px;
+      letter-spacing: 0.5px;
+      font-family: "Ubuntu Mono", monospace;
     }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-20px); }
+    /* ===== FAQ ===== */
+    .faq-item {
+      background: #212121;
+      border: 1px solid #2e2e2e;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
     }
-    
-    .float-anim {
-      animation: float 6s ease-in-out infinite;
+    .faq-item:hover { border-color: #3a3a3a; }
+    .faq-btn {
+      width: 100%;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: transparent;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      text-align: left;
+      font-family: "Space Grotesk", sans-serif;
+      gap: 12px;
+    }
+    .faq-answer {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+      background: #1a1a1a;
+      border-top: 0px solid #2e2e2e;
+    }
+    .faq-answer.active {
+      opacity: 1;
+      border-top: 1px solid #2e2e2e;
+    }
+    .faq-icon { transition: transform 0.3s ease; }
+    .faq-btn[aria-expanded="true"] .faq-icon { transform: rotate(180deg); }
+
+    /* ===== SECTION LABEL ===== */
+    .section-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #555;
+      font-family: "Ubuntu Mono", monospace;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    /* ===== DIVIDER ===== */
+    .section-divider {
+      width: 40px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      margin: 10px 0 16px;
+    }
+
+    /* ===== BACK TO TOP ===== */
+    #backToTop {
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+    #backToTop.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ===== TOAST ===== */
+    #toast {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: #212121;
+      border: 1px solid #383838;
+      color: #e2e0f0;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      z-index: 9998;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      animation: fadeInUp 0.3s;
+    }
+    #toast.show { display: flex; }
+    #toast.success i { color: #4ade80; }
+
+    /* ===== METHOD BADGE ===== */
+    .method-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-family: "Ubuntu Mono", monospace;
+    }
+    .method-get { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
+
+    /* ===== SCROLL REVEAL ===== */
+    @keyframes revealUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes revealLeft {
+      from { opacity: 0; transform: translateX(-24px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes revealRight {
+      from { opacity: 0; transform: translateX(24px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes revealScale {
+      from { opacity: 0; transform: scale(0.93); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes revealFade {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* Stat counter roll-up */
+    @keyframes rollUp {
+      from { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+      to   { opacity: 1; transform: translateY(0);   filter: blur(0); }
+    }
+
+    /* Glow pulse on stat cards when revealed */
+    @keyframes cardGlow {
+      0%   { box-shadow: 0 0 0 rgba(255,255,255,0); }
+      40%  { box-shadow: 0 0 20px rgba(255,255,255,0.04); }
+      100% { box-shadow: 0 0 0 rgba(255,255,255,0); }
+    }
+
+    /* Line draw for section-divider */
+    @keyframes drawLine {
+      from { width: 0; opacity: 0; }
+      to   { width: 40px; opacity: 1; }
+    }
+
+    /* Staggered children */
+    .reveal-child {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.55s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.55s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal-child.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Scroll reveal base — elements start hidden */
+    .sr {
+      opacity: 0;
+      transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.6s cubic-bezier(0.16,1,0.3,1);
+    }
+    .sr-up    { transform: translateY(28px); }
+    .sr-left  { transform: translateX(-24px); }
+    .sr-right { transform: translateX(24px); }
+    .sr-scale { transform: scale(0.93); }
+    .sr-fade  { /* opacity only */ }
+
+    .sr.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* Section divider animate on reveal */
+    .section-divider {
+      width: 0;
+      opacity: 0;
+      transition: width 0.5s cubic-bezier(0.16,1,0.3,1) 0.15s,
+                  opacity 0.3s ease 0.15s;
+    }
+    .section-divider.visible {
+      width: 40px;
+      opacity: 1;
+    }
+
+    /* Stat card glow on reveal */
+    .stat-card.pop {
+      animation: cardGlow 1s ease-out forwards;
+    }
+
+    /* Terminal typing line fade-in */
+    .t-line {
+      opacity: 0;
+      animation: revealFade 0.3s ease forwards;
+    }
+
+    /* Hover: button ripple */
+    .btn-ripple {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-ripple::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.07);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+      border-radius: inherit;
+    }
+    .btn-ripple:hover::after { transform: scaleX(1); }
+
+    /* Feature icon hover float */
+    .feature-card:hover .feature-icon {
+      background: #222;
+      color: #fff;
+      transform: translateY(-3px) scale(1.08);
+    }
+    .feature-icon {
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    /* Cat card arrow slide */
+    .cat-grid-card .arrow-icon {
+      transition: transform 0.25s ease, color 0.25s ease;
+    }
+    .cat-grid-card:hover .arrow-icon {
+      transform: translateX(4px);
+      color: #bbb;
+    }
+
+    /* Navbar link underline slide */
+    #navbar a.nav-link {
+      position: relative;
+    }
+    #navbar a.nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 1px;
+      background: #fff;
+      transition: width 0.25s ease;
+    }
+    #navbar a.nav-link:hover::after { width: 100%; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 640px) {
+      .hero-title { font-size: 2rem; }
     }
   </style>
 </head>
 <body class="bg-[#181818] text-gray-200 antialiased font-sans min-h-screen">
 
-  <!-- Navbar -->
-  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-[#181818] transition-all duration-300 border-b border-transparent md:border-[#2E2E2E]">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/" class="font-bold text-white text-xl flex items-center gap-2" style="font-family: 'Space Grotesk', sans-serif;">
-        Kyoto<span class="text-gray-400">API</span>
-      </a>
-      
-      <div class="hidden md:flex items-center gap-8 text-sm text-gray-400">
-        <a href="/category" class="hover:text-white transition-colors">Categories</a>
-        <a href="#statistic" class="hover:text-white transition-colors">Stats</a>
-        <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
-        <a href="/status" class="hover:text-white transition-colors">Status</a>
-      </div>
-      
-      <div class="hidden md:flex items-center gap-3">
-        <a href="/category" class="px-5 py-2 bg-white text-black rounded-lg text-sm font-semibold hover:bg-gray-200 transition-all">
-          Get Started
-        </a>
-      </div>
-      
-      <button id="sidebarToggle" class="md:hidden text-white">
-        <i class="bi bi-list text-3xl"></i>
-      </button>
-    </div>
-  </nav>
+  <!-- Toast -->
+  <div id="toast">
+    <i class="material-icons text-base">check_circle</i>
+    <span id="toast-msg"></span>
+  </div>
 
-  <!-- Mobile Sidebar Overlay -->
-  <div id="overlay" class="fixed inset-0 bg-black bg-opacity-60 opacity-0 invisible z-[90] md:hidden"></div>
+  <!-- Overlay -->
+  <div id="overlay" class="fixed inset-0 bg-black bg-opacity-70 opacity-0 invisible z-[90] md:hidden transition-all"></div>
 
   <!-- Mobile Sidebar -->
-  <aside id="sidebar" class="fixed top-0 left-0 w-64 bg-[#181818] border-r border-[#2E2E2E] z-[100] flex flex-col md:hidden">
-    <div class="flex items-center justify-between px-6 pt-5 pb-4">
-      <h2 class="font-bold text-white text-lg">Kyoto API</h2>
+  <aside id="sidebar" class="fixed top-0 left-0 w-64 bg-[#181818] border-r border-[#2E2E2E] z-[100] md:hidden">
+    <div class="flex items-center justify-between px-6 py-5 border-b border-[#2e2e2e]">
+      <a href="/" class="font-bold text-white text-lg" style="font-family:'Space Grotesk',sans-serif;">
+        Kyoto<span class="text-gray-500">API</span>
+      </a>
       <button id="sidebarClose" class="text-gray-400 hover:text-white transition-colors">
-        <i class="bi bi-x-lg text-lg"></i>
+        <i class="material-icons text-xl">close</i>
       </button>
     </div>
-    <div class="mx-6 border-b border-[#2E2E2E]"></div>
-    <div class="flex-1 min-h-0 px-5 pt-8 pb-6 overflow-y-auto">
-      <nav class="space-y-1">
-        <a href="/category" class="flex items-center justify-between py-2 px-4 text-sm text-gray-400 hover:bg-[#222] hover:text-white rounded-xl transition-colors">
-          <span>Categories</span>
-          <i class="bi bi-chevron-right text-xs"></i>
+    <div class="flex-1 min-h-0 px-5 pt-6 pb-6 overflow-y-auto">
+      <nav class="space-y-0.5">
+        <a href="/" class="flex items-center py-2 px-4 text-sm text-white bg-[#222] rounded-xl">
+          <i class="material-icons text-base mr-3">home</i>Home
         </a>
-        <a href="#statistic" class="flex items-center justify-between py-2 px-4 text-sm text-gray-400 hover:bg-[#222] hover:text-white rounded-xl transition-colors">
-          <span>Stats</span>
-          <i class="bi bi-chevron-right text-xs"></i>
+        <a href="/category" class="flex items-center py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-[#1e1e1e] rounded-xl transition-colors">
+          <i class="material-icons text-base mr-3 opacity-70">explore</i>Categories
         </a>
-        <a href="#pricing" class="flex items-center justify-between py-2 px-4 text-sm text-gray-400 hover:bg-[#222] hover:text-white rounded-xl transition-colors">
-          <span>Pricing</span>
-          <i class="bi bi-chevron-right text-xs"></i>
+        <a href="#statistic" class="flex items-center py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-[#1e1e1e] rounded-xl transition-colors" onclick="closeSidebar()">
+          <i class="material-icons text-base mr-3 opacity-70">bar_chart</i>Stats
         </a>
-        <a href="/status" class="flex items-center justify-between py-2 px-4 text-sm text-gray-400 hover:bg-[#222] hover:text-white rounded-xl transition-colors">
-          <span>Status</span>
-          <i class="bi bi-chevron-right text-xs"></i>
+        <a href="#pricing" class="flex items-center py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-[#1e1e1e] rounded-xl transition-colors" onclick="closeSidebar()">
+          <i class="material-icons text-base mr-3 opacity-70">sell</i>Pricing
+        </a>
+        <a href="/status" class="flex items-center py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-[#1e1e1e] rounded-xl transition-colors">
+          <i class="material-icons text-base mr-3 opacity-70">monitor_heart</i>Status
         </a>
       </nav>
     </div>
     <div class="px-4 pb-6 pt-4 border-t border-[#2E2E2E] shrink-0">
-      <a href="https://www.instagram.com/wtf.w4n_" target="_blank" class="flex items-center justify-between bg-[#212121] border border-[#2E2E2E] rounded-2xl px-5 py-4">
+      <a href="https://www.instagram.com/wtf.w4n_" target="_blank" class="flex items-center justify-between bg-[#212121] border border-[#2E2E2E] rounded-2xl px-5 py-4 hover:border-[#3a3a3a] transition-colors">
         <div>
           <p class="font-semibold text-white text-sm">Follow Us</p>
           <p class="text-xs text-gray-500">@wtf.w4n_</p>
         </div>
-        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center flex-shrink-0">
           <i class="bi bi-arrow-right text-black text-sm"></i>
         </div>
       </a>
     </div>
   </aside>
 
-  <!-- Main Content -->
-  <main class="flex-1 w-full max-w-5xl mx-auto px-6 pt-24 pb-8 overflow-x-hidden">
+  <!-- Navbar -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 border-b border-transparent md:border-[#2e2e2e]">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="font-bold text-white text-xl flex items-center gap-2" style="font-family:'Space Grotesk',sans-serif;">
+        Kyoto<span class="text-gray-500">API</span>
+      </a>
 
-    <!-- Hero Section -->
-    <section class="py-12 md:py-20" data-aos="fade-up" data-aos-duration="1200">
-      <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+      <div class="hidden md:flex items-center gap-7 text-sm text-gray-400">
+        <a href="/category" class="hover:text-white transition-colors">Categories</a>
+        <a href="#statistic" class="hover:text-white transition-colors">Stats</a>
+        <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
+        <a href="/status" class="hover:text-white transition-colors">Status</a>
+      </div>
+
+      <div class="hidden md:flex items-center gap-3">
+        <a href="/category" class="px-5 py-2 bg-white text-black rounded-lg text-sm font-semibold hover:bg-gray-100 transition-all">
+          Get Started
+        </a>
+      </div>
+
+      <button id="sidebarToggle" class="md:hidden text-white">
+        <i class="material-icons text-3xl">menu</i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="w-full max-w-5xl mx-auto px-6 pt-24 pb-8 overflow-x-hidden">
+
+    <!-- ===== HERO ===== -->
+    <section class="py-12 md:py-20">
+      <div class="flex flex-col md:flex-row items-center gap-10 md:gap-16">
+
+        <!-- Left -->
         <div class="md:flex-1 text-center md:text-left">
-          <div class="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-sm font-semibold text-gray-400 border border-[#2E2E2E] bg-[#212121] rounded-full">
-            <i class="bi bi-patch-check-fill text-white text-xs"></i>
+          <div class="hero-badge mb-6 inline-flex">
+            <span class="dot"></span>
             <span>100+ Free API Endpoints</span>
           </div>
-          
-          <h1 class="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
-            Build Faster with<br/>Free REST APIs
+
+          <h1 class="hero-title mb-6">
+            Build Faster with<br/>
+            <span class="accent">Free REST APIs</span>
           </h1>
-          
-          <p class="text-base text-gray-400 mb-10 max-w-xl leading-relaxed">
-            Instant access to AI generation, anime data, news, internet tools, and more. 
+
+          <p class="hero-sub text-sm md:text-base text-gray-400 mb-10 max-w-xl leading-relaxed">
+            Instant access to AI generation, anime data, news, internet tools, and more.
             No API keys, no authentication, no self-hosting. Just fetch and use.
           </p>
-          
-          <div class="flex flex-col sm:flex-row items-center gap-3 justify-center md:justify-start">
-            <a href="/category" class="w-full sm:w-auto px-8 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-all text-center">
+
+          <div class="hero-actions flex flex-col sm:flex-row items-center gap-3 justify-center md:justify-start">
+            <a href="/category" class="w-full sm:w-auto px-7 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-all text-center text-sm flex items-center justify-center gap-2">
+              <i class="material-icons text-base">explore</i>
               Explore Endpoints
             </a>
-            <a href="#statistic" class="w-full sm:w-auto px-8 py-3 bg-[#212121] border border-[#2E2E2E] text-gray-400 hover:text-white font-semibold rounded-lg hover:bg-[#1c1c1c] transition-all text-center flex items-center justify-center gap-2">
-              <i class="bi bi-activity"></i> View Stats
+            <a href="#statistic" class="w-full sm:w-auto px-7 py-3 bg-[#212121] border border-[#2e2e2e] text-gray-400 hover:text-white font-semibold rounded-lg hover:bg-[#1c1c1c] hover:border-[#3a3a3a] transition-all text-center text-sm flex items-center justify-center gap-2">
+              <i class="material-icons text-base">bar_chart</i>
+              View Stats
             </a>
           </div>
         </div>
-        
+
+        <!-- Right: Terminal -->
         <div class="hidden md:flex md:flex-1 items-center justify-center">
-          <div class="float-anim">
-            <i class="bi bi-lightning-charge-fill text-white opacity-80" style="font-size: 10rem;"></i>
+          <div class="hero-terminal w-full max-w-md">
+            <div class="bar">
+              <div class="dots">
+                <span class="r"></span>
+                <span class="y"></span>
+                <span class="g"></span>
+              </div>
+              <span class="bar-title">kyoto-api ~ terminal</span>
+            </div>
+            <div class="body">
+              <div><span class="comment"># AI Chat endpoint</span></div>
+              <div><span class="cmd">$</span> <span class="url">curl</span> kyoto-rest-api.vercel.app/api/ai/chatgpt<span class="comment">?text=Hello</span></div>
+              <br>
+              <div><span class="ok">{</span></div>
+              <div>&nbsp;&nbsp;<span class="key">"status"</span>: <span class="val">"success"</span>,</div>
+              <div>&nbsp;&nbsp;<span class="key">"result"</span>: <span class="val">"Hello! How can I help you today?"</span>,</div>
+              <div>&nbsp;&nbsp;<span class="key">"latency"</span>: <span class="num">87</span></div>
+              <div><span class="ok">}</span></div>
+              <br>
+              <div><span class="cmd">$</span> <span class="cursor"></span></div>
+            </div>
           </div>
         </div>
+
       </div>
     </section>
 
-    <!-- Stats Section -->
-    <section id="statistic" class="py-16">
-      <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="1200">
-        <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">API Statistics</h2>
-        <div class="w-20 h-0.5 bg-white mx-auto rounded-full mb-4"></div>
-        <p class="text-gray-400 text-sm">Real-time performance metrics.</p>
+    <!-- ===== STATS ===== -->
+    <section id="statistic" class="py-14">
+      <div class="mb-10 animate-fade-in-up">
+        <p class="section-label">Platform Metrics</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">API Statistics</h2>
+        <div class="section-divider"></div>
+        <p class="text-gray-500 text-sm">Real-time performance metrics.</p>
       </div>
-      
+
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="stat-card group" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="0">
+        <div class="stat-card animate-fade-in-up" style="animation-delay:0ms">
           <div class="relative z-10">
-            <div class="text-2xl font-bold text-white mb-1">100+</div>
-            <div class="text-xs text-gray-400 uppercase tracking-wider">Endpoints</div>
+            <div class="text-2xl font-bold text-white mb-1 font-mono">100+</div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider">Endpoints</div>
           </div>
           <i class="fa-solid fa-code icon-bg"></i>
         </div>
-        
-        <div class="stat-card group" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="100">
+        <div class="stat-card animate-fade-in-up" style="animation-delay:60ms">
           <div class="relative z-10">
-            <div class="text-2xl font-bold text-white mb-1">10</div>
-            <div class="text-xs text-gray-400 uppercase tracking-wider">Categories</div>
+            <div class="text-2xl font-bold text-white mb-1 font-mono">10</div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider">Categories</div>
           </div>
           <i class="fa-solid fa-layer-group icon-bg"></i>
         </div>
-        
-        <div class="stat-card group" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="200">
+        <div class="stat-card animate-fade-in-up" style="animation-delay:120ms">
           <div class="relative z-10">
-            <div class="text-2xl font-bold text-white mb-1">99.9%</div>
-            <div class="text-xs text-gray-400 uppercase tracking-wider">Uptime</div>
+            <div class="text-2xl font-bold text-white mb-1 font-mono">99.9%</div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider">Uptime</div>
           </div>
           <i class="fa-solid fa-server icon-bg"></i>
         </div>
-        
-        <div class="stat-card group" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="300">
+        <div class="stat-card animate-fade-in-up" style="animation-delay:180ms">
           <div class="relative z-10">
-            <div class="text-2xl font-bold text-white mb-1">&lt;100ms</div>
-            <div class="text-xs text-gray-400 uppercase tracking-wider">Latency</div>
+            <div class="text-2xl font-bold text-white mb-1 font-mono">&lt;100ms</div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider">Latency</div>
           </div>
           <i class="fa-solid fa-bolt icon-bg"></i>
         </div>
       </div>
     </section>
 
-    <!-- Integration Demo -->
-    <section class="py-16">
+    <!-- ===== FEATURES ===== -->
+    <section class="py-14">
+      <div class="mb-10 animate-fade-in-up">
+        <p class="section-label">Why Kyoto</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Built for Developers</h2>
+        <div class="section-divider"></div>
+        <p class="text-gray-500 text-sm">Everything you need, nothing you don't.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="feature-card animate-fade-in-up" style="animation-delay:0ms">
+          <div class="feature-icon"><i class="material-icons text-base">key_off</i></div>
+          <h3 class="font-semibold text-white text-sm mb-2">No API Key Required</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">Just make an HTTP GET request. Zero authentication overhead, zero configuration.</p>
+        </div>
+        <div class="feature-card animate-fade-in-up" style="animation-delay:60ms">
+          <div class="feature-icon"><i class="material-icons text-base">bolt</i></div>
+          <h3 class="font-semibold text-white text-sm mb-2">Sub-100ms Responses</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">Powered by Vercel Edge Network for blazing fast responses from anywhere in the world.</p>
+        </div>
+        <div class="feature-card animate-fade-in-up" style="animation-delay:120ms">
+          <div class="feature-icon"><i class="material-icons text-base">data_object</i></div>
+          <h3 class="font-semibold text-white text-sm mb-2">Clean JSON Output</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">Structured, consistent, and predictable JSON responses across all endpoints.</p>
+        </div>
+        <div class="feature-card animate-fade-in-up" style="animation-delay:180ms">
+          <div class="feature-icon"><i class="material-icons text-base">diversity_3</i></div>
+          <h3 class="font-semibold text-white text-sm mb-2">100+ Endpoints</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">AI generation, anime data, tools, news, games and more — all in one place.</p>
+        </div>
+        <div class="feature-card animate-fade-in-up" style="animation-delay:240ms">
+          <div class="feature-icon"><i class="material-icons text-base">all_inclusive</i></div>
+          <h3 class="font-semibold text-white text-sm mb-2">Free Forever</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">No hidden tiers, no credit card, no expiry. All endpoints free for all developers.</p>
+        </div>
+        <div class="feature-card animate-fade-in-up" style="animation-delay:300ms">
+          <div class="feature-icon"><i class="material-icons text-base">code</i></div>
+          <h3 class="font-semibold text-white text-sm mb-2">Any Language</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">Works with JavaScript, Python, PHP, Java, Go, cURL — any language with HTTP support.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== INTEGRATION ===== -->
+    <section class="py-14">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-        <div data-aos="fade-right" data-aos-duration="1200">
-          <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">Seamless Integration</h2>
-          <p class="text-gray-400 mb-6 leading-relaxed">
-            Integrate Kyoto API into your apps with just a few lines of code. Simple GET requests, instant JSON responses.
+        <!-- Left -->
+        <div class="animate-fade-in-up">
+          <p class="section-label">Quick Start</p>
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Seamless Integration</h2>
+          <div class="section-divider"></div>
+          <p class="text-gray-400 mb-6 leading-relaxed text-sm">
+            Integrate Kyoto API into your apps with just a few lines of code.
+            Simple GET requests, instant JSON responses.
           </p>
-          
-          <div class="bg-[#111] border border-[#2E2E2E] rounded-xl px-4 py-3 font-mono text-sm flex items-center justify-between mb-4">
-            <span class="text-gray-300 truncate mr-2" id="npm-command">curl https://kyoto-rest-api.vercel.app/api/ai/chatgpt?text=Hello</span>
-            <button onclick="copyCommand()" class="text-gray-400 hover:text-white transition-colors flex-shrink-0">
-              <i class="bi bi-copy text-sm" id="copy-icon"></i>
+
+          <!-- Command bar -->
+          <div class="bg-[#111] border border-[#2e2e2e] rounded-xl px-4 py-3 font-mono text-xs flex items-center justify-between mb-6 gap-3">
+            <span class="text-gray-300 truncate" id="hero-cmd">curl https://kyoto-rest-api.vercel.app/api/ai/chatgpt?text=Hello</span>
+            <button onclick="copyHeroCmd()" class="copy-btn flex-shrink-0" id="hero-copy-btn">
+              <i class="material-icons text-sm" id="hero-copy-icon">content_copy</i>
             </button>
           </div>
-          
-          <div class="space-y-3">
-            <div class="flex items-start gap-3">
-              <div class="w-7 h-7 rounded-full bg-[#2a2a2a] text-white flex items-center justify-center flex-shrink-0 text-xs font-mono">1</div>
+
+          <!-- Steps -->
+          <div class="space-y-4">
+            <div class="flex items-start gap-4">
+              <div class="w-7 h-7 rounded-full bg-[#2a2a2a] border border-[#333] text-white flex items-center justify-center flex-shrink-0 text-xs font-mono">1</div>
               <div>
                 <h4 class="font-semibold text-white text-sm">Pick an Endpoint</h4>
-                <p class="text-xs text-gray-500">Browse 100+ endpoints across 10 categories.</p>
+                <p class="text-xs text-gray-500 mt-0.5">Browse 100+ endpoints across 10 categories.</p>
               </div>
             </div>
-            <div class="flex items-start gap-3">
-              <div class="w-7 h-7 rounded-full bg-[#2a2a2a] text-white flex items-center justify-center flex-shrink-0 text-xs font-mono">2</div>
+            <div class="flex items-start gap-4">
+              <div class="w-7 h-7 rounded-full bg-[#2a2a2a] border border-[#333] text-white flex items-center justify-center flex-shrink-0 text-xs font-mono">2</div>
               <div>
                 <h4 class="font-semibold text-white text-sm">Make a Request</h4>
-                <p class="text-xs text-gray-500">Simple GET request. No API key needed.</p>
+                <p class="text-xs text-gray-500 mt-0.5">Simple GET request. No API key needed.</p>
               </div>
             </div>
-            <div class="flex items-start gap-3">
-              <div class="w-7 h-7 rounded-full bg-[#2a2a2a] text-white flex items-center justify-center flex-shrink-0 text-xs font-mono">3</div>
+            <div class="flex items-start gap-4">
+              <div class="w-7 h-7 rounded-full bg-[#2a2a2a] border border-[#333] text-white flex items-center justify-center flex-shrink-0 text-xs font-mono">3</div>
               <div>
                 <h4 class="font-semibold text-white text-sm">Get JSON Response</h4>
-                <p class="text-xs text-gray-500">Clean, structured data ready to use.</p>
+                <p class="text-xs text-gray-500 mt-0.5">Clean, structured data ready to use.</p>
               </div>
             </div>
           </div>
         </div>
-        
-        <div data-aos="fade-left" data-aos-duration="1200">
-          <div class="rounded-xl overflow-hidden border border-[#2E2E2E]">
-            <div class="flex items-center gap-2 bg-[#111] px-4 py-3 border-b border-[#2E2E2E]">
+
+        <!-- Right: Code examples with tabs -->
+        <div class="animate-fade-in-up" style="animation-delay:100ms">
+          <div class="rounded-xl overflow-hidden border border-[#2e2e2e]">
+            <div class="flex items-center gap-2 bg-[#1a1a1a] px-4 py-3 border-b border-[#2e2e2e]">
               <div class="flex gap-1.5">
-                <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                <div class="w-3 h-3 rounded-full bg-red-500 opacity-80"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500 opacity-80"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500 opacity-80"></div>
               </div>
-              <span class="text-xs text-gray-500 font-mono ml-2">terminal</span>
+              <!-- Tabs -->
+              <div class="flex gap-1 ml-3">
+                <button onclick="switchTab('curl')" id="tab-curl" class="tab-btn px-3 py-1 text-xs font-mono rounded-md bg-[#111] text-white border border-[#333]">cURL</button>
+                <button onclick="switchTab('js')" id="tab-js" class="tab-btn px-3 py-1 text-xs font-mono rounded-md text-gray-500 hover:text-gray-300 transition-colors">JS</button>
+                <button onclick="switchTab('python')" id="tab-python" class="tab-btn px-3 py-1 text-xs font-mono rounded-md text-gray-500 hover:text-gray-300 transition-colors">Python</button>
+              </div>
             </div>
-            <div class="bg-[#1a1a1a] p-4 font-mono text-sm text-gray-300 overflow-x-auto">
-              <div class="text-gray-600 mb-2"># Chat with AI</div>
-              <div><span class="text-purple-400">curl</span> https://kyoto-rest-api.vercel.app/api/ai/chatgpt?text=Hello</div>
-              <div class="text-gray-600 my-2"># Translate text</div>
-              <div><span class="text-purple-400">curl</span> https://kyoto-rest-api.vercel.app/api/ai/translate?text=Good+morning&to=id</div>
-              <div class="text-gray-600 my-2"># Get weather</div>
-              <div><span class="text-purple-400">curl</span> https://kyoto-rest-api.vercel.app/api/tools/cuaca?city=Tokyo</div>
+            <div class="bg-[#111] p-5 font-mono text-xs text-gray-300 overflow-x-auto min-h-[160px]">
+              <div id="code-curl">
+                <span class="text-[#555]"># AI Chat</span><br>
+                <span class="text-[#c4b5fd]">curl</span> <span class="text-[#7dd3fc]">https://kyoto-rest-api.vercel.app/api/ai/chatgpt?text=Hello</span><br><br>
+                <span class="text-[#555]"># Translate text</span><br>
+                <span class="text-[#c4b5fd]">curl</span> <span class="text-[#7dd3fc]">https://kyoto-rest-api.vercel.app/api/ai/translate?text=Hello&amp;to=id</span><br><br>
+                <span class="text-[#555]"># Get weather</span><br>
+                <span class="text-[#c4b5fd]">curl</span> <span class="text-[#7dd3fc]">https://kyoto-rest-api.vercel.app/api/tools/cuaca?city=Tokyo</span>
+              </div>
+              <div id="code-js" style="display:none">
+                <span class="text-[#555]">// AI Chat</span><br>
+                <span class="text-[#c4b5fd]">const</span> res = <span class="text-[#fbbf24]">await</span> <span class="text-[#86efac]">fetch</span>(<span class="text-[#7dd3fc]">'/api/ai/chatgpt?text=Hello'</span>);<br>
+                <span class="text-[#c4b5fd]">const</span> data = <span class="text-[#fbbf24]">await</span> res.<span class="text-[#86efac]">json</span>();<br>
+                console.<span class="text-[#86efac]">log</span>(data.result);<br><br>
+                <span class="text-[#555]">// Or with async/await in a function</span><br>
+                <span class="text-[#c4b5fd]">async function</span> <span class="text-[#86efac]">chat</span>(text) {<br>
+                &nbsp;&nbsp;<span class="text-[#c4b5fd]">const</span> { result } = <span class="text-[#fbbf24]">await</span> (<span class="text-[#fbbf24]">await</span> <span class="text-[#86efac]">fetch</span>(<span class="text-[#7dd3fc]">`/api/ai/chatgpt?text=${text}`</span>)).<span class="text-[#86efac]">json</span>();<br>
+                &nbsp;&nbsp;<span class="text-[#c4b5fd]">return</span> result;<br>
+                }
+              </div>
+              <div id="code-python" style="display:none">
+                <span class="text-[#555]"># AI Chat</span><br>
+                <span class="text-[#c4b5fd]">import</span> requests<br><br>
+                res = requests.<span class="text-[#86efac]">get</span>(<br>
+                &nbsp;&nbsp;<span class="text-[#7dd3fc]">'https://kyoto-rest-api.vercel.app/api/ai/chatgpt'</span>,<br>
+                &nbsp;&nbsp;params={<span class="text-[#7dd3fc]">'text'</span>: <span class="text-[#7dd3fc]">'Hello'</span>}<br>
+                )<br>
+                data = res.<span class="text-[#86efac]">json</span>()<br>
+                <span class="text-[#86efac]">print</span>(data[<span class="text-[#7dd3fc]">'result'</span>])
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Pricing -->
-    <section id="pricing" class="py-16">
-      <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="1200">
-        <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">Simple Pricing</h2>
-        <div class="w-20 h-0.5 bg-white mx-auto rounded-full mb-4"></div>
-        <p class="text-gray-400 text-sm">One plan. All endpoints. Forever free.</p>
+    <!-- ===== CATEGORIES PREVIEW ===== -->
+    <section class="py-14">
+      <div class="flex items-end justify-between mb-10">
+        <div class="animate-fade-in-up">
+          <p class="section-label">Browse</p>
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">API Categories</h2>
+          <div class="section-divider"></div>
+          <p class="text-gray-500 text-sm">10 categories, 100+ endpoints.</p>
+        </div>
+        <a href="/category" class="hidden sm:flex items-center gap-1 text-xs text-gray-500 hover:text-white transition-colors font-mono animate-fade-in-up">
+          View all <i class="material-icons text-sm">arrow_forward</i>
+        </a>
       </div>
-      
-      <div class="max-w-md mx-auto" data-aos="zoom-in" data-aos-duration="1200">
-        <div class="bg-[#212121] p-8 rounded-2xl border border-[#2E2E2E] hover:border-[#383838] transition-all relative overflow-hidden">
-          <div class="absolute top-0 right-0 bg-white text-black text-[10px] font-bold px-3 py-1 rounded-bl-xl">FREE FOREVER</div>
-          
-          <div class="text-center mb-6">
-            <span class="text-5xl font-bold text-white">$0</span>
-            <span class="text-gray-500">/month</span>
-            <p class="text-sm text-gray-400 mt-2">No credit card required</p>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="cat-preview-grid">
+        <!-- Populated dynamically, fallback shown below if JS unavailable -->
+        <a href="/category?cat=ai" class="cat-grid-card animate-fade-in-up" style="animation-delay:0ms">
+          <div class="flex items-start justify-between mb-3">
+            <div class="w-9 h-9 rounded-xl bg-[#1a1a1a] border border-[#2e2e2e] flex items-center justify-center">
+              <i class="fas fa-brain text-gray-500 text-xs"></i>
+            </div>
+            <span class="method-badge method-get text-[9px]">GET</span>
           </div>
-          
-          <ul class="space-y-3 mb-8 text-sm text-gray-400">
-            <li class="flex items-center gap-3">
-              <i class="bi bi-check-lg text-green-400"></i>
-              <span>All <strong class="text-white">100+</strong> endpoints</span>
+          <h3 class="text-sm font-semibold text-white mb-1">AI</h3>
+          <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed">ChatGPT, image generation, translation, and more AI-powered endpoints.</p>
+          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600 hover:text-gray-400 transition-colors">
+            <span>Explore</span><i class="material-icons text-sm">arrow_forward</i>
+          </div>
+        </a>
+        <a href="/category?cat=anime" class="cat-grid-card animate-fade-in-up" style="animation-delay:60ms">
+          <div class="flex items-start justify-between mb-3">
+            <div class="w-9 h-9 rounded-xl bg-[#1a1a1a] border border-[#2e2e2e] flex items-center justify-center">
+              <i class="fas fa-dragon text-gray-500 text-xs"></i>
+            </div>
+            <span class="method-badge method-get text-[9px]">GET</span>
+          </div>
+          <h3 class="text-sm font-semibold text-white mb-1">Anime</h3>
+          <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed">Anime characters, quotes, images, waifu generators and more.</p>
+          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600 hover:text-gray-400 transition-colors">
+            <span>Explore</span><i class="material-icons text-sm">arrow_forward</i>
+          </div>
+        </a>
+        <a href="/category?cat=news" class="cat-grid-card animate-fade-in-up" style="animation-delay:120ms">
+          <div class="flex items-start justify-between mb-3">
+            <div class="w-9 h-9 rounded-xl bg-[#1a1a1a] border border-[#2e2e2e] flex items-center justify-center">
+              <i class="fas fa-newspaper text-gray-500 text-xs"></i>
+            </div>
+            <span class="method-badge method-get text-[9px]">GET</span>
+          </div>
+          <h3 class="text-sm font-semibold text-white mb-1">News</h3>
+          <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed">Latest news from various sources, categories, and regions.</p>
+          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600 hover:text-gray-400 transition-colors">
+            <span>Explore</span><i class="material-icons text-sm">arrow_forward</i>
+          </div>
+        </a>
+        <a href="/category?cat=tools" class="cat-grid-card animate-fade-in-up" style="animation-delay:180ms">
+          <div class="flex items-start justify-between mb-3">
+            <div class="w-9 h-9 rounded-xl bg-[#1a1a1a] border border-[#2e2e2e] flex items-center justify-center">
+              <i class="fas fa-screwdriver-wrench text-gray-500 text-xs"></i>
+            </div>
+            <span class="method-badge method-get text-[9px]">GET</span>
+          </div>
+          <h3 class="text-sm font-semibold text-white mb-1">Tools</h3>
+          <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed">Utilities like weather, QR codes, URL shorteners and more.</p>
+          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600 hover:text-gray-400 transition-colors">
+            <span>Explore</span><i class="material-icons text-sm">arrow_forward</i>
+          </div>
+        </a>
+        <a href="/category?cat=media" class="cat-grid-card animate-fade-in-up" style="animation-delay:240ms">
+          <div class="flex items-start justify-between mb-3">
+            <div class="w-9 h-9 rounded-xl bg-[#1a1a1a] border border-[#2e2e2e] flex items-center justify-center">
+              <i class="fas fa-image text-gray-500 text-xs"></i>
+            </div>
+            <span class="method-badge method-get text-[9px]">GET</span>
+          </div>
+          <h3 class="text-sm font-semibold text-white mb-1">Media</h3>
+          <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed">Images, videos, audio and media-related endpoints.</p>
+          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600 hover:text-gray-400 transition-colors">
+            <span>Explore</span><i class="material-icons text-sm">arrow_forward</i>
+          </div>
+        </a>
+        <a href="/category" class="cat-grid-card animate-fade-in-up flex flex-col items-center justify-center text-center" style="animation-delay:300ms; border-style:dashed">
+          <i class="material-icons text-3xl text-gray-700 mb-2">apps</i>
+          <p class="text-sm font-semibold text-gray-400">All Categories</p>
+          <p class="text-xs text-gray-600 mt-1">+5 more categories</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== PRICING ===== -->
+    <section id="pricing" class="py-14">
+      <div class="text-center mb-10 animate-fade-in-up">
+        <p class="section-label" style="justify-content:center">Pricing</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Simple Pricing</h2>
+        <div class="section-divider mx-auto"></div>
+        <p class="text-gray-500 text-sm">One plan. All endpoints. Forever free.</p>
+      </div>
+
+      <div class="max-w-md mx-auto animate-fade-in-up" style="animation-delay:80ms">
+        <div class="price-card">
+          <div class="price-badge">FREE FOREVER</div>
+
+          <div class="text-center mb-8">
+            <div class="text-5xl font-bold text-white font-mono">$0</div>
+            <div class="text-gray-500 text-sm mt-1">/month · no credit card</div>
+          </div>
+
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center gap-3 text-sm text-gray-400">
+              <i class="material-icons text-base text-green-400">check_circle</i>
+              All <strong class="text-white">100+</strong>&nbsp;endpoints
             </li>
-            <li class="flex items-center gap-3">
-              <i class="bi bi-check-lg text-green-400"></i>
-              <span>No API key required</span>
+            <li class="flex items-center gap-3 text-sm text-gray-400">
+              <i class="material-icons text-base text-green-400">check_circle</i>
+              No API key required
             </li>
-            <li class="flex items-center gap-3">
-              <i class="bi bi-check-lg text-green-400"></i>
-              <span>Unlimited requests</span>
+            <li class="flex items-center gap-3 text-sm text-gray-400">
+              <i class="material-icons text-base text-green-400">check_circle</i>
+              Unlimited requests
             </li>
-            <li class="flex items-center gap-3">
-              <i class="bi bi-check-lg text-green-400"></i>
-              <span>Global CDN edge network</span>
+            <li class="flex items-center gap-3 text-sm text-gray-400">
+              <i class="material-icons text-base text-green-400">check_circle</i>
+              Global CDN edge network
             </li>
-            <li class="flex items-center gap-3">
-              <i class="bi bi-check-lg text-green-400"></i>
-              <span>Community support</span>
+            <li class="flex items-center gap-3 text-sm text-gray-400">
+              <i class="material-icons text-base text-green-400">check_circle</i>
+              Community support
             </li>
           </ul>
-          
-          <a href="/category" class="block text-center w-full py-3 bg-white text-black rounded-xl font-semibold hover:bg-gray-200 transition-colors">
+
+          <a href="/category" class="block text-center w-full py-3 bg-white text-black rounded-xl font-semibold hover:bg-gray-100 transition-colors text-sm">
             Start Building Now
           </a>
         </div>
       </div>
     </section>
 
-    <!-- FAQ -->
-    <section class="py-16 mb-8">
-      <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="1200">
-        <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">Frequently Asked Questions</h2>
-        <div class="w-20 h-0.5 bg-white mx-auto rounded-full mb-4"></div>
-        <p class="text-gray-400 text-sm">Find answers to common questions.</p>
+    <!-- ===== FAQ ===== -->
+    <section class="py-14 mb-8">
+      <div class="text-center mb-10 animate-fade-in-up">
+        <p class="section-label" style="justify-content:center">Help</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Frequently Asked Questions</h2>
+        <div class="section-divider mx-auto"></div>
+        <p class="text-gray-500 text-sm">Find answers to common questions.</p>
       </div>
-      
-      <div class="max-w-2xl mx-auto space-y-3">
-        <div class="faq-item border border-[#2E2E2E] rounded-xl overflow-hidden bg-[#212121] hover:border-[#383838] transition-colors" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="0">
-          <button class="faq-btn w-full px-5 py-4 flex items-center justify-between text-left" aria-expanded="false">
-            <span class="font-medium text-white text-sm">What is Kyoto API?</span>
-            <i class="bi bi-chevron-down text-white faq-icon"></i>
+
+      <div class="max-w-2xl mx-auto space-y-2">
+        <div class="faq-item animate-fade-in-up" style="animation-delay:0ms">
+          <button class="faq-btn" aria-expanded="false">
+            <span class="font-medium text-sm">What is Kyoto API?</span>
+            <i class="bi bi-chevron-down text-white faq-icon flex-shrink-0"></i>
           </button>
-          <div class="faq-answer bg-[#1a1a1a] border-t border-[#2E2E2E]">
+          <div class="faq-answer">
             <div class="px-5 py-4 text-sm text-gray-400 leading-relaxed">Kyoto API is a comprehensive REST API service providing 100+ free endpoints for AI generation, anime data, news, internet tools, games, and more. All endpoints are free and require no API key.</div>
           </div>
         </div>
-        
-        <div class="faq-item border border-[#2E2E2E] rounded-xl overflow-hidden bg-[#212121] hover:border-[#383838] transition-colors" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="100">
-          <button class="faq-btn w-full px-5 py-4 flex items-center justify-between text-left" aria-expanded="false">
-            <span class="font-medium text-white text-sm">Is this really free?</span>
-            <i class="bi bi-chevron-down text-white faq-icon"></i>
+
+        <div class="faq-item animate-fade-in-up" style="animation-delay:60ms">
+          <button class="faq-btn" aria-expanded="false">
+            <span class="font-medium text-sm">Is this really free?</span>
+            <i class="bi bi-chevron-down text-white faq-icon flex-shrink-0"></i>
           </button>
-          <div class="faq-answer bg-[#1a1a1a] border-t border-[#2E2E2E]">
-            <div class="px-5 py-4 text-sm text-gray-400 leading-relaxed">Yes, absolutely. All endpoints are free forever. No API keys, no authentication, no credit card required. Just send a GET request and get JSON response.</div>
+          <div class="faq-answer">
+            <div class="px-5 py-4 text-sm text-gray-400 leading-relaxed">Yes, absolutely. All endpoints are free forever. No API keys, no authentication, no credit card required. Just send a GET request and get a JSON response.</div>
           </div>
         </div>
-        
-        <div class="faq-item border border-[#2E2E2E] rounded-xl overflow-hidden bg-[#212121] hover:border-[#383838] transition-colors" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="200">
-          <button class="faq-btn w-full px-5 py-4 flex items-center justify-between text-left" aria-expanded="false">
-            <span class="font-medium text-white text-sm">What programming languages are supported?</span>
-            <i class="bi bi-chevron-down text-white faq-icon"></i>
+
+        <div class="faq-item animate-fade-in-up" style="animation-delay:120ms">
+          <button class="faq-btn" aria-expanded="false">
+            <span class="font-medium text-sm">What programming languages are supported?</span>
+            <i class="bi bi-chevron-down text-white faq-icon flex-shrink-0"></i>
           </button>
-          <div class="faq-answer bg-[#1a1a1a] border-t border-[#2E2E2E]">
-            <div class="px-5 py-4 text-sm text-gray-400 leading-relaxed">As a RESTful API, Kyoto works with any language that supports HTTP requests: JavaScript, Python, PHP, Java, cURL, and more.</div>
+          <div class="faq-answer">
+            <div class="px-5 py-4 text-sm text-gray-400 leading-relaxed">As a RESTful API, Kyoto works with any language that supports HTTP requests: JavaScript, Python, PHP, Java, cURL, Go, Rust, and more.</div>
           </div>
         </div>
-        
-        <div class="faq-item border border-[#2E2E2E] rounded-xl overflow-hidden bg-[#212121] hover:border-[#383838] transition-colors" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="300">
-          <button class="faq-btn w-full px-5 py-4 flex items-center justify-between text-left" aria-expanded="false">
-            <span class="font-medium text-white text-sm">Are there rate limits?</span>
-            <i class="bi bi-chevron-down text-white faq-icon"></i>
+
+        <div class="faq-item animate-fade-in-up" style="animation-delay:180ms">
+          <button class="faq-btn" aria-expanded="false">
+            <span class="font-medium text-sm">Are there rate limits?</span>
+            <i class="bi bi-chevron-down text-white faq-icon flex-shrink-0"></i>
           </button>
-          <div class="faq-answer bg-[#1a1a1a] border-t border-[#2E2E2E]">
+          <div class="faq-answer">
             <div class="px-5 py-4 text-sm text-gray-400 leading-relaxed">Yes, to ensure fair usage for everyone, we implement rate limiting. However, limits are generous enough for most use cases. Contact us if you need higher limits.</div>
           </div>
         </div>
-        
-        <div class="faq-item border border-[#2E2E2E] rounded-xl overflow-hidden bg-[#212121] hover:border-[#383838] transition-colors" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="400">
-          <button class="faq-btn w-full px-5 py-4 flex items-center justify-between text-left" aria-expanded="false">
-            <span class="font-medium text-white text-sm">How often is the service updated?</span>
-            <i class="bi bi-chevron-down text-white faq-icon"></i>
+
+        <div class="faq-item animate-fade-in-up" style="animation-delay:240ms">
+          <button class="faq-btn" aria-expanded="false">
+            <span class="font-medium text-sm">How often is the service updated?</span>
+            <i class="bi bi-chevron-down text-white faq-icon flex-shrink-0"></i>
           </button>
-          <div class="faq-answer bg-[#1a1a1a] border-t border-[#2E2E2E]">
+          <div class="faq-answer">
             <div class="px-5 py-4 text-sm text-gray-400 leading-relaxed">We continuously add new endpoints and improve existing ones. Follow our social channels for the latest updates and changelogs.</div>
           </div>
         </div>
       </div>
     </section>
+
   </main>
 
   <!-- Footer -->
-  <footer class="bg-[#212121] border-t border-[#2E2E2E] w-full">
+  <footer class="bg-[#212121] border-t border-[#2e2e2e] w-full">
     <div class="max-w-5xl mx-auto px-6 py-10">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
         <div>
-          <h3 class="font-semibold text-white mb-3">About</h3>
-          <p class="text-sm text-gray-400 leading-relaxed">Kyoto API is a free REST API platform providing 100+ endpoints for developers worldwide.</p>
+          <a href="/" class="font-bold text-white text-lg mb-3 block" style="font-family:'Space Grotesk',sans-serif;">
+            Kyoto<span class="text-gray-500">API</span>
+          </a>
+          <p class="text-sm text-gray-500 leading-relaxed">A free REST API platform providing 100+ endpoints for developers worldwide.</p>
         </div>
         <div>
-          <h3 class="font-semibold text-white mb-3">Quick Links</h3>
+          <h3 class="font-semibold text-white mb-3 text-sm">Quick Links</h3>
           <div class="flex flex-col gap-2">
-            <a href="/category" class="text-sm text-gray-400 hover:text-white transition-colors">Documentation</a>
-            <a href="/status" class="text-sm text-gray-400 hover:text-white transition-colors">API Status</a>
-            <a href="#pricing" class="text-sm text-gray-400 hover:text-white transition-colors">Pricing</a>
+            <a href="/category" class="text-sm text-gray-500 hover:text-white transition-colors flex items-center gap-2">
+              <i class="material-icons text-sm opacity-50">explore</i>Documentation
+            </a>
+            <a href="/status" class="text-sm text-gray-500 hover:text-white transition-colors flex items-center gap-2">
+              <i class="material-icons text-sm opacity-50">monitor_heart</i>API Status
+            </a>
+            <a href="#pricing" class="text-sm text-gray-500 hover:text-white transition-colors flex items-center gap-2">
+              <i class="material-icons text-sm opacity-50">sell</i>Pricing
+            </a>
           </div>
         </div>
         <div>
-          <h3 class="font-semibold text-white mb-3">Connect</h3>
+          <h3 class="font-semibold text-white mb-3 text-sm">Connect</h3>
           <div class="flex gap-3">
-            <a href="https://whatsapp.com/channel/0029Vb69z8n1dAvztHQTDu3r" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#1a1a1a] hover:bg-[#2a2a2a] text-gray-400 hover:text-white transition-colors">
-              <i class="fab fa-whatsapp"></i>
+            <a href="https://whatsapp.com/channel/0029Vb69z8n1dAvztHQTDu3r" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#1a1a1a] border border-[#2e2e2e] hover:bg-[#2a2a2a] hover:border-[#3a3a3a] text-gray-400 hover:text-white transition-all">
+              <i class="fab fa-whatsapp text-sm"></i>
             </a>
-            <a href="https://www.instagram.com/wtf.w4n_" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#1a1a1a] hover:bg-[#2a2a2a] text-gray-400 hover:text-white transition-colors">
-              <i class="fab fa-instagram"></i>
+            <a href="https://www.instagram.com/wtf.w4n_" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#1a1a1a] border border-[#2e2e2e] hover:bg-[#2a2a2a] hover:border-[#3a3a3a] text-gray-400 hover:text-white transition-all">
+              <i class="fab fa-instagram text-sm"></i>
             </a>
           </div>
         </div>
       </div>
-      <div class="pt-8 border-t border-[#2E2E2E] text-center">
-        <p class="text-sm text-gray-400">&copy; 2026 Kyoto API. All rights reserved.</p>
+      <div class="pt-6 border-t border-[#2e2e2e] flex flex-col md:flex-row items-center justify-between gap-3">
+        <p class="text-xs text-gray-600">&copy; 2026 Kyoto API. All rights reserved.</p>
+        <div class="flex gap-5">
+          <a href="/" class="text-xs text-white transition-colors">Home</a>
+          <a href="/category" class="text-xs text-gray-600 hover:text-white transition-colors">Categories</a>
+          <a href="/status" class="text-xs text-gray-600 hover:text-white transition-colors">Status</a>
+        </div>
       </div>
     </div>
   </footer>
 
   <!-- Back to Top -->
-  <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 right-6 w-10 h-10 bg-white text-black rounded-full items-center justify-center transition-all duration-300 opacity-0 invisible flex z-50">
-    <i class="bi bi-arrow-up"></i>
+  <button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="fixed bottom-6 right-6 w-10 h-10 bg-white text-black rounded-full flex items-center justify-center z-50 hover:bg-gray-100 transition-all shadow-lg">
+    <i class="material-icons text-base">arrow_upward</i>
   </button>
 
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    AOS.init({ duration: 1200, easing: 'ease-out-cubic', once: true, offset: 30 });
+  (function () {
+    'use strict';
 
-    function copyCommand() {
-      const command = document.getElementById('npm-command').innerText.trim();
-      navigator.clipboard.writeText(command).then(() => {
-        const icon = document.getElementById('copy-icon');
-        icon.className = 'bi bi-check-lg text-sm';
-        setTimeout(() => { icon.className = 'bi bi-copy text-sm'; }, 2000);
-      });
+    // ===== SIDEBAR =====
+    const sidebar  = document.getElementById('sidebar');
+    const overlay  = document.getElementById('overlay');
+    const toggle   = document.getElementById('sidebarToggle');
+    const close    = document.getElementById('sidebarClose');
+
+    function openSidebar()  {
+      sidebar.classList.add('open');
+      overlay.classList.remove('opacity-0','invisible');
+      overlay.classList.add('opacity-100','visible','show');
+      document.body.classList.add('overflow-hidden');
     }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.add('opacity-0','invisible');
+      overlay.classList.remove('opacity-100','visible','show');
+      document.body.classList.remove('overflow-hidden');
+    }
+    window.closeSidebar = closeSidebar;
 
+    toggle?.addEventListener('click', openSidebar);
+    close?.addEventListener('click', closeSidebar);
+    overlay?.addEventListener('click', closeSidebar);
+
+    // ===== NAVBAR SCROLL =====
+    const navbar = document.getElementById('navbar');
+    const backToTop = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
+        navbar.classList.add('scrolled');
+        backToTop.classList.add('show');
+      } else {
+        navbar.classList.remove('scrolled');
+        backToTop.classList.remove('show');
+      }
+    });
+
+    // ===== FAQ =====
     document.querySelectorAll('.faq-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const answer = btn.nextElementSibling;
-        const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', !isExpanded);
-        if (!isExpanded) {
+        const isOpen = btn.getAttribute('aria-expanded') === 'true';
+        // Close all
+        document.querySelectorAll('.faq-btn').forEach(b => {
+          b.setAttribute('aria-expanded','false');
+          const a = b.nextElementSibling;
+          a.classList.remove('active');
+          a.style.maxHeight = null;
+        });
+        if (!isOpen) {
+          btn.setAttribute('aria-expanded','true');
           answer.classList.add('active');
           answer.style.maxHeight = answer.scrollHeight + 'px';
-        } else {
-          answer.classList.remove('active');
-          answer.style.maxHeight = null;
         }
       });
     });
 
-    const backToTop = document.getElementById('backToTop');
-    const navbar = document.getElementById('navbar');
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const sidebarClose = document.getElementById('sidebarClose');
+    // ===== CODE TABS =====
+    window.switchTab = function(lang) {
+      ['curl','js','python'].forEach(l => {
+        document.getElementById('code-' + l).style.display = l === lang ? '' : 'none';
+        const btn = document.getElementById('tab-' + l);
+        if (l === lang) {
+          btn.classList.add('bg-[#111]','text-white','border','border-[#333]');
+          btn.classList.remove('text-gray-500');
+        } else {
+          btn.classList.remove('bg-[#111]','text-white','border','border-[#333]');
+          btn.classList.add('text-gray-500');
+        }
+      });
+    };
 
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 400) {
-        backToTop.classList.remove('opacity-0', 'invisible');
-        backToTop.classList.add('opacity-100', 'visible');
-      } else {
-        backToTop.classList.remove('opacity-100', 'visible');
-        backToTop.classList.add('opacity-0', 'invisible');
-      }
+    // ===== COPY HERO CMD =====
+    window.copyHeroCmd = function() {
+      const cmd = document.getElementById('hero-cmd').textContent.trim();
+      navigator.clipboard.writeText(cmd).then(() => {
+        const icon = document.getElementById('hero-copy-icon');
+        const btn  = document.getElementById('hero-copy-btn');
+        icon.textContent = 'check';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          icon.textContent = 'content_copy';
+          btn.classList.remove('copied');
+        }, 2000);
+        showToast('Copied to clipboard!');
+      });
+    };
 
-      if (window.innerWidth >= 768) {
-        navbar.classList.add('bg-[#181818]');
-        return;
-      }
-
-      if (window.scrollY > 50) {
-        navbar.classList.add('!bg-[#181818]/60', 'backdrop-blur-md', '!border-[#2E2E2E]');
-        navbar.classList.remove('border-transparent');
-      } else {
-        navbar.classList.remove('!bg-[#181818]/60', 'backdrop-blur-md', '!border-[#2E2E2E]');
-        navbar.classList.add('border-transparent');
-      }
-    });
-
-    function openSidebar() {
-      sidebar.classList.add('open');
-      overlay.classList.remove('opacity-0', 'invisible');
-      overlay.classList.add('opacity-100', 'visible');
-      document.body.classList.add('overflow-hidden');
+    // ===== TOAST =====
+    let toastTimer;
+    function showToast(msg, type = 'success') {
+      const t  = document.getElementById('toast');
+      const m  = document.getElementById('toast-msg');
+      t.className = 'show ' + type;
+      m.textContent = msg;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
     }
 
-    function closeSidebar() {
-      sidebar.classList.remove('open');
-      overlay.classList.add('opacity-0', 'invisible');
-      overlay.classList.remove('opacity-100', 'visible');
-      document.body.classList.remove('overflow-hidden');
-    }
+    // ===== DYNAMIC CATEGORY PREVIEW (from openapi.json) =====
+    async function loadCatPreview() {
+      try {
+        const r = await fetch('/src/openapi.json');
+        if (!r.ok) return;
+        const d = await r.json();
+        const cats = {};
+        d.tags?.forEach(t => { cats[t.name] = { name: t.name, desc: t.description || '', eps: [] }; });
+        Object.keys(d.paths || {}).forEach(p => {
+          Object.keys(d.paths[p]).forEach(method => {
+            const ep = d.paths[p][method];
+            const tag = ep.tags?.[0] || 'Other';
+            if (!cats[tag]) cats[tag] = { name: tag, desc: '', eps: [] };
+            cats[tag].eps.push(p);
+          });
+        });
+        const cl = Object.values(cats).filter(c => c.eps.length);
+        const totalEps = cl.reduce((s, c) => s + c.eps.length, 0);
 
-    sidebarToggle.addEventListener('click', openSidebar);
-    sidebarClose.addEventListener('click', closeSidebar);
-    overlay.addEventListener('click', closeSidebar);
+        // Update stat cards
+        const epEl = document.querySelector('.stat-card:nth-child(1) .text-2xl');
+        const catEl = document.querySelector('.stat-card:nth-child(2) .text-2xl');
+        if (epEl) epEl.textContent = totalEps + '+';
+        if (catEl) catEl.textContent = cl.length;
+      } catch(e) {}
+    }
+    loadCatPreview();
+
+  })();
   </script>
 </body>
 </html>
