@@ -13,15 +13,13 @@
     { "source": "/api/ai/:path*", "destination": "/api/ai" },
     { "source": "/api/anime/:path*", "destination": "/api/anime" },
     { "source": "/api/news/:path*", "destination": "/api/news" },
-    { "source": "/api/fun/:path*", "destination": "/api/fun" },
+    { "source": "/api/internet/:path*", "destination": "/api/internet" },
     { "source": "/api/games/:path*", "destination": "/api/games" },
     { "source": "/api/info/:path*", "destination": "/api/info" },
     { "source": "/api/maker/:path*", "destination": "/api/maker" },
     { "source": "/api/stalker/:path*", "destination": "/api/stalker" },
-    { "source": "/api/zodiak/:path*", "destination": "/api/zodiak" },
     { "source": "/api/tools/:path*", "destination": "/api/tools" },
-    { "source": "/api/media/:path*", "destination": "/api/media" },
-    { "source": "/api/quran/:path*", "destination": "/api/quran" }
+    { "source": "/api/media/:path*", "destination": "/api/media" }
   ],
   "headers": [
     {
