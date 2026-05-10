@@ -461,21 +461,14 @@
         <span class="text-gray-600">/</span>
         <span class="text-white" id="breadcrumb-current">Categories</span>
       </div>
-      <div class="relative w-64 hidden md:block">
-        <i class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg pointer-events-none">search</i>
-        <input type="text" id="searchInput" placeholder="Search endpoints..." class="w-full bg-[#1a1a1a] border border-[#2e2e2e] text-white font-sans text-sm py-2 pl-10 pr-4 rounded-lg outline-none focus:border-[#444] transition-colors" />
-      </div>
+      <!-- Search removed from header -->
     </div>
   </header>
 
   <!-- Main Content -->
   <main class="max-w-5xl mx-auto px-6 py-8">
     
-    <!-- Mobile Search -->
-    <div class="relative mb-6 md:hidden">
-      <i class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg pointer-events-none">search</i>
-      <input type="text" id="searchInputMobile" placeholder="Search endpoints..." class="w-full bg-[#212121] border border-[#2e2e2e] text-white font-sans text-sm py-3 pl-10 pr-4 rounded-xl outline-none focus:border-[#444] transition-colors" />
-    </div>
+    <!-- Mobile Search removed -->
 
     <!-- Dynamic Content -->
     <div id="content"></div>
@@ -898,20 +891,7 @@
     }
   }
 
-  // ===== SEARCH =====
-  function setupSearch(inputId) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
-    input.addEventListener('input', function() {
-      const q = this.value.toLowerCase();
-      document.querySelectorAll('.ep-item').forEach(el => {
-        el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
-      });
-    });
-  }
-  
-  setupSearch('searchInput');
-  setupSearch('searchInputMobile');
+  // Search functionality removed
 
   // ===== SPA NAVIGATION =====
   window.addEventListener('popstate', load);
