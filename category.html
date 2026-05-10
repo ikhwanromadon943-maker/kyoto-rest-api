@@ -329,11 +329,12 @@
       });
       const cl = Object.values(cats).filter(c=>c.eps.length);
       const slug = n=>n.toLowerCase().replace(/\s+/g,'-');
+      const curCat = new URLSearchParams(location.search).get('cat');
 
-      side.innerHTML = cl.map(c=>`<a href="/category/${slug(c.name)}" class="block py-1 px-4 text-sm rounded-xl ${m&&m[1]===slug(c.name)?'text-white bg-[#222]':'text-gray-400 hover:text-white hover:bg-[#222]'}">${c.name}</a>`).join('');
+      side.innerHTML = cl.map(c=>`<a href="/category?cat=${slug(c.name)}" class="block py-1 px-4 text-sm rounded-xl ${curCat===slug(c.name)?'text-white bg-[#222]':'text-gray-400 hover:text-white hover:bg-[#222]'}">${c.name}</a>`).join('');
 
-      if(m){
-        const cat = cl.find(c=>slug(c.name)===m[1]);
+      if(curCat){
+        const cat = cl.find(c=>slug(c.name)===curCat);
         if(cat){
           bc.classList.remove('hidden');
           document.title = cat.name + ' - Category.';
@@ -348,7 +349,7 @@
       } else {
         bc.classList.add('hidden');
         document.title='Category.';
-        cont.innerHTML = cl.map((c,i)=>`<a href="/category/${slug(c.name)}" class="block bg-[#212121] border border-[#2e2e2e] rounded-xl p-6 hover:border-[#383838] group fade-in" style="animation-delay:${i*100}ms"><div class="flex justify-between items-center"><div><h4 class="text-lg font-semibold text-white">${c.name}</h4><span class="text-xs text-gray-400">${c.eps.length} endpoints</span></div><i class="material-icons text-gray-500">arrow_forward</i></div></a>`).join('');
+        cont.innerHTML = cl.map((c,i)=>`<a href="/category?cat=${slug(c.name)}" class="block bg-[#212121] border border-[#2e2e2e] rounded-xl p-6 hover:border-[#383838] group fade-in" style="animation-delay:${i*100}ms"><div class="flex justify-between items-center"><div><h4 class="text-lg font-semibold text-white">${c.name}</h4><span class="text-xs text-gray-400">${c.eps.length} endpoints</span></div><i class="material-icons text-gray-500">arrow_forward</i></div></a>`).join('');
       }
     } catch(e){ cont.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Failed to load data.</p>'; }
   }
@@ -363,7 +364,8 @@
     const l=e.target.closest('a');
     if(l&&l.href&&l.href.startsWith(location.origin+'/category')){
       e.preventDefault();
-      history.pushState({},'',new URL(l.href).pathname);
+      const u=new URL(l.href);
+      history.pushState({},'',(u.pathname+(u.search||'')));
       load();
       if(window.innerWidth<768) closeSb();
     }
