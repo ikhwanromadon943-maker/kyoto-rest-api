@@ -123,6 +123,19 @@ export default async function handler(req, res) {
       if (d.status === 'fail') throw new Error(d.message || 'IP lookup failed');
       return res.json({ status: true, author: 'Kyoto API', provider: 'ip-api.com', ip:d.query, country:d.country, region:d.regionName, city:d.city, isp:d.isp, lat:d.lat, lon:d.lon, timezone:d.timezone, response_time: rt() });
     }
+    
+    // Add zodiak endpoint to tools.js
+if (ep === 'zodiak') {
+  const sign = url.searchParams.get('sign');
+  if (!sign) return errRes(res, 'Parameter "sign" is required');
+  const day = url.searchParams.get('day') || 'today';
+  const allowedSigns = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'];
+  const allowedDays = ['today', 'tomorrow', 'yesterday'];
+  if (!allowedSigns.includes(sign)) return errRes(res, `Invalid sign. Allowed: ${allowedSigns.join(', ')}`);
+  if (!allowedDays.includes(day)) return errRes(res, `Invalid day. Allowed: ${allowedDays.join(', ')}`);
+  const d = await safeFetch(`https://aztro.sameerkumar.website/?sign=${sign}&day=${day}`, { method: 'POST' });
+  return res.json({ status: true, author: 'Kyoto API', provider: 'Aztro API', sign, day, horoscope: d.description, mood: d.mood, color: d.color, lucky_number: d.lucky_number, lucky_time: d.lucky_time, compatibility: d.compatibility, response_time: rt() });
+}
 
     return errRes(res, `Endpoint /api/tools/${ep} not found`);
   } catch (err) {
