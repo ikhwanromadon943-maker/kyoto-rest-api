@@ -370,12 +370,7 @@
   });
 
   window._k = { exec, copy: copyText, toggleEp, toggleCat };
-  // Jalankan load() setelah DOM siap, baik via DOMContentLoaded maupun langsung jika sudah ready
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded', load);
-  } else {
-    load();
-  }
+  load();
 })();
 </script>
 </body>
