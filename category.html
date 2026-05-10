@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
   <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script>
     tailwind.config = {
@@ -24,119 +25,107 @@
     };
   </script>
   <style>
-    ::-webkit-scrollbar { display: none !important; }
-    
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #555; }
+
     body {
       background-color: #181818;
       letter-spacing: 0.025em;
     }
-    
+
     body::before {
       content: "";
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: -1;
       background-image:
-        linear-gradient(rgba(148,163,184,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(148,163,184,0.06) 1px, transparent 1px);
+        linear-gradient(rgba(148,163,184,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148,163,184,0.05) 1px, transparent 1px);
       background-size: 40px 40px;
       pointer-events: none;
     }
 
-    /* Animations */
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(12px); }
+      from { opacity: 0; transform: translateY(14px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    
-    @keyframes slideDown {
-      from { opacity: 0; max-height: 0; }
-      to { opacity: 1; max-height: 2000px; }
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
     }
-    
+    @keyframes shimmer {
+      0% { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .animate-fade-in-up {
       animation: fadeInUp 0.4s ease-out forwards;
       opacity: 0;
     }
-    
-    .animate-fade-in {
-      animation: fadeIn 0.3s ease-out forwards;
-    }
+    .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
 
     /* Sidebar */
     #sidebar {
       transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
     #overlay {
       transition: opacity 0.3s, visibility 0.3s;
     }
-    
     #overlay.show {
       opacity: 1 !important;
       visibility: visible !important;
     }
-    
     @media (max-width: 767px) {
-      #sidebar {
-        transform: translateX(-100%);
-      }
-      #sidebar.open {
-        transform: translateX(0);
-      }
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
     }
-    
     @media (min-width: 768px) {
-      body {
-        padding-left: 16rem;
-      }
-      #sidebar {
-        transform: translateX(0) !important;
-      }
-      #overlay {
-        display: none !important;
-      }
-      #sidebarToggle,
-      #sidebarClose {
-        display: none !important;
-      }
+      body { padding-left: 16rem; }
+      #sidebar { transform: translateX(0) !important; }
+      #overlay { display: none !important; }
+      #sidebarToggle, #sidebarClose { display: none !important; }
     }
 
-    /* Category Header Card */
+    /* Category header */
     .cat-header-card {
       background: linear-gradient(135deg, #1e1e1e 0%, #1a1a1a 100%);
       border: 1px solid #2e2e2e;
     }
 
-    /* Method Badge */
+    /* Method badge */
     .method-badge {
       display: inline-flex;
       align-items: center;
-      padding: 4px 12px;
-      border-radius: 8px;
-      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
       font-family: "Ubuntu Mono", monospace;
       flex-shrink: 0;
     }
-    
-    .method-get {
-      background: rgba(59,130,246,0.12);
-      color: #60a5fa;
-      border: 1px solid rgba(59,130,246,0.25);
-    }
+    .method-get    { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
+    .method-post   { background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.25); }
+    .method-put    { background: rgba(250,204,21,0.12); color: #facc15; border: 1px solid rgba(250,204,21,0.25); }
+    .method-delete { background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.25); }
+    .method-patch  { background: rgba(168,85,247,0.12); color: #a855f7; border: 1px solid rgba(168,85,247,0.25); }
 
-    /* Endpoint Item */
+    /* Endpoint toggle */
     .ep-toggle-btn {
       width: 100%;
       background: #212121;
@@ -153,24 +142,17 @@
       gap: 12px;
       border-radius: 12px;
     }
-    
-    .ep-item {
-      margin-bottom: 4px;
-    }
-    
+    .ep-item { margin-bottom: 6px; }
     .ep-item.active .ep-toggle-btn {
       border-radius: 12px 12px 0 0;
-      border-bottom: 1px solid #2e2e2e;
-      background: #1a1a1a;
-      border-color: #383838;
-    }
-    
-    .ep-toggle-btn:hover {
+      border-bottom: 1px solid #2a2a2a;
       background: #1c1c1c;
       border-color: #383838;
     }
-
-    /* Endpoint Detail Panel */
+    .ep-toggle-btn:hover {
+      background: #1c1c1c;
+      border-color: #3a3a3a;
+    }
     .ep-detail-panel {
       background: #141414;
       border: 1px solid #2e2e2e;
@@ -179,22 +161,17 @@
       display: none;
       overflow: hidden;
     }
-    
     .ep-detail-panel.open {
       display: block;
-      animation: slideDown 0.3s ease-out;
+      animation: slideDown 0.25s ease-out;
     }
-    
     .detail-block {
       padding: 20px 24px;
-      border-bottom: 1px solid #2e2e2e;
+      border-bottom: 1px solid #222;
     }
-    
-    .detail-block:last-child {
-      border-bottom: none;
-    }
+    .detail-block:last-child { border-bottom: none; }
 
-    /* Stat Mini Cards */
+    /* Stats */
     .stat-mini {
       background: #212121;
       border: 1px solid #2e2e2e;
@@ -203,11 +180,8 @@
       text-align: center;
     }
 
-    /* Inputs & Buttons */
-    input[type="text"],
-    input[type="number"],
-    select,
-    textarea {
+    /* Form inputs */
+    input[type="text"], input[type="number"], select, textarea {
       width: 100%;
       background: #181818;
       border: 1px solid #2e2e2e;
@@ -217,26 +191,17 @@
       padding: 10px 14px;
       border-radius: 10px;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
       box-sizing: border-box;
     }
-    
-    input:focus,
-    select:focus,
-    textarea:focus {
+    input:focus, select:focus, textarea:focus {
       border-color: #555;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.03);
     }
-    
-    input::placeholder,
-    textarea::placeholder {
-      color: #555;
-    }
-    
-    textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
+    input::placeholder, textarea::placeholder { color: #444; }
+    textarea { resize: vertical; min-height: 80px; }
 
+    /* Execute button */
     .btn-exec {
       background: #fff;
       color: #181818;
@@ -253,43 +218,51 @@
       align-items: center;
       gap: 8px;
     }
-    
     .btn-exec:hover {
-      background: #e0e0e0;
+      background: #e8e8e8;
       transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
     }
-    
     .btn-exec:disabled {
-      opacity: 0.5;
+      opacity: 0.45;
       cursor: not-allowed;
       transform: none;
       box-shadow: none;
     }
+    .btn-exec .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: #181818;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    .btn-exec.loading .spinner { display: inline-block; }
+    .btn-exec.loading .exec-icon { display: none; }
 
-    /* Code Block */
+    /* Code block */
     .code-block {
       background: #111;
-      border: 1px solid #2e2e2e;
+      border: 1px solid #252525;
       border-radius: 10px;
-      padding: 16px;
+      padding: 14px 16px;
       font-family: "Ubuntu Mono", monospace;
       font-size: 12px;
-      color: #e2e0f0;
+      color: #d4d0f0;
       overflow-x: auto;
       white-space: pre-wrap;
-      word-break: break-all;
+      word-break: break-word;
       max-height: 500px;
       overflow-y: auto;
-      line-height: 1.8;
+      line-height: 1.85;
     }
 
-    /* Section Label */
+    /* Section label */
     .section-label {
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      color: #888;
+      color: #666;
       margin-bottom: 12px;
       font-family: "Ubuntu Mono", monospace;
       font-weight: 500;
@@ -297,41 +270,34 @@
       align-items: center;
       gap: 8px;
     }
-    
-    .section-label i {
-      font-size: 16px;
-    }
+    .section-label i { font-size: 15px; }
 
     /* Chevron */
-    .chevron {
-      transition: transform 0.25s;
-    }
-    
-    .chevron.open {
-      transform: rotate(180deg);
-    }
+    .chevron { transition: transform 0.25s; }
+    .chevron.open { transform: rotate(180deg); }
 
-    /* Copy Button */
+    /* Copy button */
     .copy-btn {
       background: transparent;
       border: 1px solid #2e2e2e;
-      color: #999;
-      padding: 8px 16px;
+      color: #888;
+      padding: 6px 12px;
       font-family: "Space Grotesk", sans-serif;
       font-size: 11px;
       cursor: pointer;
-      border-radius: 8px;
+      border-radius: 7px;
       transition: all 0.2s;
       letter-spacing: 0.3px;
       white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
     }
-    
-    .copy-btn:hover {
-      color: #fff;
-      border-color: #555;
-    }
+    .copy-btn:hover { color: #fff; border-color: #555; background: rgba(255,255,255,0.04); }
+    .copy-btn.copied { color: #4ade80; border-color: #4ade80; }
 
-    /* Category Grid Cards */
+    /* Category card */
     .cat-grid-card {
       background: #212121;
       border: 1px solid #2e2e2e;
@@ -342,98 +308,376 @@
       display: block;
       text-decoration: none;
     }
-    
     .cat-grid-card:hover {
       border-color: #444;
       background: #1c1c1c;
       transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
     }
 
-    .flex-row-btns {
+    /* Status table */
+    .status-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .status-table th {
+      text-align: left;
+      padding: 10px 16px;
+      border-bottom: 1px solid #2e2e2e;
+      color: #555;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 500;
+      font-family: "Ubuntu Mono", monospace;
+    }
+    .status-table td { padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .status-table td:first-child { font-family: "Ubuntu Mono", monospace; }
+    .status-table tr:last-child td { border-bottom: none; }
+    .sc-200 { color: #4ade80; }
+    .sc-err { color: #f87171; }
+    .sc-warn { color: #facc15; }
+
+    /* URL bar */
+    .url-bar {
+      background: #0f0f0f;
+      border: 1px solid #252525;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: "Ubuntu Mono", monospace;
+      font-size: 12px;
       display: flex;
-      gap: 8px;
       align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .url-bar span {
+      color: #b0acd0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Response media */
+    .response-image-wrapper {
+      position: relative;
+      display: inline-block;
+      max-width: 100%;
+    }
+    .response-img {
+      max-width: 100%;
+      max-height: 480px;
+      border-radius: 10px;
+      display: block;
+      cursor: zoom-in;
+      transition: opacity 0.2s;
+      border: 1px solid #2e2e2e;
+      object-fit: contain;
+    }
+    .response-img:hover { opacity: 0.92; }
+    .response-media-audio { width: 100%; border-radius: 8px; }
+    .response-media-video { max-width: 100%; max-height: 360px; border-radius: 10px; border: 1px solid #2e2e2e; }
+
+    /* Media action row */
+    .media-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
       flex-wrap: wrap;
     }
+    .btn-media-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      border: 1px solid #2e2e2e;
+      color: #999;
+      background: transparent;
+    }
+    .btn-media-action:hover { color: #fff; border-color: #555; background: rgba(255,255,255,0.04); }
+    .btn-media-action.primary { background: rgba(255,255,255,0.06); color: #e2e0f0; border-color: #3a3a3a; }
+    .btn-media-action.primary:hover { background: rgba(255,255,255,0.1); border-color: #555; }
+
+    /* URL response display */
+    .url-response-card {
+      background: #0f0f0f;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .url-response-label {
+      font-size: 10px;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-family: "Ubuntu Mono", monospace;
+      margin-bottom: 8px;
+    }
+    .url-response-link {
+      color: #60a5fa;
+      font-family: "Ubuntu Mono", monospace;
+      font-size: 12px;
+      word-break: break-all;
+      text-decoration: none;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      line-height: 1.6;
+      transition: color 0.2s;
+    }
+    .url-response-link:hover { color: #93c5fd; }
+    .url-response-link i { flex-shrink: 0; font-size: 14px; margin-top: 2px; }
+
+    /* Loading skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, #1e1e1e 25%, #262626 50%, #1e1e1e 75%);
+      background-size: 400px 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 8px;
+    }
+
+    /* Response status badge */
+    .resp-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: "Ubuntu Mono", monospace;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .resp-status-badge.ok { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
+    .resp-status-badge.err { background: rgba(248,113,113,0.1); color: #f87171; border: 1px solid rgba(248,113,113,0.2); }
+
+    /* Fullscreen lightbox */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      cursor: zoom-out;
+    }
+    #lightbox.show { display: flex; animation: fadeIn 0.2s; }
+    #lightbox img {
+      max-width: 92vw;
+      max-height: 82vh;
+      border-radius: 12px;
+      object-fit: contain;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    }
+    #lightbox-close {
+      position: fixed;
+      top: 18px; right: 20px;
+      color: #888;
+      font-size: 28px;
+      cursor: pointer;
+      transition: color 0.2s;
+      z-index: 10000;
+    }
+    #lightbox-close:hover { color: #fff; }
+    #lightbox-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    /* JSON syntax highlight */
+    .json-key { color: #7dd3fc; }
+    .json-str { color: #86efac; }
+    .json-num { color: #fbbf24; }
+    .json-bool { color: #c4b5fd; }
+    .json-null { color: #94a3b8; }
+
+    /* Response container */
+    .resp-container {
+      position: relative;
+    }
+    .resp-container .copy-btn {
+      position: absolute;
+      top: 8px; right: 8px;
+    }
+
+    /* Tab for JSON / raw toggle */
+    .resp-tab-bar {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 8px;
+    }
+    .resp-tab {
+      padding: 5px 14px;
+      font-size: 11px;
+      font-family: "Ubuntu Mono", monospace;
+      background: #1a1a1a;
+      border: 1px solid #2e2e2e;
+      border-radius: 7px 7px 0 0;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .resp-tab.active { background: #111; color: #e2e0f0; border-bottom-color: #111; }
+
+    /* Expand/collapse JSON */
+    details.json-object summary { cursor: pointer; }
+
+    /* Notification toast */
+    #toast {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: #212121;
+      border: 1px solid #383838;
+      color: #e2e0f0;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      z-index: 9998;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      animation: fadeInUp 0.3s;
+    }
+    #toast.show { display: flex; }
+    #toast.success i { color: #4ade80; }
+    #toast.error i { color: #f87171; }
+
+    /* Response time badge */
+    .resp-time {
+      font-size: 10px;
+      font-family: "Ubuntu Mono", monospace;
+      color: #555;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .resp-time.fast { color: #4ade80; }
+    .resp-time.slow { color: #facc15; }
   </style>
 </head>
 <body class="bg-[#181818] text-gray-200 antialiased font-sans min-h-screen">
 
+  <!-- Lightbox -->
+  <div id="lightbox" onclick="closeLightbox(event)">
+    <button id="lightbox-close" onclick="document.getElementById('lightbox').classList.remove('show')">
+      <i class="material-icons">close</i>
+    </button>
+    <img id="lightbox-img" src="" alt="Preview" />
+    <div id="lightbox-actions"></div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast">
+    <i class="material-icons text-base">check_circle</i>
+    <span id="toast-msg"></span>
+  </div>
+
   <!-- Sidebar -->
   <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-[#181818] text-gray-200 border-r border-[#2e2e2e] z-[100] overflow-y-auto">
-    <div class="px-8 py-7 flex items-center justify-start md:hidden">
-      <button id="sidebarClose" class="text-white">
-        <i class="material-icons text-2xl">close</i>
+    <div class="px-6 py-6 flex items-center justify-between md:hidden border-b border-[#2e2e2e]">
+      <span class="text-white font-bold text-base" style="font-family:'Space Grotesk',sans-serif;">
+        Kyoto<span class="text-gray-500">API</span>
+      </span>
+      <button id="sidebarClose" class="text-gray-400 hover:text-white transition-colors">
+        <i class="material-icons text-xl">close</i>
       </button>
     </div>
     <div class="px-5 pb-8 pt-0 md:pt-8">
-      <div class="mb-6 px-4">
-        <a href="/" class="text-white font-bold text-lg" style="font-family: 'Space Grotesk', sans-serif;">
-          Kyoto<span class="text-gray-400">API</span>
+      <div class="mb-6 px-4 hidden md:block">
+        <a href="/" class="text-white font-bold text-lg" style="font-family:'Space Grotesk',sans-serif;">
+          Kyoto<span class="text-gray-500">API</span>
         </a>
       </div>
       <nav>
-        <p class="font-medium text-sm text-gray-300 mb-3 px-4">Navigation</p>
+        <p class="font-medium text-xs text-gray-500 mb-3 px-4 uppercase tracking-widest">Navigation</p>
         <div class="space-y-1 mb-6">
           <a href="/" class="flex items-center py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-[#222] rounded-xl transition-colors">
-            <i class="material-icons text-lg mr-3">home</i>Home
+            <i class="material-icons text-base mr-3 opacity-70">home</i>Home
           </a>
           <a href="/category" class="flex items-center py-2 px-4 text-sm text-white bg-[#222] rounded-xl">
-            <i class="material-icons text-lg mr-3">explore</i>Categories
+            <i class="material-icons text-base mr-3">explore</i>Categories
           </a>
           <a href="/status" class="flex items-center py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-[#222] rounded-xl transition-colors">
-            <i class="material-icons text-lg mr-3">monitor_heart</i>Status
+            <i class="material-icons text-base mr-3 opacity-70">monitor_heart</i>Status
           </a>
         </div>
-        <p class="font-medium text-sm text-gray-300 mb-3 px-4">Categories</p>
-        <div class="space-y-1" id="sidebar-category-list"></div>
+        <p class="font-medium text-xs text-gray-500 mb-3 px-4 uppercase tracking-widest">Categories</p>
+        <div class="space-y-0.5" id="sidebar-category-list">
+          <!-- Skeleton loading -->
+          <div class="space-y-2 px-4">
+            <div class="skeleton h-8 w-full rounded-xl"></div>
+            <div class="skeleton h-8 w-4/5 rounded-xl"></div>
+            <div class="skeleton h-8 w-full rounded-xl"></div>
+            <div class="skeleton h-8 w-3/4 rounded-xl"></div>
+          </div>
+        </div>
       </nav>
     </div>
   </aside>
-  
-  <div id="overlay" class="fixed inset-0 bg-black bg-opacity-60 opacity-0 invisible z-[90] md:hidden"></div>
+
+  <div id="overlay" class="fixed inset-0 bg-black bg-opacity-70 opacity-0 invisible z-[90] md:hidden"></div>
 
   <!-- Header -->
   <header class="sticky top-0 z-40 bg-[#181818]/95 backdrop-blur-sm border-b border-[#2e2e2e]">
-    <div class="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
-      <button id="sidebarToggle" class="text-white md:hidden">
-        <i class="material-icons text-2xl">menu</i>
-      </button>
-      <div class="hidden md:flex items-center gap-2 text-sm text-gray-400">
-        <a href="/" class="hover:text-white transition-colors">Home</a>
-        <span class="text-gray-600">/</span>
-        <span class="text-white" id="breadcrumb-current">Categories</span>
+    <div class="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <button id="sidebarToggle" class="text-gray-400 hover:text-white transition-colors md:hidden">
+          <i class="material-icons text-2xl">menu</i>
+        </button>
+        <div class="hidden md:flex items-center gap-2 text-sm text-gray-500">
+          <a href="/" class="hover:text-white transition-colors">Home</a>
+          <span class="text-gray-700">/</span>
+          <a href="/category" class="hover:text-white transition-colors">Categories</a>
+          <span class="text-gray-700" id="breadcrumb-sep" style="display:none">/</span>
+          <span class="text-white" id="breadcrumb-current"></span>
+        </div>
       </div>
-      <div class="relative w-64 hidden md:block">
-        <i class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg pointer-events-none">search</i>
-        <input type="text" id="searchInput" placeholder="Search endpoints..." class="w-full bg-[#1a1a1a] border border-[#2e2e2e] text-white font-sans text-sm py-2 pl-10 pr-4 rounded-lg outline-none focus:border-[#444] transition-colors" />
+      <div class="flex items-center gap-2">
+        <!-- Response time indicator (shows after first exec) -->
+        <div id="header-stats" class="hidden items-center gap-3 text-xs text-gray-600 font-mono">
+          <span id="header-req-count">0 req</span>
+        </div>
       </div>
     </div>
   </header>
 
   <!-- Main Content -->
   <main class="max-w-5xl mx-auto px-6 py-8">
-    
-    <!-- Mobile Search -->
-    <div class="relative mb-6 md:hidden">
-      <i class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg pointer-events-none">search</i>
-      <input type="text" id="searchInputMobile" placeholder="Search endpoints..." class="w-full bg-[#212121] border border-[#2e2e2e] text-white font-sans text-sm py-3 pl-10 pr-4 rounded-xl outline-none focus:border-[#444] transition-colors" />
+    <div id="content">
+      <!-- Skeleton -->
+      <div class="space-y-4">
+        <div class="skeleton h-36 rounded-2xl"></div>
+        <div class="skeleton h-16 rounded-xl"></div>
+        <div class="skeleton h-16 rounded-xl"></div>
+        <div class="skeleton h-16 rounded-xl"></div>
+      </div>
     </div>
-
-    <!-- Dynamic Content -->
-    <div id="content"></div>
-
   </main>
 
   <!-- Footer -->
-  <footer class="border-t border-[#2e2e2e] mt-12">
+  <footer class="border-t border-[#2e2e2e] mt-16">
     <div class="max-w-5xl mx-auto px-6 py-8">
       <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-        <p class="text-sm text-gray-500">&copy; 2026 Kyoto API. All rights reserved.</p>
-        <div class="flex gap-4">
-          <a href="/" class="text-xs text-gray-500 hover:text-white transition-colors">Home</a>
+        <p class="text-xs text-gray-600">&copy; 2026 Kyoto API. All rights reserved.</p>
+        <div class="flex gap-5">
+          <a href="/" class="text-xs text-gray-600 hover:text-white transition-colors">Home</a>
           <a href="/category" class="text-xs text-white transition-colors">Categories</a>
-          <a href="/status" class="text-xs text-gray-500 hover:text-white transition-colors">Status</a>
+          <a href="/status" class="text-xs text-gray-600 hover:text-white transition-colors">Status</a>
         </div>
       </div>
     </div>
@@ -441,34 +685,608 @@
 
 <script>
 (function() {
-  // ===== SIDEBAR LOGIC =====
+  'use strict';
+
+  // ===== TOAST =====
+  let toastTimer;
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    const m = document.getElementById('toast-msg');
+    const icon = t.querySelector('i');
+    t.className = 'show ' + type;
+    icon.textContent = type === 'success' ? 'check_circle' : 'error';
+    m.textContent = msg;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // ===== LIGHTBOX =====
+  // downloadFn is always a real function — never an onclick string, so URLs never leak
+  function openLightbox(src, downloadFn) {
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    const acts = document.getElementById('lightbox-actions');
+    img.src = src;
+
+    acts.innerHTML = '';
+
+    const btnDl = document.createElement('button');
+    btnDl.className = 'btn-media-action primary';
+    btnDl.innerHTML = '<i class="material-icons text-base">download</i> Download';
+    if (typeof downloadFn === 'function') btnDl.addEventListener('click', downloadFn);
+
+    const btnClose = document.createElement('button');
+    btnClose.className = 'btn-media-action';
+    btnClose.innerHTML = '<i class="material-icons text-base">close</i> Close';
+    btnClose.addEventListener('click', () => lb.classList.remove('show'));
+
+    acts.appendChild(btnDl);
+    acts.appendChild(btnClose);
+    lb.classList.add('show');
+  }
+  window.closeLightbox = function(e) {
+    if (e.target === document.getElementById('lightbox')) {
+      document.getElementById('lightbox').classList.remove('show');
+    }
+  };
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('show');
+  });
+
+  // ===== SIDEBAR =====
   const sidebar = document.getElementById("sidebar");
   const overlay = document.getElementById("overlay");
-  
-  function openSb() {
-    sidebar.classList.add("open");
-    overlay.classList.add("show");
-    document.body.style.overflow = "hidden";
-  }
-  
-  function closeSb() {
-    if (window.innerWidth < 768) {
-      sidebar.classList.remove("open");
-      overlay.classList.remove("show");
-      document.body.style.overflow = "";
-    }
-  }
-  
+  function openSb() { sidebar.classList.add("open"); overlay.classList.add("show"); document.body.style.overflow = "hidden"; }
+  function closeSb() { if (window.innerWidth < 768) { sidebar.classList.remove("open"); overlay.classList.remove("show"); document.body.style.overflow = ""; } }
   document.getElementById("sidebarToggle").addEventListener("click", openSb);
   document.getElementById("sidebarClose").addEventListener("click", closeSb);
   overlay.addEventListener("click", closeSb);
 
-  // ===== GLOBAL ENDPOINT STORE =====
+  // ===== GLOBAL STATE =====
   const EP = {};
+  let totalReqs = 0;
 
-  // ===== BUILD PARAMETER INPUTS =====
+  // ===== COPY TO CLIPBOARD =====
+  async function copyText(text, btn) {
+    if (!text) return;
+    const orig = btn.innerHTML;
+    try {
+      await navigator.clipboard.writeText(text);
+      btn.innerHTML = '<i class="bi bi-check-lg"></i> Copied';
+      btn.classList.add('copied');
+      showToast('Copied to clipboard!');
+    } catch (e) {
+      // fallback
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.innerHTML = '<i class="bi bi-check-lg"></i> Copied';
+      btn.classList.add('copied');
+      showToast('Copied!');
+    }
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+  }
+
+  // ===== HTML ESCAPE =====
+  function esc(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // ===== JSON SYNTAX HIGHLIGHTER =====
+  // CRITICAL: escape HTML FIRST, then apply span highlights so URLs like
+  // ?width=1920&height=1080 never render as broken HTML attributes
+  function highlightJSON(obj) {
+    // Step 1: serialize to string
+    const raw = JSON.stringify(obj, null, 2);
+    // Step 2: escape all HTML special chars — this makes & → &amp; etc
+    const escaped = esc(raw);
+    // Step 3: apply syntax coloring on the already-escaped string
+    // The regex targets JSON tokens in the escaped string; since we already
+    // escaped quotes to &quot; we work on the original positions instead.
+    // Simpler & safer: tokenize the raw string, escape each token, wrap in span.
+    return tokenizeAndHighlight(raw);
+  }
+
+  function tokenizeAndHighlight(raw) {
+    // Walk char by char, tag each token type, then HTML-escape the text content
+    let result = '';
+    let i = 0;
+    while (i < raw.length) {
+      // String token
+      if (raw[i] === '"') {
+        let j = i + 1;
+        while (j < raw.length) {
+          if (raw[j] === '\\') { j += 2; continue; }
+          if (raw[j] === '"') { j++; break; }
+          j++;
+        }
+        const token = raw.slice(i, j);
+        const isKey = /"\s*$/.test(raw.slice(0, i)) === false && raw.slice(j).trimStart().startsWith(':');
+        const cls = isKey ? 'json-key' : 'json-str';
+        result += `<span class="${cls}">${esc(token)}</span>`;
+        i = j;
+      }
+      // Number token
+      else if (/[-\d]/.test(raw[i]) && (i === 0 || /[,\[{\s:]/.test(raw[i-1]))) {
+        let j = i;
+        if (raw[j] === '-') j++;
+        while (j < raw.length && /[\d.eE+\-]/.test(raw[j])) j++;
+        const token = raw.slice(i, j);
+        if (/^-?\d/.test(token)) {
+          result += `<span class="json-num">${esc(token)}</span>`;
+          i = j;
+        } else {
+          result += esc(raw[i]);
+          i++;
+        }
+      }
+      // true / false / null
+      else if (raw.startsWith('true', i)) {
+        result += `<span class="json-bool">true</span>`; i += 4;
+      } else if (raw.startsWith('false', i)) {
+        result += `<span class="json-bool">false</span>`; i += 5;
+      } else if (raw.startsWith('null', i)) {
+        result += `<span class="json-null">null</span>`; i += 4;
+      }
+      // Everything else (punctuation, whitespace)
+      else {
+        result += esc(raw[i]);
+        i++;
+      }
+    }
+    return result;
+  }
+
+  // ===== SMART URL DETECTOR =====
+  // Deeply scan any value in a response for URLs
+  function findAllUrls(val, depth = 0) {
+    if (depth > 6) return [];
+    const urls = [];
+    if (typeof val === 'string') {
+      if (/^https?:\/\//i.test(val)) urls.push(val);
+    } else if (Array.isArray(val)) {
+      val.forEach(v => urls.push(...findAllUrls(v, depth + 1)));
+    } else if (val && typeof val === 'object') {
+      Object.values(val).forEach(v => urls.push(...findAllUrls(v, depth + 1)));
+    }
+    return urls;
+  }
+
+  // ===== MEDIA TYPE DETECTOR =====
+  const IMAGE_EXTS = ['jpg','jpeg','png','gif','webp','svg','bmp','ico','avif','tiff'];
+  const VIDEO_EXTS = ['mp4','webm','ogg','mov','avi','mkv'];
+  const AUDIO_EXTS = ['mp3','wav','ogg','flac','aac','m4a','opus'];
+
+  function detectMediaType(url) {
+    try {
+      const u = new URL(url);
+      const path = u.pathname.toLowerCase();
+      const ext = path.split('.').pop().split('?')[0];
+      const fullUrl = url.toLowerCase();
+
+      if (IMAGE_EXTS.includes(ext)) return 'image';
+      if (VIDEO_EXTS.includes(ext)) return 'video';
+      if (AUDIO_EXTS.includes(ext)) return 'audio';
+
+      // Pattern detection in URL
+      const imagePatterns = ['/image', '/img', '/photo', '/thumbnail', '/avatar', '/qr', '/barcode', '/screenshot', '/picture', '/banner', 'pollinations', 'dicebear', '/png', '/jpg', '/jpeg', '/webp', '/gif', '/svg', '/media/image'];
+      const videoPatterns = ['/video', '/stream', '/clip', '/movie'];
+      const audioPatterns = ['/audio', '/sound', '/speech', '/tts', '/mp3', '/wav'];
+
+      if (imagePatterns.some(p => fullUrl.includes(p))) return 'image';
+      if (videoPatterns.some(p => fullUrl.includes(p))) return 'video';
+      if (audioPatterns.some(p => fullUrl.includes(p))) return 'audio';
+
+      // Content-type hints in URL params
+      const params = u.searchParams;
+      const format = (params.get('format') || params.get('type') || params.get('ext') || '').toLowerCase();
+      if (IMAGE_EXTS.includes(format)) return 'image';
+      if (VIDEO_EXTS.includes(format)) return 'video';
+      if (AUDIO_EXTS.includes(format)) return 'audio';
+
+    } catch (_) {}
+    return 'url'; // fallback: show as clickable URL
+  }
+
+  // ===== DOWNLOAD URL (blob fetch with open-in-tab fallback) =====
+  async function downloadUrl(encodedUrl, filename) {
+    const url = typeof encodedUrl === 'string' && encodedUrl.startsWith('http')
+      ? encodedUrl  // already a raw URL
+      : decodeURIComponent(encodedUrl);
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('fetch failed');
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = filename || 'download';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
+      showToast('Download started!');
+    } catch (e) {
+      // CORS fallback
+      window.open(url, '_blank');
+      showToast('Opened in new tab (CORS)', 'error');
+    }
+  }
+
+  // ===== RENDER IMAGE RESPONSE =====
+  // Uses DOM API — no innerHTML string injection, so URLs with special chars (?&=) never leak as visible text
+  function renderImage(container, src, isBlob = false) {
+    const filename = isBlob ? 'image.jpg' : (src.split('/').pop().split('?')[0] || 'image.jpg');
+
+    // Clear container
+    container.innerHTML = '';
+
+    // Wrapper
+    const wrapper = document.createElement('div');
+    wrapper.className = 'response-image-wrapper';
+
+    // Image element
+    const img = document.createElement('img');
+    img.className = 'response-img';
+    img.alt = 'Response';
+    img.src = src;
+
+    // onclick: open lightbox
+    img.addEventListener('click', () => {
+      isBlob ? openLightbox(src, () => downloadBlob(src, filename))
+              : openLightbox(src, () => downloadUrl(src, filename));
+    });
+
+    // onerror: show fallback card — pure DOM, zero string leakage
+    img.addEventListener('error', () => {
+      wrapper.innerHTML = '';
+      const card = document.createElement('div');
+      card.className = 'url-response-card';
+
+      const label = document.createElement('p');
+      label.className = 'url-response-label';
+      label.textContent = '⚠ Image failed to load';
+
+      const link = document.createElement('a');
+      link.href = src;
+      link.target = '_blank';
+      link.className = 'url-response-link';
+      link.innerHTML = '<i class="material-icons">open_in_new</i>';
+      link.appendChild(document.createTextNode(src));
+
+      card.appendChild(label);
+      card.appendChild(link);
+      wrapper.appendChild(card);
+    });
+
+    wrapper.appendChild(img);
+    container.appendChild(wrapper);
+
+    // Action buttons row
+    const actions = document.createElement('div');
+    actions.className = 'media-actions';
+
+    const btnDownload = document.createElement('button');
+    btnDownload.className = 'btn-media-action primary';
+    btnDownload.innerHTML = '<i class="material-icons text-base">download</i> Download';
+    btnDownload.addEventListener('click', () => {
+      isBlob ? downloadBlob(src, filename) : downloadUrl(src, filename);
+    });
+
+    const btnFullscreen = document.createElement('button');
+    btnFullscreen.className = 'btn-media-action';
+    btnFullscreen.innerHTML = '<i class="material-icons text-base">fullscreen</i> Fullscreen';
+    btnFullscreen.addEventListener('click', () => {
+      isBlob ? openLightbox(src, () => downloadBlob(src, filename))
+              : openLightbox(src, () => downloadUrl(src, filename));
+    });
+
+    const btnOpen = document.createElement('a');
+    btnOpen.href = src;
+    btnOpen.target = '_blank';
+    btnOpen.rel = 'noopener';
+    btnOpen.className = 'btn-media-action';
+    btnOpen.innerHTML = '<i class="material-icons text-base">open_in_new</i> Open URL';
+
+    actions.appendChild(btnDownload);
+    actions.appendChild(btnFullscreen);
+    actions.appendChild(btnOpen);
+    container.appendChild(actions);
+  }
+
+  // ===== RENDER RESPONSE (SMART DETECTION) =====
+  function renderResponse(bodyDiv, data, contentType, fullUrl) {
+    // 1. Binary content type already handled in exec() — this handles JSON/text objects
+
+    // 2. Scan for any URL in the response deeply
+    const allUrls = findAllUrls(data);
+
+    // 3. If response IS a URL string directly
+    if (typeof data === 'string' && /^https?:\/\//i.test(data.trim())) {
+      const url = data.trim();
+      const mtype = detectMediaType(url);
+      handleUrlByType(bodyDiv, url, mtype);
+      return;
+    }
+
+    // 4. If data object — check top-level url-like keys first (priority)
+    if (data && typeof data === 'object' && !Array.isArray(data)) {
+      const URL_KEYS = ['url','image','img','qr','barcode','audio_url','audio','video','video_url',
+        'screenshot','png','svg','result','src','source','link','href','file','download','media',
+        'thumbnail','avatar','photo','picture','output','data'];
+
+      let foundUrl = null;
+      for (const key of URL_KEYS) {
+        if (data[key] && typeof data[key] === 'string' && /^https?:\/\//i.test(data[key])) {
+          foundUrl = data[key];
+          break;
+        }
+      }
+      // Also check nested one level
+      if (!foundUrl) {
+        for (const val of Object.values(data)) {
+          if (val && typeof val === 'object' && !Array.isArray(val)) {
+            for (const key of URL_KEYS) {
+              if (val[key] && typeof val[key] === 'string' && /^https?:\/\//i.test(val[key])) {
+                foundUrl = val[key];
+                break;
+              }
+            }
+          }
+          if (foundUrl) break;
+        }
+      }
+
+      if (foundUrl) {
+        const mtype = detectMediaType(foundUrl);
+        handleUrlByType(bodyDiv, foundUrl, mtype, data);
+        return;
+      }
+
+      // Collect all URLs from deep scan
+      if (allUrls.length > 0) {
+        // Show multiple URLs nicely if there are several
+        if (allUrls.length === 1) {
+          const mtype = detectMediaType(allUrls[0]);
+          handleUrlByType(bodyDiv, allUrls[0], mtype, data);
+          return;
+        }
+        // Multiple URLs — show them in a list + JSON
+        const mtype = detectMediaType(allUrls[0]);
+        // If all look like images, render gallery
+        const allImages = allUrls.every(u => detectMediaType(u) === 'image');
+        if (allImages && allUrls.length <= 12) {
+          renderGallery(bodyDiv, allUrls, data);
+          return;
+        }
+        // Otherwise show JSON with URL highlights
+        renderJSON(bodyDiv, data, allUrls);
+        return;
+      }
+    }
+
+    // 5. If it's an array of items with URLs
+    if (Array.isArray(data)) {
+      const allUrls = findAllUrls(data);
+      if (allUrls.length > 0 && allUrls.every(u => detectMediaType(u) === 'image') && allUrls.length <= 12) {
+        renderGallery(bodyDiv, allUrls, data);
+        return;
+      }
+    }
+
+    // 6. Default: pretty JSON
+    renderJSON(bodyDiv, data);
+  }
+
+  function handleUrlByType(bodyDiv, url, mtype, originalData) {
+    if (mtype === 'image') {
+      renderImage(bodyDiv, url, false);
+      if (originalData) {
+        const extra = document.createElement('div');
+        extra.style.marginTop = '12px';
+        const jsonId = 'json-' + Math.random().toString(36).slice(2);
+        extra.innerHTML = `
+          <details style="margin-top:8px;">
+            <summary class="text-xs text-gray-600 cursor-pointer hover:text-gray-400 transition-colors font-mono">Show raw JSON response</summary>
+            <div style="margin-top:8px;" class="resp-container">
+              <div class="code-block" id="${jsonId}">${highlightJSON(originalData)}</div>
+              <button class="copy-btn" onclick="copyText(${JSON.stringify(JSON.stringify(originalData,null,2))}, this)">
+                <i class="bi bi-copy text-xs"></i> Copy
+              </button>
+            </div>
+          </details>`;
+        bodyDiv.appendChild(extra);
+      }
+    } else if (mtype === 'video') {
+      bodyDiv.innerHTML = '';
+      const fname = url.split('/').pop().split('?')[0] || 'video.mp4';
+      const video = document.createElement('video');
+      video.controls = true;
+      video.className = 'response-media-video mb-3';
+      const src = document.createElement('source');
+      src.src = url;
+      video.appendChild(src);
+      const acts = document.createElement('div');
+      acts.className = 'media-actions';
+      const btnDl = document.createElement('button');
+      btnDl.className = 'btn-media-action primary';
+      btnDl.innerHTML = '<i class="material-icons text-base">download</i> Download';
+      btnDl.addEventListener('click', () => downloadUrl(url, fname));
+      const btnOpen = document.createElement('a');
+      btnOpen.href = url;
+      btnOpen.target = '_blank';
+      btnOpen.rel = 'noopener';
+      btnOpen.className = 'btn-media-action';
+      btnOpen.innerHTML = '<i class="material-icons text-base">open_in_new</i> Open URL';
+      acts.appendChild(btnDl);
+      acts.appendChild(btnOpen);
+      bodyDiv.appendChild(video);
+      bodyDiv.appendChild(acts);
+    } else if (mtype === 'audio') {
+      bodyDiv.innerHTML = '';
+      const fname = url.split('/').pop().split('?')[0] || 'audio.mp3';
+      const audio = document.createElement('audio');
+      audio.controls = true;
+      audio.className = 'response-media-audio mb-3';
+      const src = document.createElement('source');
+      src.src = url;
+      audio.appendChild(src);
+      const acts = document.createElement('div');
+      acts.className = 'media-actions';
+      const btnDl = document.createElement('button');
+      btnDl.className = 'btn-media-action primary';
+      btnDl.innerHTML = '<i class="material-icons text-base">download</i> Download';
+      btnDl.addEventListener('click', () => downloadUrl(url, fname));
+      const btnOpen = document.createElement('a');
+      btnOpen.href = url;
+      btnOpen.target = '_blank';
+      btnOpen.rel = 'noopener';
+      btnOpen.className = 'btn-media-action';
+      btnOpen.innerHTML = '<i class="material-icons text-base">open_in_new</i> Open URL';
+      acts.appendChild(btnDl);
+      acts.appendChild(btnOpen);
+      bodyDiv.appendChild(audio);
+      bodyDiv.appendChild(acts);
+    } else {
+      // Generic URL — pure DOM, no string injection
+      bodyDiv.innerHTML = '';
+
+      const card = document.createElement('div');
+      card.className = 'url-response-card';
+
+      const lbl = document.createElement('div');
+      lbl.className = 'url-response-label';
+      lbl.textContent = 'Response URL';
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.className = 'url-response-link';
+      const linkIcon = document.createElement('i');
+      linkIcon.className = 'material-icons';
+      linkIcon.textContent = 'open_in_new';
+      link.appendChild(linkIcon);
+      link.appendChild(document.createTextNode(url));
+
+      const acts = document.createElement('div');
+      acts.className = 'media-actions';
+      acts.style.marginTop = '12px';
+
+      const fname = url.split('/').pop().split('?')[0] || 'file';
+      const btnDl = document.createElement('button');
+      btnDl.className = 'btn-media-action primary';
+      btnDl.innerHTML = '<i class="material-icons text-base">download</i> Try Download';
+      btnDl.addEventListener('click', () => downloadUrl(url, fname));
+
+      const btnCopy = document.createElement('button');
+      btnCopy.className = 'btn-media-action';
+      btnCopy.innerHTML = '<i class="bi bi-copy text-xs"></i> Copy URL';
+      btnCopy.addEventListener('click', () => copyText(url, btnCopy));
+
+      acts.appendChild(btnDl);
+      acts.appendChild(btnCopy);
+      card.appendChild(lbl);
+      card.appendChild(link);
+      card.appendChild(acts);
+      bodyDiv.appendChild(card);
+
+      if (originalData) {
+        const det = document.createElement('details');
+        det.style.marginTop = '12px';
+        const summ = document.createElement('summary');
+        summ.className = 'text-xs text-gray-600 cursor-pointer hover:text-gray-400 transition-colors font-mono';
+        summ.textContent = 'Show raw JSON';
+        const inner = document.createElement('div');
+        inner.style.marginTop = '8px';
+        const cb = document.createElement('div');
+        cb.className = 'code-block';
+        cb.innerHTML = highlightJSON(originalData);
+        inner.appendChild(cb);
+        det.appendChild(summ);
+        det.appendChild(inner);
+        bodyDiv.appendChild(det);
+      }
+    }
+
+  }
+
+  function renderGallery(bodyDiv, urls, originalData) {
+    // Pure DOM — no innerHTML string injection, URLs with special chars safe
+    const gridCols = urls.length <= 2 ? '1fr 1fr' : urls.length <= 6 ? '1fr 1fr 1fr' : '1fr 1fr 1fr 1fr';
+    const grid = document.createElement('div');
+    grid.style.cssText = `display:grid;grid-template-columns:${gridCols};gap:8px;margin-bottom:12px;`;
+
+    urls.forEach((url, i) => {
+      const cell = document.createElement('div');
+      cell.style.position = 'relative';
+
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = `Image ${i+1}`;
+      img.style.cssText = 'width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;cursor:zoom-in;border:1px solid #2e2e2e;transition:opacity 0.2s;';
+      img.addEventListener('mouseenter', () => img.style.opacity = '0.85');
+      img.addEventListener('mouseleave', () => img.style.opacity = '1');
+      img.addEventListener('click', () => {
+        openLightbox(url, () => downloadUrl(url, `image-${i+1}.jpg`));
+      });
+      img.addEventListener('error', () => { img.style.opacity = '0.3'; });
+
+      const btnDl = document.createElement('button');
+      btnDl.style.cssText = 'position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,0.75);border:none;color:#fff;border-radius:6px;padding:5px 8px;font-size:10px;cursor:pointer;display:flex;align-items:center;gap:3px;backdrop-filter:blur(4px);';
+      btnDl.innerHTML = '<i class="material-icons" style="font-size:13px;">download</i>';
+      btnDl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        downloadUrl(url, `image-${i+1}.jpg`);
+      });
+
+      cell.appendChild(img);
+      cell.appendChild(btnDl);
+      grid.appendChild(cell);
+    });
+
+    bodyDiv.innerHTML = '';
+    bodyDiv.appendChild(grid);
+
+    if (originalData) {
+      const details = document.createElement('details');
+      const summary = document.createElement('summary');
+      summary.className = 'text-xs text-gray-600 cursor-pointer hover:text-gray-400 transition-colors font-mono';
+      summary.textContent = 'Show raw JSON';
+      const inner = document.createElement('div');
+      inner.style.marginTop = '8px';
+      const cb = document.createElement('div');
+      cb.className = 'code-block';
+      cb.innerHTML = highlightJSON(originalData);
+      inner.appendChild(cb);
+      details.appendChild(summary);
+      details.appendChild(inner);
+      bodyDiv.appendChild(details);
+    }
+  }
+
+  function renderJSON(bodyDiv, data, highlightUrls) {
+    const jsonStr = JSON.stringify(data, null, 2);
+    const rawId = 'raw-' + Math.random().toString(36).slice(2);
+    bodyDiv.innerHTML = `
+      <div class="resp-container">
+        <div class="code-block" id="${rawId}">${highlightJSON(data)}</div>
+        <button class="copy-btn" onclick="copyText(document.getElementById('${rawId}').textContent, this)">
+          <i class="bi bi-copy text-xs"></i> Copy
+        </button>
+      </div>`;
+  }
+
+  // ===== BUILD PARAMS UI =====
   function buildParams(params) {
-    if (!params?.length) return '<p class="text-sm text-gray-600">No parameters required.</p>';
+    if (!params?.length) return '<p class="text-sm text-gray-600 italic">No parameters required.</p>';
     return params.map(p => {
       const s = p.schema || {};
       const req = !!p.required;
@@ -477,87 +1295,20 @@
       if (s.enum) {
         input = `<select name="${p.name}">${s.enum.map(v => `<option value="${v}">${v}</option>`).join('')}</select>`;
       } else if (s.type === 'number' || s.type === 'integer') {
-        input = `<input type="number" name="${p.name}" placeholder="${ph}" />`;
+        input = `<input type="number" name="${p.name}" placeholder="${ph || '0'}" />`;
       } else {
-        input = `<input type="text" name="${p.name}" placeholder="${ph.replace(/"/g, '&quot;')}" />`;
+        input = `<input type="text" name="${p.name}" placeholder="${ph.replace(/"/g,'&quot;')}" />`;
       }
       return `
         <div class="mb-4">
           <label class="flex items-center gap-2 text-sm text-gray-300 mb-2 font-medium">
-            ${p.name}
-            ${req ? '<span class="text-red-400 text-xs">*required</span>' : '<span class="text-gray-600 text-xs">optional</span>'}
+            <span class="font-mono text-blue-300">${p.name}</span>
+            ${req ? '<span class="text-red-400 text-xs font-mono">*required</span>' : '<span class="text-gray-600 text-xs font-mono">optional</span>'}
           </label>
           ${input}
-          ${p.description ? `<p class="text-xs text-gray-600 mt-1">${p.description}</p>` : ''}
+          ${p.description ? `<p class="text-xs text-gray-600 mt-1.5 leading-relaxed">${p.description}</p>` : ''}
         </div>`;
     }).join('');
-  }
-
-  // ===== EXECUTE ENDPOINT =====
-  async function exec(ci, ei) {
-    const item = EP[`${ci}-${ei}`];
-    const panel = document.getElementById(`ep-detail-${ci}-${ei}`);
-    const wrap = document.getElementById(`resp-wrap-${ci}-${ei}`);
-    const uDiv = document.getElementById(`resp-url-${ci}-${ei}`);
-    const cDiv = document.getElementById(`resp-curl-${ci}-${ei}`);
-    const bDiv = document.getElementById(`resp-body-${ci}-${ei}`);
-    const btn = document.getElementById(`exec-btn-${ci}-${ei}`);
-
-    let fp = item.path;
-    const pr = new URLSearchParams();
-    panel.querySelectorAll('input, select, textarea').forEach(el => {
-      if (el.name && el.value) pr.append(el.name, el.value);
-    });
-    const qs = pr.toString();
-    if (qs) fp += (item.path.includes('?') ? '&' : '?') + qs;
-    const curl = `curl -X GET "${location.origin}${fp}"`;
-
-    wrap.style.display = 'block';
-    uDiv.textContent = location.origin + fp;
-    cDiv.textContent = curl;
-    bDiv.innerHTML = '<span style="color:#666">Loading...</span>';
-    btn.disabled = true;
-
-    try {
-      const r = await fetch(fp);
-      const ct = r.headers.get('content-type') || '';
-      if (!r.ok) {
-        const t = await r.text().catch(() => '');
-        throw new Error(r.status + ' ' + r.statusText + '\n' + t.slice(0, 500));
-      }
-      if (ct.includes('json')) {
-        bDiv.textContent = JSON.stringify(await r.json(), null, 2);
-      } else if (ct.startsWith('image/')) {
-        const blob = await r.blob();
-        const url = URL.createObjectURL(blob);
-        bDiv.innerHTML = `<img src="${url}" alt="response image" style="max-width:100%;border-radius:8px;" /><br/><a href="${url}" download style="color:#60a5fa;font-size:12px;"><i class="material-icons text-sm">download</i> Download</a>`;
-      } else if (ct.startsWith('video/')) {
-        const blob = await r.blob();
-        const url = URL.createObjectURL(blob);
-        bDiv.innerHTML = `<video controls src="${url}" style="max-width:100%;border-radius:8px;"></video><br/><a href="${url}" download style="color:#60a5fa;font-size:12px;"><i class="material-icons text-sm">download</i> Download</a>`;
-      } else if (ct.startsWith('audio/')) {
-        const blob = await r.blob();
-        const url = URL.createObjectURL(blob);
-        bDiv.innerHTML = `<audio controls src="${url}" style="width:100%;"></audio><br/><a href="${url}" download style="color:#60a5fa;font-size:12px;"><i class="material-icons text-sm">download</i> Download</a>`;
-      } else {
-        bDiv.textContent = await r.text();
-      }
-    } catch (e) {
-      bDiv.innerHTML = `<span style="color:#f87171">${e.message}</span>`;
-    }
-    btn.disabled = false;
-  }
-
-  // ===== COPY TO CLIPBOARD =====
-  async function copyText(t, btn) {
-    const o = btn.innerHTML;
-    try {
-      await navigator.clipboard.writeText(t);
-      btn.innerHTML = '<i class="material-icons text-sm">check</i> Copied';
-    } catch (e) {
-      btn.innerHTML = 'Failed';
-    }
-    setTimeout(() => (btn.innerHTML = o), 2000);
   }
 
   // ===== TOGGLE ENDPOINT DETAIL =====
@@ -565,49 +1316,246 @@
     const panel = document.getElementById(`ep-detail-${ci}-${ei}`);
     const chev = document.getElementById(`ep-chev-${ci}-${ei}`);
     const itemEl = document.getElementById(`ep-item-${ci}-${ei}`);
-
     if (!panel.dataset.rendered) {
       const item = EP[`${ci}-${ei}`];
       panel.innerHTML = `
         <div class="detail-block">
           <div class="section-label"><i class="material-icons">info</i> Description</div>
-          <p class="text-sm text-gray-400 mb-6">${item.desc || item.summary || 'No description available.'}</p>
-          
+          <p class="text-sm text-gray-400 leading-relaxed mb-6">${item.desc || item.summary || 'No description available.'}</p>
+
           <div class="section-label"><i class="material-icons">tune</i> Parameters</div>
           ${buildParams(item.params)}
-          
-          <button class="btn-exec" id="exec-btn-${ci}-${ei}" onclick="window._k.exec(${ci},${ei})">
-            <i class="material-icons text-base">play_arrow</i> Execute
-          </button>
-          
+
+          <div class="flex items-center gap-3 mt-6 flex-wrap">
+            <button class="btn-exec" id="exec-btn-${ci}-${ei}" onclick="window._k.exec(${ci},${ei})">
+              <span class="spinner"></span>
+              <i class="material-icons text-base exec-icon">play_arrow</i>
+              Execute
+            </button>
+            <button class="btn-media-action" onclick="window._k.clearResp(${ci},${ei})">
+              <i class="material-icons text-base">delete_sweep</i> Clear
+            </button>
+          </div>
+
           <div id="resp-wrap-${ci}-${ei}" style="display:none;margin-top:20px;">
-            <div class="section-label"><i class="material-icons">link</i> Request URL</div>
-            <div class="flex-row-btns mb-4">
-              <div class="code-block" style="flex:1;margin:0;" id="resp-url-${ci}-${ei}"></div>
-              <button class="copy-btn" onclick="window._k.copy(document.getElementById('resp-url-${ci}-${ei}').textContent,this)">
-                <i class="material-icons text-sm">content_copy</i> Copy
+            <div class="flex items-center justify-between mb-3">
+              <div class="section-label mb-0"><i class="material-icons">link</i> Request URL</div>
+              <span id="resp-time-${ci}-${ei}" class="resp-time"></span>
+            </div>
+            <div class="url-bar">
+              <span id="resp-url-text-${ci}-${ei}"></span>
+              <button class="copy-btn" onclick="window._k.copy(document.getElementById('resp-url-text-${ci}-${ei}').textContent, this)">
+                <i class="bi bi-copy text-xs"></i> Copy
               </button>
             </div>
-            
+
             <div class="section-label"><i class="material-icons">terminal</i> cURL</div>
-            <div class="flex-row-btns mb-4">
-              <div class="code-block" style="flex:1;margin:0;" id="resp-curl-${ci}-${ei}"></div>
-              <button class="copy-btn" onclick="window._k.copy(document.getElementById('resp-curl-${ci}-${ei}').textContent,this)">
-                <i class="material-icons text-sm">content_copy</i> Copy
+            <div class="url-bar">
+              <span id="resp-curl-text-${ci}-${ei}" style="font-size:11px;"></span>
+              <button class="copy-btn" onclick="window._k.copy(document.getElementById('resp-curl-text-${ci}-${ei}').textContent, this)">
+                <i class="bi bi-copy text-xs"></i> Copy
               </button>
             </div>
-            
+
             <div class="section-label"><i class="material-icons">data_object</i> Response</div>
-            <div class="code-block" id="resp-body-${ci}-${ei}"></div>
+            <div id="resp-status-${ci}-${ei}"></div>
+            <div id="resp-body-${ci}-${ei}"></div>
           </div>
         </div>
-      `;
+
+        <div class="detail-block">
+          <div class="section-label"><i class="material-icons">list</i> HTTP Status Codes</div>
+          <table class="status-table">
+            <thead><tr><th>Code</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="sc-200"><i class="material-icons text-sm">check_circle</i> 200</td><td>OK — Request successful</td></tr>
+              <tr><td class="sc-err"><i class="material-icons text-sm">error</i> 400</td><td>Bad Request — Missing or invalid parameters</td></tr>
+              <tr><td class="sc-err"><i class="material-icons text-sm">error</i> 405</td><td>Method Not Allowed — Only GET is supported</td></tr>
+              <tr><td class="sc-warn"><i class="material-icons text-sm">warning</i> 429</td><td>Too Many Requests — Rate limit exceeded</td></tr>
+              <tr><td class="sc-err"><i class="material-icons text-sm">error</i> 500</td><td>Internal Server Error — Upstream API failure</td></tr>
+            </tbody>
+          </table>
+        </div>`;
       panel.dataset.rendered = '1';
     }
-    
     panel.classList.toggle('open');
     chev.classList.toggle('open');
     itemEl.classList.toggle('active');
+  }
+
+  // ===== CLEAR RESPONSE =====
+  function clearResp(ci, ei) {
+    const wrap = document.getElementById(`resp-wrap-${ci}-${ei}`);
+    if (wrap) wrap.style.display = 'none';
+  }
+
+  // ===== EXECUTE ENDPOINT =====
+  async function exec(ci, ei) {
+    const item = EP[`${ci}-${ei}`];
+    const panel = document.getElementById(`ep-detail-${ci}-${ei}`);
+    const uDiv  = document.getElementById(`resp-url-text-${ci}-${ei}`);
+    const cDiv  = document.getElementById(`resp-curl-text-${ci}-${ei}`);
+    const bDiv  = document.getElementById(`resp-body-${ci}-${ei}`);
+    const sDiv  = document.getElementById(`resp-status-${ci}-${ei}`);
+    const tDiv  = document.getElementById(`resp-time-${ci}-${ei}`);
+    const btn   = document.getElementById(`exec-btn-${ci}-${ei}`);
+    const wrap  = document.getElementById(`resp-wrap-${ci}-${ei}`);
+
+    // Build URL
+    let fp = item.path;
+    const pr = new URLSearchParams();
+    panel.querySelectorAll('input, select, textarea').forEach(el => {
+      if (el.name && el.value.trim()) pr.append(el.name, el.value.trim());
+    });
+    const qs = pr.toString();
+    if (qs) fp += (item.path.includes('?') ? '&' : '?') + qs;
+    const fullUrl = location.origin + fp;
+    const curl = `curl -X GET "${fullUrl}" -H "Accept: application/json"`;
+
+    wrap.style.display = 'block';
+    uDiv.textContent = fullUrl;
+    cDiv.textContent = curl;
+    sDiv.innerHTML = '';
+    bDiv.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;padding:16px 0;">
+        <div style="width:16px;height:16px;border:2px solid #333;border-top-color:#888;border-radius:50%;animation:spin 0.7s linear infinite;"></div>
+        <span style="color:#555;font-size:12px;font-family:'Ubuntu Mono',monospace;">Executing request…</span>
+      </div>`;
+    btn.disabled = true;
+    btn.classList.add('loading');
+
+    const startTime = performance.now();
+
+    try {
+      const r = await fetch(fp, {
+        headers: { 'Accept': 'application/json, image/*, audio/*, video/*, */*' }
+      });
+      const elapsed = Math.round(performance.now() - startTime);
+      const ct = r.headers.get('content-type') || '';
+
+      // Status badge
+      const ok = r.ok;
+      sDiv.innerHTML = `
+        <div class="resp-status-badge ${ok ? 'ok' : 'err'}">
+          <i class="material-icons text-xs">${ok ? 'check_circle' : 'error'}</i>
+          ${r.status} ${r.statusText}
+        </div>`;
+
+      // Response time
+      const timeClass = elapsed < 500 ? 'fast' : elapsed > 2000 ? 'slow' : '';
+      tDiv.innerHTML = `<i class="material-icons text-xs">timer</i><span class="${timeClass}">${elapsed}ms</span>`;
+
+      // Update request counter
+      totalReqs++;
+      const hdr = document.getElementById('header-stats');
+      const hdrCount = document.getElementById('header-req-count');
+      hdr.classList.remove('hidden');
+      hdr.style.display = 'flex';
+      hdrCount.textContent = `${totalReqs} req${totalReqs > 1 ? 's' : ''}`;
+
+      if (!r.ok) {
+        const errText = await r.text().catch(() => '');
+        let parsed = null;
+        try { parsed = JSON.parse(errText); } catch (_) {}
+        bDiv.innerHTML = `
+          <div class="resp-container">
+            <div class="code-block" style="border-color:rgba(248,113,113,0.2);">${parsed ? highlightJSON(parsed) : (errText || 'No response body.')}</div>
+          </div>`;
+        return;
+      }
+
+      // Handle by content type
+      if (ct.includes('json')) {
+        const data = await r.json();
+        renderResponse(bDiv, data, ct, fullUrl);
+      } else if (ct.startsWith('image/')) {
+        const blob = await r.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const ext = ct.split('/')[1]?.split(';')[0] || 'img';
+        const fname = `image.${ext}`;
+        renderImage(bDiv, blobUrl, true);
+        // Store blob ref for download
+        window._blobRefs = window._blobRefs || {};
+        window._blobRefs[blobUrl] = { blob, fname };
+      } else if (ct.startsWith('video/')) {
+        const blob = await r.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const ext = ct.split('/')[1]?.split(';')[0] || 'mp4';
+        bDiv.innerHTML = `
+          <video controls class="response-media-video mb-3">
+            <source src="${blobUrl}" type="${ct.split(';')[0]}">
+          </video>
+          <div class="media-actions">
+            <button class="btn-media-action primary" onclick="window._k.downloadBlob('${blobUrl}','video.${ext}')">
+              <i class="material-icons text-base">download</i> Download
+            </button>
+          </div>`;
+      } else if (ct.startsWith('audio/')) {
+        const blob = await r.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const ext = ct.split('/')[1]?.split(';')[0] || 'mp3';
+        bDiv.innerHTML = `
+          <audio controls class="response-media-audio mb-3">
+            <source src="${blobUrl}" type="${ct.split(';')[0]}">
+          </audio>
+          <div class="media-actions">
+            <button class="btn-media-action primary" onclick="window._k.downloadBlob('${blobUrl}','audio.${ext}')">
+              <i class="material-icons text-base">download</i> Download
+            </button>
+          </div>`;
+      } else if (ct.includes('text/html')) {
+        const text = await r.text();
+        bDiv.innerHTML = `
+          <div class="resp-container">
+            <div class="code-block" style="max-height:300px;">${escHtml(text.slice(0, 3000))}${text.length > 3000 ? '\n…(truncated)' : ''}</div>
+            <button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent, this)"><i class="bi bi-copy text-xs"></i> Copy</button>
+          </div>`;
+      } else {
+        const text = await r.text().catch(() => '(binary or unreadable content)');
+        // Try parse as JSON anyway
+        try {
+          const maybeJson = JSON.parse(text);
+          renderResponse(bDiv, maybeJson, 'application/json', fullUrl);
+        } catch (_) {
+          bDiv.innerHTML = `
+            <div class="resp-container">
+              <div class="code-block">${escHtml(text.slice(0, 5000))}${text.length > 5000 ? '\n…(truncated)' : ''}</div>
+              <button class="copy-btn" onclick="copyText(this.previousElementSibling.textContent, this)"><i class="bi bi-copy text-xs"></i> Copy</button>
+            </div>`;
+        }
+      }
+    } catch (e) {
+      const elapsed = Math.round(performance.now() - startTime);
+      sDiv.innerHTML = `<div class="resp-status-badge err"><i class="material-icons text-xs">error</i> Network Error</div>`;
+      tDiv.innerHTML = `<span class="resp-time">${elapsed}ms</span>`;
+      bDiv.innerHTML = `
+        <div class="code-block" style="border-color:rgba(248,113,113,0.2);color:#f87171;">
+${escHtml(e.message)}
+
+Possible causes:
+• CORS policy blocked the request
+• Network timeout
+• Server is unreachable
+        </div>`;
+    } finally {
+      btn.disabled = false;
+      btn.classList.remove('loading');
+    }
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ===== DOWNLOAD BLOB =====
+  function downloadBlob(blobUrl, fname) {
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = fname || 'download';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('Download started!');
   }
 
   // ===== LOAD CATEGORIES & ENDPOINTS =====
@@ -615,16 +1563,17 @@
     const cont = document.getElementById('content');
     const sideList = document.getElementById('sidebar-category-list');
     const bc = document.getElementById('breadcrumb-current');
+    const bcSep = document.getElementById('breadcrumb-sep');
     const curCat = new URLSearchParams(location.search).get('cat');
 
     try {
       const r = await fetch('/src/openapi.json');
+      if (!r.ok) throw new Error('Failed to load API spec');
       const d = await r.json();
-      
-      // Group by tags
+
       const cats = {};
       d.tags?.forEach(t => { cats[t.name] = { name: t.name, desc: t.description || '', eps: [] }; });
-      
+
       Object.keys(d.paths || {}).forEach(p => {
         Object.keys(d.paths[p]).forEach(method => {
           const ep = d.paths[p][method];
@@ -633,7 +1582,7 @@
           cats[tag].eps.push({
             path: p,
             method: method.toUpperCase(),
-            summary: ep.summary || '',
+            summary: ep.summary || p,
             desc: ep.description || '',
             params: ep.parameters || []
           });
@@ -643,125 +1592,124 @@
       const cl = Object.values(cats).filter(c => c.eps.length);
       const slug = n => n.toLowerCase().replace(/\s+/g, '-');
 
-      // Build sidebar
+      // Sidebar
       sideList.innerHTML = cl.map(c => `
-        <a href="/category?cat=${slug(c.name)}" 
-           class="flex items-center justify-between py-2 px-4 text-sm rounded-xl transition-colors ${curCat === slug(c.name) ? 'text-white bg-[#222]' : 'text-gray-400 hover:text-white hover:bg-[#222]'}">
+        <a href="/category?cat=${slug(c.name)}"
+           class="flex items-center justify-between py-2 px-4 text-sm rounded-xl transition-colors ${curCat === slug(c.name) ? 'text-white bg-[#222]' : 'text-gray-500 hover:text-white hover:bg-[#1e1e1e]'}">
           <span>${c.name}</span>
-          <span class="text-xs text-gray-600">${c.eps.length}</span>
-        </a>
-      `).join('');
+          <span class="text-xs text-gray-700 font-mono">${c.eps.length}</span>
+        </a>`).join('');
 
       if (curCat) {
         const cat = cl.find(c => slug(c.name) === curCat);
         if (cat) {
           document.title = `${cat.name} — Kyoto API`;
           bc.textContent = cat.name;
-          
-          // Category Header
+          bcSep.style.display = '';
+
           let h = `
             <div class="cat-header-card rounded-2xl p-8 mb-8 animate-fade-in-up" style="animation-delay:0ms">
               <div class="flex items-start justify-between flex-wrap gap-4">
                 <div>
                   <h1 class="text-3xl font-bold text-white mb-2">${cat.name}</h1>
-                  <p class="text-gray-400 text-sm max-w-xl">${cat.desc || 'Browse available endpoints in this category.'}</p>
+                  <p class="text-gray-500 text-sm max-w-xl leading-relaxed">${cat.desc || 'Browse available endpoints in this category.'}</p>
                 </div>
                 <div class="flex gap-3">
                   <div class="stat-mini">
                     <div class="text-2xl font-bold text-white font-mono">${cat.eps.length}</div>
-                    <div class="text-xs text-gray-500">Endpoints</div>
+                    <div class="text-xs text-gray-600 mt-1">Endpoints</div>
                   </div>
                 </div>
               </div>
-            </div>
-          `;
-          
-          // Endpoint list
-          h += `<div class="space-y-1">`;
+            </div>`;
+
+          h += `<div class="space-y-1.5">`;
           cat.eps.forEach((ep, ei) => {
             const ci = cl.indexOf(cat);
             EP[`${ci}-${ei}`] = ep;
+            const methodCls = `method-${ep.method.toLowerCase()}`;
             h += `
-              <div class="ep-item animate-fade-in-up" id="ep-item-${ci}-${ei}" style="animation-delay:${ei * 50}ms">
+              <div class="ep-item animate-fade-in-up" id="ep-item-${ci}-${ei}" style="animation-delay:${Math.min(ei * 40, 400)}ms">
                 <button class="ep-toggle-btn" onclick="window._k.toggleEp(${ci},${ei})">
                   <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-3 mb-1">
-                      <span class="method-badge method-get">${ep.method}</span>
-                      <span class="font-mono text-sm text-gray-300 truncate">${ep.path}</span>
+                    <div class="flex items-center gap-3 mb-1.5">
+                      <span class="method-badge ${methodCls}">${ep.method}</span>
+                      <span class="font-mono text-xs text-gray-500 truncate">${ep.path}</span>
                     </div>
                     <div class="text-sm font-semibold text-white">${ep.summary}</div>
                   </div>
-                  <i class="material-icons chevron flex-shrink-0" id="ep-chev-${ci}-${ei}">expand_more</i>
+                  <i class="material-icons chevron flex-shrink-0 text-gray-600" id="ep-chev-${ci}-${ei}">expand_more</i>
                 </button>
                 <div class="ep-detail-panel" id="ep-detail-${ci}-${ei}"></div>
               </div>`;
           });
           h += `</div>`;
-          
           cont.innerHTML = h;
         } else {
-          cont.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Category not found.</p>';
+          cont.innerHTML = `
+            <div class="text-center py-20">
+              <i class="material-icons text-4xl text-gray-700 mb-4 block">search_off</i>
+              <p class="text-gray-500 text-sm">Category "<strong class="text-gray-300">${curCat}</strong>" not found.</p>
+              <a href="/category" class="text-xs text-blue-400 hover:text-blue-300 mt-3 inline-block">← Back to all categories</a>
+            </div>`;
         }
       } else {
-        // All categories grid
         document.title = 'Categories — Kyoto API';
-        bc.textContent = 'All Categories';
-        
+        bc.textContent = '';
+        bcSep.style.display = 'none';
+
         const icons = {
           'AI': 'fa-brain', 'Anime': 'fa-dragon', 'News': 'fa-newspaper',
           'Internet': 'fa-globe', 'Games': 'fa-gamepad', 'Info': 'fa-circle-info',
           'Maker': 'fa-wand-magic-sparkles', 'Stalker': 'fa-magnifying-glass',
-          'Tools': 'fa-screwdriver-wrench', 'Media': 'fa-image'
+          'Tools': 'fa-screwdriver-wrench', 'Media': 'fa-image',
+          'Music': 'fa-music', 'Weather': 'fa-cloud-sun', 'Finance': 'fa-chart-line',
+          'Social': 'fa-users', 'Other': 'fa-code'
         };
-        
+
+        const totalEps = cl.reduce((s, c) => s + c.eps.length, 0);
+
         let h = `
           <div class="mb-8 animate-fade-in-up">
             <h1 class="text-3xl font-bold text-white mb-2">API Categories</h1>
-            <p class="text-gray-400 text-sm">Browse ${cl.reduce((sum, c) => sum + c.eps.length, 0)} endpoints across ${cl.length} categories.</p>
+            <p class="text-gray-500 text-sm">Browse <span class="text-white font-semibold">${totalEps}</span> endpoints across <span class="text-white font-semibold">${cl.length}</span> categories.</p>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
-        
+
         cl.forEach((c, i) => {
           const icon = icons[c.name] || 'fa-code';
           h += `
-            <a href="/category?cat=${slug(c.name)}" class="cat-grid-card animate-fade-in-up" style="animation-delay:${i * 50}ms">
-              <div class="flex items-start justify-between mb-3">
+            <a href="/category?cat=${slug(c.name)}" class="cat-grid-card animate-fade-in-up" style="animation-delay:${Math.min(i * 50, 500)}ms">
+              <div class="flex items-start justify-between mb-4">
                 <div class="w-10 h-10 rounded-xl bg-[#1a1a1a] border border-[#2e2e2e] flex items-center justify-center">
-                  <i class="fas ${icon} text-gray-400"></i>
+                  <i class="fas ${icon} text-gray-500 text-sm"></i>
                 </div>
-                <span class="text-xs text-gray-600 font-mono">${c.eps.length} endpoints</span>
+                <span class="text-xs text-gray-700 font-mono">${c.eps.length} endpoint${c.eps.length !== 1 ? 's' : ''}</span>
               </div>
-              <h3 class="text-lg font-semibold text-white mb-1">${c.name}</h3>
-              <p class="text-sm text-gray-500 line-clamp-2">${c.desc || 'No description'}</p>
-              <div class="flex items-center gap-1 mt-3 text-xs text-gray-600">
+              <h3 class="text-base font-semibold text-white mb-1.5">${c.name}</h3>
+              <p class="text-sm text-gray-600 line-clamp-2 leading-relaxed">${c.desc || 'No description available.'}</p>
+              <div class="flex items-center gap-1 mt-4 text-xs text-gray-600 hover:text-gray-400 transition-colors">
                 <span>Explore</span>
                 <i class="material-icons text-sm">arrow_forward</i>
               </div>
             </a>`;
         });
-        
+
         h += `</div>`;
         cont.innerHTML = h;
       }
     } catch (e) {
-      cont.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Failed to load API data. Please try again.</p>';
+      cont.innerHTML = `
+        <div class="text-center py-20">
+          <i class="material-icons text-4xl text-gray-700 mb-4 block">cloud_off</i>
+          <p class="text-gray-500 text-sm">Failed to load API data.</p>
+          <p class="text-gray-700 text-xs mt-2 font-mono">${e.message}</p>
+          <button onclick="load()" class="btn-exec mt-6" style="margin:24px auto 0;">
+            <i class="material-icons text-base exec-icon">refresh</i> Retry
+          </button>
+        </div>`;
     }
   }
-
-  // ===== SEARCH =====
-  function setupSearch(inputId) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
-    input.addEventListener('input', function() {
-      const q = this.value.toLowerCase();
-      document.querySelectorAll('.ep-item').forEach(el => {
-        el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
-      });
-    });
-  }
-  
-  setupSearch('searchInput');
-  setupSearch('searchInputMobile');
 
   // ===== SPA NAVIGATION =====
   window.addEventListener('popstate', load);
@@ -776,9 +1724,11 @@
     }
   });
 
-  // ===== EXPORT GLOBALS =====
-  window._k = { exec, copy: copyText, toggleEp };
-  
+  // ===== EXPOSE GLOBALS =====
+  window._k = { exec, copy: copyText, toggleEp, downloadUrl, downloadBlob, clearResp };
+  window.copyText = copyText;
+  window.openLightbox = openLightbox;
+
   // ===== INIT =====
   load();
 })();
