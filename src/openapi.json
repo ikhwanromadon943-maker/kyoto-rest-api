@@ -1326,6 +1326,33 @@
         ]
       }
     },
+    "/api/tools/ngl": {
+  "get": {
+    "tags": ["Tools"],
+    "summary": "NGL Message Spammer",
+    "description": "Send multiple anonymous messages to NGL.link profile. Max 25 messages per request to avoid timeout.",
+    "parameters": [
+      {
+        "name": "username",
+        "required": true,
+        "description": "NGL username (without @)",
+        "schema": { "type": "string", "example": "john_doe" }
+      },
+      {
+        "name": "message",
+        "required": false,
+        "description": "Message to send",
+        "schema": { "type": "string", "default": "Hello from Kyoto API 👋" }
+      },
+      {
+        "name": "count",
+        "required": false,
+        "description": "Number of messages (max 25)",
+        "schema": { "type": "number", "default": 1, "maximum": 25 }
+      }
+    ]
+  }
+},
     "/api/tools/ssweb": {
       "get": {
         "tags": ["Tools"],
