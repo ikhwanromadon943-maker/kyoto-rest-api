@@ -7,7 +7,7 @@ const WEBHOOK_URL = 'https://discord.com/api/webhooks/1500483284113555527/aQhFU9
 // INTERNAL: Kirim log ke Discord (async, non-blocking)
 // ============================================
 async function sendWebhook(title, description, color, fields = []) {
-  if (!WEBHOOK_URL || WEBHOOK_URL.includes('https://discord.com/api/webhooks/1500483284113555527/aQhFU951vjNTsThy_9Lj0gGSfHJkBkXxedoJAeW1CblxnTLfWg9xUuFAz3pNBNAx3YiW')) return; // Skip kalau belum diset
+  if (!WEBHOOK_URL) return; // <-- GANTI JADI GINI DOANG
   
   try {
     const embed = {
@@ -32,7 +32,6 @@ async function sendWebhook(title, description, color, fields = []) {
       })
     });
   } catch (e) {
-    // Silent fail — jangan ganggu user
     console.error('[Webhook] Failed:', e.message);
   }
 }
