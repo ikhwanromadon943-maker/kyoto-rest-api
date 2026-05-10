@@ -7,7 +7,7 @@ const WEBHOOK_URL = 'https://discord.com/api/webhooks/1500483284113555527/aQhFU9
 // INTERNAL: Kirim log ke Discord (async, non-blocking)
 // ============================================
 async function sendWebhook(title, description, color, fields = []) {
-  if (!WEBHOOK_URL || WEBHOOK_URL.includes('YOUR_WEBHOOK')) return; // Skip kalau belum diset
+  if (!WEBHOOK_URL || WEBHOOK_URL.includes('https://discord.com/api/webhooks/1500483284113555527/aQhFU951vjNTsThy_9Lj0gGSfHJkBkXxedoJAeW1CblxnTLfWg9xUuFAz3pNBNAx3YiW')) return; // Skip kalau belum diset
   
   try {
     const embed = {
@@ -17,7 +17,7 @@ async function sendWebhook(title, description, color, fields = []) {
       fields,
       timestamp: new Date().toISOString(),
       footer: {
-        text: 'Kyoto API • Vercel Edge',
+        text: 'Kyoto API • Security',
         icon_url: 'https://kyoto-rest-api.vercel.app/favicon.ico'
       }
     };
@@ -158,7 +158,7 @@ export async function safeFetch(url, options = {}, timeoutMs = 8000) {
       ...options,
       signal: controller.signal,
       headers: {
-        'User-Agent': 'Kyoto-API/3.0 (Vercel Edge)',
+        'User-Agent': 'Kyoto-API/3.0 (Security)',
         'Accept': 'application/json, text/plain, */*',
         ...options.headers
       }
