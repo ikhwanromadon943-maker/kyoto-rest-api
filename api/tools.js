@@ -1,4 +1,5 @@
 import { safeFetch, setCORS, errRes } from './_helper.js';
+import crypto from 'crypto';
 
 const CITY = {
   jakarta: { lat: -6.2, lon: 106.8 }, surabaya: { lat: -7.25, lon: 112.75 },
@@ -50,6 +51,85 @@ export default async function handler(req, res) {
         response_time: rt()
       });
     }
+    
+    if (ep === 'ngl') {
+  const username = url.searchParams.get('username');
+  const message = url.searchParams.get('message') || 'Hello from Kyoto API ðŸ‘‹';
+  const count = Math.min(parseInt(url.searchParams.get('count')) || 1, 50); // Maks 25 biar gak timeout
+  
+  if (!username) return errRes(res, 'Parameter "username" is required (NGL username)');
+  
+  const startTime = Date.now();
+  let sent = 0;
+  let failed = 0;
+  const logs = [];
+  
+  for (let i = 0; i < count; i++) {
+    try {
+      const deviceId = crypto.randomBytes(21).toString('hex');
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch('https://ngl.link/api/submit', {
+        method: 'POST',
+        signal: controller.signal,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0',
+          'Accept': '*/*',
+          'Accept-Language': 'en-US,en;q=0.5',
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'X-Requested-With': 'XMLHttpRequest',
+          'Sec-Fetch-Dest': 'empty',
+          'Sec-Fetch-Mode': 'cors',
+          'Sec-Fetch-Site': 'same-origin',
+          'Referer': `https://ngl.link/${username}`,
+          'Origin': 'https://ngl.link'
+        },
+        body: `username=${encodeURIComponent(username)}&question=${encodeURIComponent(message)}&deviceId=${deviceId}&gameSlug=&referrer=`,
+      });
+      
+      clearTimeout(timeout);
+      
+      if (response.status === 200) {
+        sent++;
+        logs.push({ index: i + 1, status: 'sent', deviceId: deviceId.slice(0, 8) + '...' });
+      } else {
+        failed++;
+        logs.push({ index: i + 1, status: 'ratelimited', code: response.status });
+        // Kalau kena ratelimit, tunggu sebentar
+        if (response.status === 429 || response.status === 403) {
+          await new Promise(r => setTimeout(r, 2000));
+        }
+      }
+    } catch (err) {
+      failed++;
+      logs.push({ index: i + 1, status: 'error', error: err.message });
+      await new Promise(r => setTimeout(r, 1000));
+    }
+    
+    // Delay kecil antar request biar gak kena blokir
+    if (i < count - 1) {
+      await new Promise(r => setTimeout(r, 800));
+    }
+  }
+  
+  const elapsed = Date.now() - startTime;
+  
+  return res.json({
+    status: true,
+    author: 'Kyoto API',
+    provider: 'NGL.link',
+    target: username,
+    message,
+    total_requested: count,
+    sent,
+    failed,
+    response_time: `${elapsed}ms`,
+    rate_limited: failed > sent,
+    logs: logs.slice(0, 20), // Maks 20 log
+    note: failed > sent ? 'Rate limit detected. Try again in 60 seconds.' : null
+  });
+}
 
     if (ep === 'cuaca') {
       const c = (url.searchParams.get('city') || 'jakarta').toLowerCase().replace(/\s/g, '');
