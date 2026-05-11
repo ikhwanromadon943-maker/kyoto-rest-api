@@ -695,10 +695,10 @@
       </a>
 
       <div class="hidden md:flex items-center gap-7 text-sm text-gray-400">
-        <a href="/category" class="hover:text-white transition-colors">Categories</a>
-        <a href="#statistic" class="hover:text-white transition-colors">Stats</a>
-        <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
-        <a href="/status" class="hover:text-white transition-colors">Status</a>
+        <a href="/category" class="nav-link hover:text-white transition-colors">Categories</a>
+        <a href="#statistic" class="nav-link hover:text-white transition-colors">Stats</a>
+        <a href="#pricing" class="nav-link hover:text-white transition-colors">Pricing</a>
+        <a href="/status" class="nav-link hover:text-white transition-colors">Status</a>
       </div>
 
       <div class="hidden md:flex items-center gap-3">
@@ -738,11 +738,11 @@
           </p>
 
           <div class="hero-actions flex flex-col sm:flex-row items-center gap-3 justify-center md:justify-start">
-            <a href="/category" class="w-full sm:w-auto px-7 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-all text-center text-sm flex items-center justify-center gap-2">
+            <a href="/category" class="btn-ripple w-full sm:w-auto px-7 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-all text-center text-sm flex items-center justify-center gap-2">
               <i class="material-icons text-base">explore</i>
               Explore Endpoints
             </a>
-            <a href="#statistic" class="w-full sm:w-auto px-7 py-3 bg-[#212121] border border-[#2e2e2e] text-gray-400 hover:text-white font-semibold rounded-lg hover:bg-[#1c1c1c] hover:border-[#3a3a3a] transition-all text-center text-sm flex items-center justify-center gap-2">
+            <a href="#statistic" class="btn-ripple w-full sm:w-auto px-7 py-3 bg-[#212121] border border-[#2e2e2e] text-gray-400 hover:text-white font-semibold rounded-lg hover:bg-[#1c1c1c] hover:border-[#3a3a3a] transition-all text-center text-sm flex items-center justify-center gap-2">
               <i class="material-icons text-base">bar_chart</i>
               View Stats
             </a>
@@ -780,7 +780,7 @@
 
     <!-- ===== STATS ===== -->
     <section id="statistic" class="py-14">
-      <div class="mb-10 animate-fade-in-up">
+      <div class="mb-10 sr sr-up">
         <p class="section-label">Platform Metrics</p>
         <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">API Statistics</h2>
         <div class="section-divider"></div>
@@ -788,28 +788,28 @@
       </div>
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="stat-card animate-fade-in-up" style="animation-delay:0ms">
+        <div class="stat-card sr sr-up" style="--sr-delay:0ms">
           <div class="relative z-10">
             <div class="text-2xl font-bold text-white mb-1 font-mono">100+</div>
             <div class="text-xs text-gray-500 uppercase tracking-wider">Endpoints</div>
           </div>
           <i class="fa-solid fa-code icon-bg"></i>
         </div>
-        <div class="stat-card animate-fade-in-up" style="animation-delay:60ms">
+        <div class="stat-card sr sr-up" style="--sr-delay:70ms">
           <div class="relative z-10">
             <div class="text-2xl font-bold text-white mb-1 font-mono">10</div>
             <div class="text-xs text-gray-500 uppercase tracking-wider">Categories</div>
           </div>
           <i class="fa-solid fa-layer-group icon-bg"></i>
         </div>
-        <div class="stat-card animate-fade-in-up" style="animation-delay:120ms">
+        <div class="stat-card sr sr-up" style="--sr-delay:140ms">
           <div class="relative z-10">
             <div class="text-2xl font-bold text-white mb-1 font-mono">99.9%</div>
             <div class="text-xs text-gray-500 uppercase tracking-wider">Uptime</div>
           </div>
           <i class="fa-solid fa-server icon-bg"></i>
         </div>
-        <div class="stat-card animate-fade-in-up" style="animation-delay:180ms">
+        <div class="stat-card sr sr-up" style="--sr-delay:210ms">
           <div class="relative z-10">
             <div class="text-2xl font-bold text-white mb-1 font-mono">&lt;100ms</div>
             <div class="text-xs text-gray-500 uppercase tracking-wider">Latency</div>
@@ -821,7 +821,7 @@
 
     <!-- ===== FEATURES ===== -->
     <section class="py-14">
-      <div class="mb-10 animate-fade-in-up">
+      <div class="mb-10 sr sr-up">
         <p class="section-label">Why Kyoto</p>
         <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Built for Developers</h2>
         <div class="section-divider"></div>
@@ -829,32 +829,32 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="feature-card animate-fade-in-up" style="animation-delay:0ms">
+        <div class="feature-card sr sr-up" style="--sr-delay:0ms">
           <div class="feature-icon"><i class="material-icons text-base">key_off</i></div>
           <h3 class="font-semibold text-white text-sm mb-2">No API Key Required</h3>
           <p class="text-xs text-gray-500 leading-relaxed">Just make an HTTP GET request. Zero authentication overhead, zero configuration.</p>
         </div>
-        <div class="feature-card animate-fade-in-up" style="animation-delay:60ms">
+        <div class="feature-card sr sr-up" style="--sr-delay:70ms">
           <div class="feature-icon"><i class="material-icons text-base">bolt</i></div>
           <h3 class="font-semibold text-white text-sm mb-2">Sub-100ms Responses</h3>
           <p class="text-xs text-gray-500 leading-relaxed">Powered by Vercel Edge Network for blazing fast responses from anywhere in the world.</p>
         </div>
-        <div class="feature-card animate-fade-in-up" style="animation-delay:120ms">
+        <div class="feature-card sr sr-up" style="--sr-delay:140ms">
           <div class="feature-icon"><i class="material-icons text-base">data_object</i></div>
           <h3 class="font-semibold text-white text-sm mb-2">Clean JSON Output</h3>
           <p class="text-xs text-gray-500 leading-relaxed">Structured, consistent, and predictable JSON responses across all endpoints.</p>
         </div>
-        <div class="feature-card animate-fade-in-up" style="animation-delay:180ms">
+        <div class="feature-card sr sr-up" style="--sr-delay:0ms">
           <div class="feature-icon"><i class="material-icons text-base">diversity_3</i></div>
           <h3 class="font-semibold text-white text-sm mb-2">100+ Endpoints</h3>
           <p class="text-xs text-gray-500 leading-relaxed">AI generation, anime data, tools, news, games and more — all in one place.</p>
         </div>
-        <div class="feature-card animate-fade-in-up" style="animation-delay:240ms">
+        <div class="feature-card sr sr-up" style="--sr-delay:70ms">
           <div class="feature-icon"><i class="material-icons text-base">all_inclusive</i></div>
           <h3 class="font-semibold text-white text-sm mb-2">Free Forever</h3>
           <p class="text-xs text-gray-500 leading-relaxed">No hidden tiers, no credit card, no expiry. All endpoints free for all developers.</p>
         </div>
-        <div class="feature-card animate-fade-in-up" style="animation-delay:300ms">
+        <div class="feature-card sr sr-up" style="--sr-delay:140ms">
           <div class="feature-icon"><i class="material-icons text-base">code</i></div>
           <h3 class="font-semibold text-white text-sm mb-2">Any Language</h3>
           <p class="text-xs text-gray-500 leading-relaxed">Works with JavaScript, Python, PHP, Java, Go, cURL — any language with HTTP support.</p>
@@ -866,7 +866,7 @@
     <section class="py-14">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
         <!-- Left -->
-        <div class="animate-fade-in-up">
+        <div class="sr sr-left">
           <p class="section-label">Quick Start</p>
           <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Seamless Integration</h2>
           <div class="section-divider"></div>
@@ -910,7 +910,7 @@
         </div>
 
         <!-- Right: Code examples with tabs -->
-        <div class="animate-fade-in-up" style="animation-delay:100ms">
+        <div class="sr sr-right" style="--sr-delay:80ms">
           <div class="rounded-xl overflow-hidden border border-[#2e2e2e]">
             <div class="flex items-center gap-2 bg-[#1a1a1a] px-4 py-3 border-b border-[#2e2e2e]">
               <div class="flex gap-1.5">
@@ -964,20 +964,19 @@
     <!-- ===== CATEGORIES PREVIEW ===== -->
     <section class="py-14">
       <div class="flex items-end justify-between mb-10">
-        <div class="animate-fade-in-up">
+        <div class="sr sr-up">
           <p class="section-label">Browse</p>
           <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">API Categories</h2>
           <div class="section-divider"></div>
           <p class="text-gray-500 text-sm">10 categories, 100+ endpoints.</p>
         </div>
-        <a href="/category" class="hidden sm:flex items-center gap-1 text-xs text-gray-500 hover:text-white transition-colors font-mono animate-fade-in-up">
+        <a href="/category" class="hidden sm:flex items-center gap-1 text-xs text-gray-500 hover:text-white transition-colors font-mono sr sr-fade">
           View all <i class="material-icons text-sm">arrow_forward</i>
         </a>
       </div>
 
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="cat-preview-grid">
-        <!-- Populated dynamically, fallback shown below if JS unavailable -->
-        <a href="/category?cat=ai" class="cat-grid-card animate-fade-in-up" style="animation-delay:0ms">
+        <a href="/category?cat=ai" class="cat-grid-card sr sr-scale" style="--sr-delay:0ms">
           <div class="flex items-start justify-between mb-3">
             <div class="w-9 h-9 rounded-xl bg-[#1a1a1a] border border-[#2e2e2e] flex items-center justify-center">
               <i class="fas fa-brain text-gray-500 text-xs"></i>
@@ -986,11 +985,11 @@
           </div>
           <h3 class="text-sm font-semibold text-white mb-1">AI</h3>
           <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed">ChatGPT, image generation, translation, and more AI-powered endpoints.</p>
-          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600 hover:text-gray-400 transition-colors">
-            <span>Explore</span><i class="material-icons text-sm">arrow_forward</i>
+          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600">
+            <span>Explore</span><i class="material-icons text-sm arrow-icon">arrow_forward</i>
           </div>
         </a>
-        <a href="/category?cat=anime" class="cat-grid-card animate-fade-in-up" style="animation-delay:60ms">
+        <a href="/category?cat=anime" class="cat-grid-card sr sr-scale" style="--sr-delay:60ms">
           <div class="flex items-start justify-between mb-3">
             <div class="w-9 h-9 rounded-xl bg-[#1a1a1a] border border-[#2e2e2e] flex items-center justify-center">
               <i class="fas fa-dragon text-gray-500 text-xs"></i>
@@ -999,11 +998,11 @@
           </div>
           <h3 class="text-sm font-semibold text-white mb-1">Anime</h3>
           <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed">Anime characters, quotes, images, waifu generators and more.</p>
-          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600 hover:text-gray-400 transition-colors">
-            <span>Explore</span><i class="material-icons text-sm">arrow_forward</i>
+          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600">
+            <span>Explore</span><i class="material-icons text-sm arrow-icon">arrow_forward</i>
           </div>
         </a>
-        <a href="/category?cat=news" class="cat-grid-card animate-fade-in-up" style="animation-delay:120ms">
+        <a href="/category?cat=news" class="cat-grid-card sr sr-scale" style="--sr-delay:120ms">
           <div class="flex items-start justify-between mb-3">
             <div class="w-9 h-9 rounded-xl bg-[#1a1a1a] border border-[#2e2e2e] flex items-center justify-center">
               <i class="fas fa-newspaper text-gray-500 text-xs"></i>
@@ -1012,11 +1011,11 @@
           </div>
           <h3 class="text-sm font-semibold text-white mb-1">News</h3>
           <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed">Latest news from various sources, categories, and regions.</p>
-          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600 hover:text-gray-400 transition-colors">
-            <span>Explore</span><i class="material-icons text-sm">arrow_forward</i>
+          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600">
+            <span>Explore</span><i class="material-icons text-sm arrow-icon">arrow_forward</i>
           </div>
         </a>
-        <a href="/category?cat=tools" class="cat-grid-card animate-fade-in-up" style="animation-delay:180ms">
+        <a href="/category?cat=tools" class="cat-grid-card sr sr-scale" style="--sr-delay:0ms">
           <div class="flex items-start justify-between mb-3">
             <div class="w-9 h-9 rounded-xl bg-[#1a1a1a] border border-[#2e2e2e] flex items-center justify-center">
               <i class="fas fa-screwdriver-wrench text-gray-500 text-xs"></i>
@@ -1025,11 +1024,11 @@
           </div>
           <h3 class="text-sm font-semibold text-white mb-1">Tools</h3>
           <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed">Utilities like weather, QR codes, URL shorteners and more.</p>
-          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600 hover:text-gray-400 transition-colors">
-            <span>Explore</span><i class="material-icons text-sm">arrow_forward</i>
+          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600">
+            <span>Explore</span><i class="material-icons text-sm arrow-icon">arrow_forward</i>
           </div>
         </a>
-        <a href="/category?cat=media" class="cat-grid-card animate-fade-in-up" style="animation-delay:240ms">
+        <a href="/category?cat=media" class="cat-grid-card sr sr-scale" style="--sr-delay:60ms">
           <div class="flex items-start justify-between mb-3">
             <div class="w-9 h-9 rounded-xl bg-[#1a1a1a] border border-[#2e2e2e] flex items-center justify-center">
               <i class="fas fa-image text-gray-500 text-xs"></i>
@@ -1038,11 +1037,11 @@
           </div>
           <h3 class="text-sm font-semibold text-white mb-1">Media</h3>
           <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed">Images, videos, audio and media-related endpoints.</p>
-          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600 hover:text-gray-400 transition-colors">
-            <span>Explore</span><i class="material-icons text-sm">arrow_forward</i>
+          <div class="flex items-center gap-1 mt-3 text-xs text-gray-600">
+            <span>Explore</span><i class="material-icons text-sm arrow-icon">arrow_forward</i>
           </div>
         </a>
-        <a href="/category" class="cat-grid-card animate-fade-in-up flex flex-col items-center justify-center text-center" style="animation-delay:300ms; border-style:dashed">
+        <a href="/category" class="cat-grid-card sr sr-scale flex flex-col items-center justify-center text-center" style="--sr-delay:120ms; border-style:dashed">
           <i class="material-icons text-3xl text-gray-700 mb-2">apps</i>
           <p class="text-sm font-semibold text-gray-400">All Categories</p>
           <p class="text-xs text-gray-600 mt-1">+5 more categories</p>
@@ -1052,15 +1051,15 @@
 
     <!-- ===== PRICING ===== -->
     <section id="pricing" class="py-14">
-      <div class="text-center mb-10 animate-fade-in-up">
+      <div class="text-center mb-10 sr sr-up">
         <p class="section-label" style="justify-content:center">Pricing</p>
         <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Simple Pricing</h2>
         <div class="section-divider mx-auto"></div>
         <p class="text-gray-500 text-sm">One plan. All endpoints. Forever free.</p>
       </div>
 
-      <div class="max-w-md mx-auto animate-fade-in-up" style="animation-delay:80ms">
-        <div class="price-card">
+      <div class="max-w-md mx-auto sr sr-up" style="--sr-delay:80ms">
+        <div class="price-card btn-ripple">
           <div class="price-badge">FREE FOREVER</div>
 
           <div class="text-center mb-8">
@@ -1100,7 +1099,7 @@
 
     <!-- ===== FAQ ===== -->
     <section class="py-14 mb-8">
-      <div class="text-center mb-10 animate-fade-in-up">
+      <div class="text-center mb-10 sr sr-up">
         <p class="section-label" style="justify-content:center">Help</p>
         <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Frequently Asked Questions</h2>
         <div class="section-divider mx-auto"></div>
@@ -1108,7 +1107,7 @@
       </div>
 
       <div class="max-w-2xl mx-auto space-y-2">
-        <div class="faq-item animate-fade-in-up" style="animation-delay:0ms">
+        <div class="faq-item sr sr-up" style="--sr-delay:0ms">
           <button class="faq-btn" aria-expanded="false">
             <span class="font-medium text-sm">What is Kyoto API?</span>
             <i class="bi bi-chevron-down text-white faq-icon flex-shrink-0"></i>
@@ -1118,7 +1117,7 @@
           </div>
         </div>
 
-        <div class="faq-item animate-fade-in-up" style="animation-delay:60ms">
+        <div class="faq-item sr sr-up" style="--sr-delay:60ms">
           <button class="faq-btn" aria-expanded="false">
             <span class="font-medium text-sm">Is this really free?</span>
             <i class="bi bi-chevron-down text-white faq-icon flex-shrink-0"></i>
@@ -1128,7 +1127,7 @@
           </div>
         </div>
 
-        <div class="faq-item animate-fade-in-up" style="animation-delay:120ms">
+        <div class="faq-item sr sr-up" style="--sr-delay:120ms">
           <button class="faq-btn" aria-expanded="false">
             <span class="font-medium text-sm">What programming languages are supported?</span>
             <i class="bi bi-chevron-down text-white faq-icon flex-shrink-0"></i>
@@ -1138,7 +1137,7 @@
           </div>
         </div>
 
-        <div class="faq-item animate-fade-in-up" style="animation-delay:180ms">
+        <div class="faq-item sr sr-up" style="--sr-delay:180ms">
           <button class="faq-btn" aria-expanded="false">
             <span class="font-medium text-sm">Are there rate limits?</span>
             <i class="bi bi-chevron-down text-white faq-icon flex-shrink-0"></i>
@@ -1148,7 +1147,7 @@
           </div>
         </div>
 
-        <div class="faq-item animate-fade-in-up" style="animation-delay:240ms">
+        <div class="faq-item sr sr-up" style="--sr-delay:240ms">
           <button class="faq-btn" aria-expanded="false">
             <span class="font-medium text-sm">How often is the service updated?</span>
             <i class="bi bi-chevron-down text-white faq-icon flex-shrink-0"></i>
@@ -1243,7 +1242,7 @@
     overlay?.addEventListener('click', closeSidebar);
 
     // ===== NAVBAR SCROLL =====
-    const navbar = document.getElementById('navbar');
+    const navbar    = document.getElementById('navbar');
     const backToTop = document.getElementById('backToTop');
 
     window.addEventListener('scroll', () => {
@@ -1254,14 +1253,112 @@
         navbar.classList.remove('scrolled');
         backToTop.classList.remove('show');
       }
+    }, { passive: true });
+
+    // ===== SCROLL REVEAL (IntersectionObserver) =====
+    const srObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el    = entry.target;
+        const delay = el.style.getPropertyValue('--sr-delay') || '0ms';
+        setTimeout(() => {
+          el.classList.add('visible');
+          // section-divider child: animate it too
+          const divider = el.querySelector('.section-divider');
+          if (divider) divider.classList.add('visible');
+          // stat card glow pop
+          if (el.classList.contains('stat-card')) {
+            el.classList.add('pop');
+            setTimeout(() => el.classList.remove('pop'), 1000);
+          }
+        }, parseFloat(delay));
+        srObserver.unobserve(el);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    // Also animate standalone section-dividers (those not inside .sr elements)
+    const dividerObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('visible');
+        dividerObserver.unobserve(entry.target);
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.sr').forEach(el => srObserver.observe(el));
+    document.querySelectorAll('.section-divider').forEach(el => {
+      // only observe standalone ones (not already inside .sr)
+      if (!el.closest('.sr')) dividerObserver.observe(el);
     });
+
+    // ===== TERMINAL TYPEWRITER =====
+    (function typewriterTerminal() {
+      const lines = [
+        { text: '# AI Chat endpoint',                                         cls: 'comment', delay: 300 },
+        { text: '$ curl kyoto-rest-api.vercel.app/api/ai/chatgpt?text=Hello', cls: 'cmd',     delay: 500 },
+        { text: '',                                                            cls: '',         delay: 300 },
+        { text: '{',                                                           cls: 'ok',       delay: 200 },
+        { text: '  "status": "success",',                                     cls: 'key',      delay: 180 },
+        { text: '  "result": "Hello! How can I help you today?",',             cls: 'val',      delay: 180 },
+        { text: '  "latency": 87',                                             cls: 'num',      delay: 180 },
+        { text: '}',                                                           cls: 'ok',       delay: 200 },
+        { text: '',                                                            cls: '',         delay: 200 },
+        { text: '$ ',                                                          cls: 'cursor-line', delay: 100 },
+      ];
+
+      const body = document.querySelector('.hero-terminal .body');
+      if (!body) return;
+      body.innerHTML = '';
+
+      let cumDelay = 600;
+      lines.forEach(({ text, cls, delay }) => {
+        cumDelay += delay;
+        setTimeout(() => {
+          const div = document.createElement('div');
+          div.style.opacity = '0';
+          div.style.transform = 'translateX(-4px)';
+          div.style.transition = 'opacity 0.22s ease, transform 0.22s ease';
+
+          if (cls === 'cursor-line') {
+            div.innerHTML = '<span class="cmd">$</span> <span class="cursor"></span>';
+          } else if (cls === 'comment') {
+            div.innerHTML = `<span class="comment">${text}</span>`;
+          } else if (cls === 'cmd') {
+            // split $ from rest
+            div.innerHTML = `<span class="cmd">$</span> <span class="url">${text.slice(2)}</span>`;
+          } else if (cls === 'ok') {
+            div.innerHTML = `<span class="ok">${text}</span>`;
+          } else if (cls === 'key') {
+            // "key": "val", or num
+            div.innerHTML = text.replace(/"([^"]+)":/g, '<span class="key">"$1":</span>')
+                                .replace(/: "([^"]+)"/g, ': <span class="val">"$1"</span>')
+                                .replace(/: (\d+)/g, ': <span class="num">$1</span>');
+          } else if (cls === 'val') {
+            div.innerHTML = text.replace(/"([^"]+)":/g, '<span class="key">"$1":</span>')
+                                .replace(/: "([^"]+)"/g, ': <span class="val">"$1"</span>');
+          } else if (cls === 'num') {
+            div.innerHTML = text.replace(/"([^"]+)":/g, '<span class="key">"$1":</span>')
+                                .replace(/: (\d+)/g, ': <span class="num">$1</span>');
+          } else {
+            div.textContent = text;
+          }
+
+          body.appendChild(div);
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              div.style.opacity = '1';
+              div.style.transform = 'translateX(0)';
+            });
+          });
+        }, cumDelay);
+      });
+    })();
 
     // ===== FAQ =====
     document.querySelectorAll('.faq-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const answer = btn.nextElementSibling;
         const isOpen = btn.getAttribute('aria-expanded') === 'true';
-        // Close all
         document.querySelectorAll('.faq-btn').forEach(b => {
           b.setAttribute('aria-expanded','false');
           const a = b.nextElementSibling;
@@ -1279,12 +1376,15 @@
     // ===== CODE TABS =====
     window.switchTab = function(lang) {
       ['curl','js','python'].forEach(l => {
-        document.getElementById('code-' + l).style.display = l === lang ? '' : 'none';
-        const btn = document.getElementById('tab-' + l);
+        const panel = document.getElementById('code-' + l);
+        const btn   = document.getElementById('tab-' + l);
         if (l === lang) {
+          panel.style.display = '';
+          panel.style.animation = 'revealFade 0.25s ease forwards';
           btn.classList.add('bg-[#111]','text-white','border','border-[#333]');
           btn.classList.remove('text-gray-500');
         } else {
+          panel.style.display = 'none';
           btn.classList.remove('bg-[#111]','text-white','border','border-[#333]');
           btn.classList.add('text-gray-500');
         }
@@ -1328,19 +1428,17 @@
         d.tags?.forEach(t => { cats[t.name] = { name: t.name, desc: t.description || '', eps: [] }; });
         Object.keys(d.paths || {}).forEach(p => {
           Object.keys(d.paths[p]).forEach(method => {
-            const ep = d.paths[p][method];
+            const ep  = d.paths[p][method];
             const tag = ep.tags?.[0] || 'Other';
             if (!cats[tag]) cats[tag] = { name: tag, desc: '', eps: [] };
             cats[tag].eps.push(p);
           });
         });
-        const cl = Object.values(cats).filter(c => c.eps.length);
+        const cl       = Object.values(cats).filter(c => c.eps.length);
         const totalEps = cl.reduce((s, c) => s + c.eps.length, 0);
-
-        // Update stat cards
-        const epEl = document.querySelector('.stat-card:nth-child(1) .text-2xl');
+        const epEl  = document.querySelector('.stat-card:nth-child(1) .text-2xl');
         const catEl = document.querySelector('.stat-card:nth-child(2) .text-2xl');
-        if (epEl) epEl.textContent = totalEps + '+';
+        if (epEl)  epEl.textContent  = totalEps + '+';
         if (catEl) catEl.textContent = cl.length;
       } catch(e) {}
     }
