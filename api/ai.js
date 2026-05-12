@@ -1,4 +1,4 @@
-import { safeFetch, setCORS, errRes, checkRateLimit, logError, logRequest, logAbuse } from './_helper.js';
+import { fetchAI, safeFetch, setCORS, errRes, checkRateLimit, logError, logRequest } from './_helper.js';
 
 export default async function handler(req, res) {
   const start = Date.now();
@@ -11,256 +11,334 @@ export default async function handler(req, res) {
   const ua = req.headers['user-agent'] || 'unknown';
   const rt = () => `${Date.now() - start}ms`;
 
-  // Rate limit check
   const rateCheck = checkRateLimit(ip, ep);
   if (!rateCheck.allowed) {
     return res.status(429).json({ status: false, author: 'Kyoto API', error: 'Rate limit exceeded', retry_after: `${rateCheck.retryAfter}s` });
   }
 
   try {
-    if (ep === 'chatgpt') {
-      const text = url.searchParams.get('text');
-      if (!text) return errRes(res, 'Parameter "text" is required');
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
-      const ext = await fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}`, { signal: controller.signal });
-      clearTimeout(timeout);
-      if (!ext.ok) throw new Error(`Upstream error: HTTP ${ext.status}`);
-      const result = await ext.text();
+    // ─── CHAT / ASK ───────────────────────────────────────────────────────────
+    if (ep === 'chatgpt' || ep === 'ask') {
+      const text = url.searchParams.get('text') || url.searchParams.get('q');
+      if (!text) return errRes(res, `Parameter "${ep === 'ask' ? 'q' : 'text'}" is required`);
+      const result = await fetchAI(text);
       logRequest(url.pathname, ip, ua, rt());
       return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', result, timestamp: new Date().toISOString(), response_time: rt() });
     }
 
-    if (ep === 'dalle') {
+    // ─── IMAGE GENERATION ─────────────────────────────────────────────────────
+    if (ep === 'dalle' || ep === 'imagine') {
       const prompt = url.searchParams.get('prompt');
-      const size = url.searchParams.get('size') || '512x512';
       if (!prompt) return errRes(res, 'Parameter "prompt" is required');
-      const [w, h] = size.split('x');
+      const size = url.searchParams.get('size') || '512x512';
+      const [w, h] = size.split('x').map(Number);
+      const width = Math.min(w || 512, 1280);
+      const height = Math.min(h || 512, 1280);
+      const seed = Math.floor(Math.random() * 999999);
       logRequest(url.pathname, ip, ua, rt());
-      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', prompt, url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true`, timestamp: new Date().toISOString(), response_time: rt() });
+      return res.json({
+        status: true, author: 'Kyoto API', provider: 'Pollinations.ai',
+        prompt, width, height, seed,
+        url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&nologo=true`,
+        timestamp: new Date().toISOString(), response_time: rt()
+      });
     }
 
+    // ─── TRANSLATE ────────────────────────────────────────────────────────────
     if (ep === 'translate') {
       const text = url.searchParams.get('text');
       const to = url.searchParams.get('to') || 'en';
+      const from = url.searchParams.get('from') || 'auto';
       if (!text) return errRes(res, 'Parameter "text" is required');
-      const data = await safeFetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${to}&dt=t&q=${encodeURIComponent(text)}`);
-      logRequest(url.pathname, ip, ua, rt());
-      return res.json({ status: true, author: 'Kyoto API', provider: 'Google Translate', original: text, translated: data?.[0]?.[0]?.[0] || text, to, timestamp: new Date().toISOString(), response_time: rt() });
+      try {
+        const data = await safeFetch(
+          `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&dt=ld&q=${encodeURIComponent(text)}`,
+          {}, 8000
+        );
+        const translated = (data?.[0] || []).map(seg => seg?.[0]).filter(Boolean).join('');
+        const detectedLang = data?.[2] || from;
+        logRequest(url.pathname, ip, ua, rt());
+        return res.json({
+          status: true, author: 'Kyoto API', provider: 'Google Translate',
+          original: text, translated: translated || text,
+          from: detectedLang, to,
+          timestamp: new Date().toISOString(), response_time: rt()
+        });
+      } catch {
+        // Fallback: AI translate
+        const result = await fetchAI(`Translate this text to ${to}. Reply ONLY with the translation, no extra text:\n"${text}"`);
+        logRequest(url.pathname, ip, ua, rt());
+        return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai (fallback)', original: text, translated: result.trim(), to, timestamp: new Date().toISOString(), response_time: rt() });
+      }
     }
 
-    if (ep === 'text-to-speech') {
+    // ─── TEXT TO SPEECH ───────────────────────────────────────────────────────
+    if (ep === 'text-to-speech' || ep === 'tts') {
       const text = url.searchParams.get('text');
       if (!text) return errRes(res, 'Parameter "text" is required');
+      const voice = url.searchParams.get('voice') || 'alloy';
+      const validVoices = ['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer'];
+      const safeVoice = validVoices.includes(voice) ? voice : 'alloy';
       logRequest(url.pathname, ip, ua, rt());
-      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', audio_url: `https://text.pollinations.ai/${encodeURIComponent(text)}?model=openai-audio`, text, timestamp: new Date().toISOString(), response_time: rt() });
+      return res.json({
+        status: true, author: 'Kyoto API', provider: 'Pollinations.ai',
+        text, voice: safeVoice,
+        audio_url: `https://text.pollinations.ai/${encodeURIComponent(text)}?model=openai-audio&voice=${safeVoice}`,
+        note: 'Audio URL — play directly in browser or fetch as audio/mpeg',
+        timestamp: new Date().toISOString(), response_time: rt()
+      });
     }
 
-    if (ep === 'image-variation') {
-      const prompt = url.searchParams.get('prompt');
-      if (!prompt) return errRes(res, 'Parameter "prompt" is required');
-      const seed = Math.floor(Math.random() * 1000000);
-      logRequest(url.pathname, ip, ua, rt());
-      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', prompt, url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?seed=${seed}&width=512&height=512&nologo=true`, seed, timestamp: new Date().toISOString(), response_time: rt() });
-    }
-
+    // ─── SUMMARIZE ────────────────────────────────────────────────────────────
     if (ep === 'summarize') {
       const text = url.searchParams.get('text');
       if (!text) return errRes(res, 'Parameter "text" is required');
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
-      const prompt = `Summarize the following text concisely in 2-3 sentences:\n\n${text}`;
-      const ext = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`, { signal: controller.signal });
-      clearTimeout(timeout);
-      if (!ext.ok) throw new Error(`Upstream error: HTTP ${ext.status}`);
+      const sentences = parseInt(url.searchParams.get('sentences')) || 3;
+      const summary = await fetchAI(`Summarize the following text in ${sentences} concise sentence(s). Reply ONLY with the summary:\n\n${text}`);
       logRequest(url.pathname, ip, ua, rt());
-      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', original_length: text.length, summary: await ext.text(), timestamp: new Date().toISOString(), response_time: rt() });
+      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', original_length: text.length, summary: summary.trim(), sentences_requested: sentences, timestamp: new Date().toISOString(), response_time: rt() });
     }
 
+    // ─── ROAST ────────────────────────────────────────────────────────────────
     if (ep === 'roast') {
       const text = url.searchParams.get('text');
+      const level = url.searchParams.get('level') || 'mild'; // mild | medium | savage
       if (!text) return errRes(res, 'Parameter "text" is required');
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
-      const prompt = `Roast this in a funny, witty way (max 2 sentences):\n${text}`;
-      const ext = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`, { signal: controller.signal });
-      clearTimeout(timeout);
-      if (!ext.ok) throw new Error(`Upstream error: HTTP ${ext.status}`);
+      const intensity = { mild: 'mildly and playfully', medium: 'with sharp wit', savage: 'brutally and savagely' }[level] || 'with sharp wit';
+      const roast = await fetchAI(`Roast this ${intensity} in 1-2 funny sentences. NO disclaimers, NO apologies, just the roast:\n${text}`);
       logRequest(url.pathname, ip, ua, rt());
-      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', target: text, roast: await ext.text(), timestamp: new Date().toISOString(), response_time: rt() });
+      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', target: text, level, roast: roast.trim(), timestamp: new Date().toISOString(), response_time: rt() });
     }
 
+    // ─── ELI5 ─────────────────────────────────────────────────────────────────
     if (ep === 'eli5') {
       const text = url.searchParams.get('text');
       if (!text) return errRes(res, 'Parameter "text" is required');
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
-      const prompt = `Explain this like I am 5 years old, simply and clearly:\n${text}`;
-      const ext = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`, { signal: controller.signal });
-      clearTimeout(timeout);
-      if (!ext.ok) throw new Error(`Upstream error: HTTP ${ext.status}`);
+      const explanation = await fetchAI(`Explain this like I am 5 years old, simply and clearly. No jargon:\n${text}`);
       logRequest(url.pathname, ip, ua, rt());
-      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', topic: text, explanation: await ext.text(), timestamp: new Date().toISOString(), response_time: rt() });
+      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', topic: text, explanation: explanation.trim(), timestamp: new Date().toISOString(), response_time: rt() });
     }
 
-    if (ep === 'detect-language') {
-      const text = url.searchParams.get('text');
-      if (!text) return errRes(res, 'Parameter "text" is required');
-      const data = await safeFetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(text)}`);
-      logRequest(url.pathname, ip, ua, rt());
-      return res.json({ status: true, author: 'Kyoto API', provider: 'Google Translate', text, detected_language: data?.[2] || 'unknown', timestamp: new Date().toISOString(), response_time: rt() });
-    }
-
-    if (ep === 'ask') {
-      const q = url.searchParams.get('q');
-      if (!q) return errRes(res, 'Parameter "q" is required');
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
-      const ext = await fetch(`https://text.pollinations.ai/${encodeURIComponent(q)}`, { signal: controller.signal });
-      clearTimeout(timeout);
-      if (!ext.ok) throw new Error(`Upstream error: HTTP ${ext.status}`);
-      logRequest(url.pathname, ip, ua, rt());
-      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', question: q, answer: await ext.text(), timestamp: new Date().toISOString(), response_time: rt() });
-    }
-
-    if (ep === 'random-image') {
-      const topics = ['futuristic city', 'anime landscape', 'fantasy forest', 'cyberpunk street', 'space nebula', 'underwater world', 'ancient temple', 'robot samurai', 'dragon mountain', 'steampunk airship'];
-      const prompt = topics[Math.floor(Math.random() * topics.length)];
-      const seed = Math.floor(Math.random() * 999999);
-      logRequest(url.pathname, ip, ua, rt());
-      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', prompt, url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?seed=${seed}&width=512&height=512&nologo=true`, seed, timestamp: new Date().toISOString(), response_time: rt() });
-    }
-
+    // ─── SENTIMENT ────────────────────────────────────────────────────────────
     if (ep === 'sentiment') {
       const text = url.searchParams.get('text');
       if (!text) return errRes(res, 'Parameter "text" is required');
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000);
-      const prompt = `Analyze sentiment of this text. Reply ONLY with JSON: {"sentiment":"positive/negative/neutral","confidence":0-100,"emotion":"happy/sad/angry/excited/etc"}\nText: ${text}`;
-      const ext = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`, { signal: controller.signal });
-      clearTimeout(timeout);
-      if (!ext.ok) throw new Error(`Upstream error: HTTP ${ext.status}`);
-      const result = await ext.text();
+      const raw = await fetchAI(`Analyze the sentiment of this text. Reply ONLY with a valid JSON object with keys: sentiment (positive/negative/neutral), confidence (0-100), emoji, reason (max 20 words).\nText: "${text}"`);
       let parsed;
-      try { parsed = JSON.parse(result.replace(/```json|```/g, '').trim()); } catch { parsed = { sentiment: result.includes('positive') ? 'positive' : 'neutral', confidence: 70, raw: result }; }
+      try {
+        parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      } catch {
+        const lower = raw.toLowerCase();
+        parsed = {
+          sentiment: lower.includes('positive') ? 'positive' : lower.includes('negative') ? 'negative' : 'neutral',
+          confidence: 70, emoji: '😐', reason: raw.slice(0, 80)
+        };
+      }
       logRequest(url.pathname, ip, ua, rt());
       return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', text, ...parsed, timestamp: new Date().toISOString(), response_time: rt() });
     }
 
+    // ─── KEYWORDS ─────────────────────────────────────────────────────────────
     if (ep === 'keywords') {
       const text = url.searchParams.get('text');
       if (!text) return errRes(res, 'Parameter "text" is required');
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000);
-      const prompt = `Extract 5-10 main keywords from this text. Reply ONLY with a JSON array of strings.\nText: ${text}`;
-      const ext = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`, { signal: controller.signal });
-      clearTimeout(timeout);
-      if (!ext.ok) throw new Error(`Upstream error: HTTP ${ext.status}`);
-      const result = await ext.text();
+      const count = Math.min(parseInt(url.searchParams.get('count')) || 8, 20);
+      const raw = await fetchAI(`Extract ${count} main keywords from this text. Reply ONLY with a JSON array of strings, no extra text.\nText: ${text}`);
       let keywords;
-      try { keywords = JSON.parse(result.replace(/```json|```/g, '').trim()); } catch { keywords = result.split(',').map(k => k.trim().replace(/^["']|["']$/g, '')); }
+      try {
+        keywords = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      } catch {
+        keywords = raw.split(',').map(k => k.trim().replace(/^["'\[\]]|["'\[\]]$/g, '')).filter(Boolean);
+      }
       logRequest(url.pathname, ip, ua, rt());
-      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', text: text.slice(0, 100) + '...', keywords, timestamp: new Date().toISOString(), response_time: rt() });
+      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', text: text.slice(0, 100) + (text.length > 100 ? '...' : ''), keywords, count: keywords.length, timestamp: new Date().toISOString(), response_time: rt() });
     }
 
+    // ─── GRAMMAR ─────────────────────────────────────────────────────────────
     if (ep === 'grammar') {
       const text = url.searchParams.get('text');
       const lang = url.searchParams.get('lang') || 'en-US';
       if (!text) return errRes(res, 'Parameter "text" is required');
       try {
-        const data = await safeFetch('https://api.languagetool.org/v2/check', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ text, language: lang }) }, 8000);
+        const data = await safeFetch('https://api.languagetool.org/v2/check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ text, language: lang })
+        }, 8000);
         logRequest(url.pathname, ip, ua, rt());
-        return res.json({ status: true, author: 'Kyoto API', provider: 'LanguageTool', text: text.slice(0, 150) + (text.length > 150 ? '...' : ''), matches: (data.matches || []).map(m => ({ message: m.message, short_message: m.shortMessage, replacements: m.replacements?.slice(0, 3).map(r => r.value), offset: m.offset, length: m.length })), total_issues: data.matches?.length || 0, timestamp: new Date().toISOString(), response_time: rt() });
+        return res.json({
+          status: true, author: 'Kyoto API', provider: 'LanguageTool',
+          text: text.slice(0, 150) + (text.length > 150 ? '...' : ''),
+          total_issues: data.matches?.length || 0,
+          matches: (data.matches || []).map(m => ({
+            message: m.message,
+            short_message: m.shortMessage,
+            replacements: m.replacements?.slice(0, 3).map(r => r.value),
+            offset: m.offset, length: m.length
+          })),
+          timestamp: new Date().toISOString(), response_time: rt()
+        });
       } catch {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 8000);
-        const prompt = `Check grammar and spelling of this text. List errors found:\n"${text}"`;
-        const ext = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`, { signal: controller.signal });
-        clearTimeout(timeout);
-        if (!ext.ok) throw new Error(`Upstream error: HTTP ${ext.status}`);
+        const analysis = await fetchAI(`Find grammar and spelling errors in this text. List them clearly:\n"${text}"`);
         logRequest(url.pathname, ip, ua, rt());
-        return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai (fallback)', text, analysis: await ext.text(), timestamp: new Date().toISOString(), response_time: rt() });
+        return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai (fallback)', text, analysis: analysis.trim(), timestamp: new Date().toISOString(), response_time: rt() });
       }
     }
 
+    // ─── PARAPHRASE ───────────────────────────────────────────────────────────
     if (ep === 'paraphrase') {
       const text = url.searchParams.get('text');
+      const tone = url.searchParams.get('tone') || 'neutral'; // neutral | formal | casual
       if (!text) return errRes(res, 'Parameter "text" is required');
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
-      const prompt = `Paraphrase this text while maintaining the same meaning. Make it sound different but convey the same message:\n"${text}"`;
-      const ext = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`, { signal: controller.signal });
-      clearTimeout(timeout);
-      if (!ext.ok) throw new Error(`Upstream error: HTTP ${ext.status}`);
+      const paraphrased = await fetchAI(`Paraphrase this text in a ${tone} tone. Keep the same meaning but use different words and structure. Reply ONLY with the paraphrased version:\n"${text}"`);
       logRequest(url.pathname, ip, ua, rt());
-      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', original: text, paraphrased: await ext.text(), timestamp: new Date().toISOString(), response_time: rt() });
+      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', original: text, paraphrased: paraphrased.trim(), tone, timestamp: new Date().toISOString(), response_time: rt() });
     }
 
+    // ─── MATH SOLVER ──────────────────────────────────────────────────────────
     if (ep === 'math') {
       const problem = url.searchParams.get('problem');
       if (!problem) return errRes(res, 'Parameter "problem" is required');
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
-      const prompt = `Solve this math problem step by step. Show your work:\n${problem}`;
-      const ext = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`, { signal: controller.signal });
-      clearTimeout(timeout);
-      if (!ext.ok) throw new Error(`Upstream error: HTTP ${ext.status}`);
+      const solution = await fetchAI(`Solve this math problem step by step. Be clear and show your work:\n${problem}`);
       logRequest(url.pathname, ip, ua, rt());
-      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', problem, solution: await ext.text(), timestamp: new Date().toISOString(), response_time: rt() });
+      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', problem, solution: solution.trim(), timestamp: new Date().toISOString(), response_time: rt() });
     }
 
+    // ─── CODE GENERATOR ───────────────────────────────────────────────────────
     if (ep === 'code') {
       const prompt = url.searchParams.get('prompt');
       const lang = url.searchParams.get('lang') || 'python';
       if (!prompt) return errRes(res, 'Parameter "prompt" is required');
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
-      const fullPrompt = `Write ${lang} code for: ${prompt}. Return ONLY the code, no explanations.`;
-      const ext = await fetch(`https://text.pollinations.ai/${encodeURIComponent(fullPrompt)}`, { signal: controller.signal });
-      clearTimeout(timeout);
-      if (!ext.ok) throw new Error(`Upstream error: HTTP ${ext.status}`);
-      let code = await ext.text();
+      let code = await fetchAI(`Write clean ${lang} code for: ${prompt}. Return ONLY the code, no explanations, no markdown.`);
       code = code.replace(/```[\w]*\n?|```/g, '').trim();
       logRequest(url.pathname, ip, ua, rt());
       return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', prompt, language: lang, code, timestamp: new Date().toISOString(), response_time: rt() });
     }
 
+    // ─── POETRY ───────────────────────────────────────────────────────────────
     if (ep === 'poetry') {
       const theme = url.searchParams.get('theme') || 'love';
       try {
         const data = await safeFetch(`https://poetrydb.org/theme/${encodeURIComponent(theme)}`, {}, 6000);
+        if (!Array.isArray(data) || data.length === 0) throw new Error('No poems found');
         const poem = data[Math.floor(Math.random() * data.length)];
         logRequest(url.pathname, ip, ua, rt());
-        return res.json({ status: true, author: 'Kyoto API', provider: 'PoetryDB', title: poem?.title, author: poem?.author, poem: poem?.lines, linecount: poem?.linecount, timestamp: new Date().toISOString(), response_time: rt() });
+        return res.json({ status: true, author: 'Kyoto API', provider: 'PoetryDB', title: poem?.title, poet: poem?.author, poem: poem?.lines, linecount: poem?.linecount, timestamp: new Date().toISOString(), response_time: rt() });
       } catch {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 8000);
-        const prompt = `Write a short poem about ${theme}. Max 8 lines.`;
-        const ext = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`, { signal: controller.signal });
-        clearTimeout(timeout);
-        if (!ext.ok) throw new Error(`Upstream error: HTTP ${ext.status}`);
+        const poem = await fetchAI(`Write a short, beautiful poem about "${theme}". Max 10 lines. No title needed.`);
         logRequest(url.pathname, ip, ua, rt());
-        return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai (AI-generated)', theme, poem: (await ext.text()).split('\n').filter(l => l.trim()), timestamp: new Date().toISOString(), response_time: rt() });
+        return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai (AI-generated)', theme, poem: poem.trim().split('\n').filter(l => l.trim()), timestamp: new Date().toISOString(), response_time: rt() });
       }
     }
 
+    // ─── STORY GENERATOR ──────────────────────────────────────────────────────
     if (ep === 'story') {
       const prompt = url.searchParams.get('prompt');
+      const genre = url.searchParams.get('genre') || 'fiction';
       if (!prompt) return errRes(res, 'Parameter "prompt" is required');
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
-      const fullPrompt = `Write a creative short story (200-300 words) based on this premise:\n${prompt}`;
-      const ext = await fetch(`https://text.pollinations.ai/${encodeURIComponent(fullPrompt)}`, { signal: controller.signal });
-      clearTimeout(timeout);
-      if (!ext.ok) throw new Error(`Upstream error: HTTP ${ext.status}`);
+      const story = await fetchAI(`Write a creative ${genre} short story (200-300 words) based on this premise: ${prompt}`);
       logRequest(url.pathname, ip, ua, rt());
-      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', prompt, story: await ext.text(), timestamp: new Date().toISOString(), response_time: rt() });
+      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', prompt, genre, story: story.trim(), word_count: story.trim().split(/\s+/).length, timestamp: new Date().toISOString(), response_time: rt() });
     }
 
-    return errRes(res, `Endpoint /api/ai/${ep} not found.`);
+    // ─── DETECT LANGUAGE ──────────────────────────────────────────────────────
+    if (ep === 'detect-language') {
+      const text = url.searchParams.get('text');
+      if (!text) return errRes(res, 'Parameter "text" is required');
+      try {
+        const data = await safeFetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(text)}`, {}, 6000);
+        logRequest(url.pathname, ip, ua, rt());
+        return res.json({ status: true, author: 'Kyoto API', provider: 'Google Translate', text, detected_language: data?.[2] || 'unknown', timestamp: new Date().toISOString(), response_time: rt() });
+      } catch {
+        const result = await fetchAI(`Detect the language of this text. Reply ONLY with the ISO language code (e.g. "en", "id", "ja"):\n"${text}"`);
+        logRequest(url.pathname, ip, ua, rt());
+        return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai (fallback)', text, detected_language: result.trim().toLowerCase().slice(0, 5), timestamp: new Date().toISOString(), response_time: rt() });
+      }
+    }
+
+    // ─── IMAGE VARIATION ──────────────────────────────────────────────────────
+    if (ep === 'image-variation') {
+      const prompt = url.searchParams.get('prompt');
+      if (!prompt) return errRes(res, 'Parameter "prompt" is required');
+      const seeds = Array.from({ length: 3 }, () => Math.floor(Math.random() * 999999));
+      logRequest(url.pathname, ip, ua, rt());
+      return res.json({
+        status: true, author: 'Kyoto API', provider: 'Pollinations.ai', prompt,
+        variations: seeds.map((seed, i) => ({
+          variation: i + 1, seed,
+          url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=512&height=512&seed=${seed}&nologo=true`
+        })),
+        timestamp: new Date().toISOString(), response_time: rt()
+      });
+    }
+
+    // ─── TWEET GENERATOR ──────────────────────────────────────────────────────
+    if (ep === 'tweet') {
+      const topic = url.searchParams.get('topic');
+      const tone = url.searchParams.get('tone') || 'engaging'; // engaging | funny | professional | motivational
+      if (!topic) return errRes(res, 'Parameter "topic" is required');
+      const tweet = await fetchAI(`Write a ${tone} tweet about "${topic}". Max 280 characters. Include relevant hashtags. Reply ONLY with the tweet text.`);
+      const result = tweet.trim().slice(0, 280);
+      logRequest(url.pathname, ip, ua, rt());
+      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', topic, tone, tweet: result, character_count: result.length, timestamp: new Date().toISOString(), response_time: rt() });
+    }
+
+    // ─── CAPTION GENERATOR ────────────────────────────────────────────────────
+    if (ep === 'caption') {
+      const topic = url.searchParams.get('topic');
+      const platform = url.searchParams.get('platform') || 'instagram'; // instagram | tiktok | linkedin | twitter
+      if (!topic) return errRes(res, 'Parameter "topic" is required');
+      const caption = await fetchAI(`Write a ${platform} caption for: "${topic}". Include emojis and relevant hashtags. Keep it engaging and platform-appropriate. Reply ONLY with the caption.`);
+      logRequest(url.pathname, ip, ua, rt());
+      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', topic, platform, caption: caption.trim(), timestamp: new Date().toISOString(), response_time: rt() });
+    }
+
+    // ─── CHAT (multi-turn style) ───────────────────────────────────────────────
+    if (ep === 'chat') {
+      const message = url.searchParams.get('message');
+      const system = url.searchParams.get('system') || 'You are a helpful assistant.';
+      if (!message) return errRes(res, 'Parameter "message" is required');
+      const result = await fetchAI(`${system}\n\nUser: ${message}\nAssistant:`);
+      logRequest(url.pathname, ip, ua, rt());
+      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', message, reply: result.trim(), timestamp: new Date().toISOString(), response_time: rt() });
+    }
+
+    // ─── RECIPE GENERATOR ─────────────────────────────────────────────────────
+    if (ep === 'recipe') {
+      const dish = url.searchParams.get('dish');
+      if (!dish) return errRes(res, 'Parameter "dish" is required');
+      const raw = await fetchAI(`Create a recipe for "${dish}". Reply ONLY with valid JSON with keys: name, description, prep_time, cook_time, servings, ingredients (array), steps (array), tips (array).`);
+      let recipe;
+      try {
+        recipe = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      } catch {
+        recipe = { name: dish, raw: raw.trim() };
+      }
+      logRequest(url.pathname, ip, ua, rt());
+      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', ...recipe, timestamp: new Date().toISOString(), response_time: rt() });
+    }
+
+    // ─── QUIZ GENERATOR ───────────────────────────────────────────────────────
+    if (ep === 'quiz') {
+      const topic = url.searchParams.get('topic');
+      const difficulty = url.searchParams.get('difficulty') || 'medium';
+      const count = Math.min(parseInt(url.searchParams.get('count')) || 5, 10);
+      if (!topic) return errRes(res, 'Parameter "topic" is required');
+      const raw = await fetchAI(`Generate ${count} ${difficulty} multiple-choice quiz questions about "${topic}". Reply ONLY with a JSON array. Each item: { question, options: [A,B,C,D], answer, explanation }.`);
+      let questions;
+      try {
+        questions = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      } catch {
+        questions = [{ raw: raw.trim() }];
+      }
+      logRequest(url.pathname, ip, ua, rt());
+      return res.json({ status: true, author: 'Kyoto API', provider: 'Pollinations.ai', topic, difficulty, count: questions.length, questions, timestamp: new Date().toISOString(), response_time: rt() });
+    }
+
+    return errRes(res, `Endpoint /api/ai/${ep} not found. Check /category for available endpoints.`);
 
   } catch (err) {
     logError(url.pathname, err.message, ip);
-    return res.status(500).json({ status: false, author: 'Kyoto API', error: err.message, hint: 'Upstream API may be rate-limited or blocked. Try again in 60 seconds.', timestamp: new Date().toISOString() });
+    return res.status(500).json({ status: false, author: 'Kyoto API', error: err.message, hint: 'AI service may be busy — try again in a moment.', timestamp: new Date().toISOString() });
   }
 }
