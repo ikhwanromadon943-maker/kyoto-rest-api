@@ -2,1515 +2,199 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Kyoto API",
-    "version": "3.0.0",
-    "description": "Kyoto API — 100+ Live REST API Endpoints. AI, Anime, News, Internet, Games, Info, Maker, Stalker, Tools, Media. All free, no API key, Vercel-optimized, zero self-host."
+    "version": "3.1.0",
+    "description": "Kyoto API — 160+ Free REST API Endpoints. AI, Anime, News, Internet, Games, Info, Maker, Stalker, Tools, Media. Zero auth, zero self-host, Vercel-optimized.",
+    "contact": { "name": "Kyoto API", "url": "https://kyoto-rest-api.vercel.app" },
+    "license": { "name": "MIT" }
   },
+  "servers": [{ "url": "https://kyoto-rest-api.vercel.app", "description": "Production" }],
   "tags": [
-    {
-      "name": "AI",
-      "description": "ChatGPT, DALL·E, Translate, Text-to-Speech, Image Variation, Summarize, Roast, ELI5, Language Detection, Ask AI, Sentiment Analysis, Keyword Extractor, Grammar Check, Paraphrase, Math Solver, Code Generator, Poetry, Story Generator (Pollinations.ai, Google Translate, LanguageTool, TextProcessing)"
-    },
-    {
-      "name": "Anime",
-      "description": "Manga Search, Anime Info, Random Manga, Waifu Images, Character Search, Top Anime, Genre, Schedule, News, Quotes, Recommendations, Seasonal, Reviews, Episodes, Studios, Voice Actors (Jikan API v4, Waifu.pics, AnimeChan)"
-    },
-    {
-      "name": "News",
-      "description": "CNN Indonesia, CNBC Indonesia, Detik, Antara, Kumparan, Republika, Tempo, HackerNews, Dev.to, BBC, Reuters, Wikipedia Current Events (Berita Indo API, HackerNews API, Dev.to API, RSS Feeds)"
-    },
-    {
-      "name": "Internet",
-      "description": "Web Scraper, Meta Tags Extractor, HTTP Headers, Robots.txt Checker, Sitemap Parser, Domain Age Checker, Redirect Chain Tracer, URL Unshortener, Email Validator, Phone Validator, DNS Lookup, SSL Checker"
-    },
-    {
-      "name": "Games",
-      "description": "Free Games List, Game Detail, Games by Genre, Platform, Random Game, Top Rated, Newest, Chess Puzzle, Wordle Solver, Steam Deals, Pokédex (FreeToGame API, Lichess, PokeAPI)"
-    },
-    {
-      "name": "Info",
-      "description": "Wikipedia, Dictionary, GitHub User/Repo, NPM Package, Country Info, Public Holidays, IP Geolocation, Exchange Rates, Crypto Prices, Movie Info, TV Shows, Lyrics, Universities, Color Info, Time & Timezone (Various free APIs)"
-    },
-    {
-      "name": "Maker",
-      "description": "Canvas Generator, Meme Generator, Quote Image, Password Generator, Avatar, Placeholder, QR Code, Gradient, Name Card, Invoice, Resume, Logo, Color Palette (Pollinations.ai, DiceBear, goQR, Colormind)"
-    },
-    {
-      "name": "Stalker",
-      "description": "IP Lookup, My IP, DNS Lookup, WHOIS, SSL Check, Domain Check, Port Check, Website Status, Instagram Info, GitHub Activity, Email Breach Check (ip-api.com, Google DNS, SSL Labs, HaveIBeenPwned)"
-    },
-    {
-      "name": "Tools",
-      "description": "QR Code, URL Shortener, Weather, Calculator, Website Screenshot, Barcode, Lorem Ipsum, Hash Generator, Base64, URL Encode, Password, Website Meta, IP Info, Unit Converter, JSON Formatter, Timezone Converter (Various APIs)"
-    },
-    {
-      "name": "Media",
-      "description": "Wallpaper Generator, AI Art Styles, Profile Picture, Banner, Thumbnail, YouTube Info, SoundCloud Track, Pinterest Pin, Unsplash Photo, GIPHY Search (Pollinations.ai, Noembed, Unsplash, GIPHY)"
-    }
+    { "name": "AI", "description": "AI text, image generation, translation, TTS, code, sentiment, grammar, poetry, story, quiz, recipe — powered by Pollinations.ai, Google Translate, LanguageTool, PoetryDB." },
+    { "name": "Anime", "description": "Anime/manga search, info, random, waifu, characters, top, seasonal, schedule, genres, episodes, quotes, reviews, studios — powered by Jikan API v4, Waifu.pics, Waifu.im, AnimeChan." },
+    { "name": "News", "description": "HackerNews, Dev.to, GitHub Trending, BBC, Reuters, Guardian, CNN, Sports, Science, Tech, Crypto, Detik, Kompas, Tempo, ProductHunt, Gaming, Anime News — via RSS & APIs." },
+    { "name": "Internet", "description": "Meta extractor, HTTP headers, robots.txt, sitemap, URL unshorten, email check, redirect chain, SSL info, DNS lookup, WHOIS, ping — all no-auth." },
+    { "name": "Games", "description": "Free games, Pokédex, Pokémon list, chess puzzle, Minecraft skin, Valorant agents, BrawlStars, Steam search, trivia — FreeToGame, PokéAPI, Lichess, Mojang, Valorant API." },
+    { "name": "Info", "description": "Wikipedia, dictionary, GitHub, NPM, country, holiday, exchange, time, color, UUID, crypto, movie, lyrics, universities, IP geo, quote, fact, joke, trivia, advice." },
+    { "name": "Maker", "description": "AI canvas, meme, QR code, avatar, placeholder, password, color palette, gradient, namecard, thumbnail, banner, lorem ipsum, slug, markdown, badge, OG image — Pollinations.ai, DiceBear, Shields.io." },
+    { "name": "Stalker", "description": "IP lookup, DNS, WHOIS, GitHub activity, website status, NPM stats, PyPI, Crates.io, domain check — ip-api.com, RDAP, Google DNS." },
+    { "name": "Tools", "description": "QR code, shortlink, weather, calculator, base64, hash, password, barcode, screenshot, meta, zodiac, NGL, unit converter, lorem — various free APIs." },
+    { "name": "Media", "description": "Wallpaper, art, profile pic, banner, thumbnail, YouTube info, Unsplash, Picsum, GIF search, TikTok, Instagram, Twitch, Spotify, image transform — Pollinations.ai, Tenor, wsrv.nl." }
   ],
   "paths": {
-    "/api/ai/chatgpt": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "ChatGPT AI",
-        "description": "AI chat via Pollinations.ai. Free, no key.",
-        "parameters": [
-          {
-            "name": "text",
-            "required": true,
-            "description": "Your message",
-            "schema": { "type": "string", "example": "Hello, how are you?" }
-          }
-        ]
-      }
-    },
-    "/api/ai/dalle": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "DALL·E Image Generator",
-        "description": "Generate AI images via Pollinations.ai.",
-        "parameters": [
-          {
-            "name": "prompt",
-            "required": true,
-            "description": "Image description",
-            "schema": { "type": "string", "example": "A futuristic city at sunset" }
-          },
-          {
-            "name": "size",
-            "required": false,
-            "description": "Image size (WxH)",
-            "schema": { "type": "string", "default": "512x512" }
-          }
-        ]
-      }
-    },
-    "/api/ai/translate": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Translate Text",
-        "description": "Google Translate. Auto-detect source language.",
-        "parameters": [
-          {
-            "name": "text",
-            "required": true,
-            "description": "Text to translate",
-            "schema": { "type": "string", "example": "Hello world" }
-          },
-          {
-            "name": "to",
-            "required": false,
-            "description": "Target language code (id, en, ja, etc)",
-            "schema": { "type": "string", "default": "en" }
-          }
-        ]
-      }
-    },
-    "/api/ai/text-to-speech": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Text to Speech",
-        "description": "Convert text to speech audio URL via Pollinations.ai.",
-        "parameters": [
-          {
-            "name": "text",
-            "required": true,
-            "description": "Text to convert to speech",
-            "schema": { "type": "string", "example": "Hello, this is a test" }
-          }
-        ]
-      }
-    },
-    "/api/ai/image-variation": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Image Variation",
-        "description": "Generate image variations with different seeds via Pollinations.ai.",
-        "parameters": [
-          {
-            "name": "prompt",
-            "required": true,
-            "description": "Base image prompt",
-            "schema": { "type": "string", "example": "A magical forest" }
-          }
-        ]
-      }
-    },
-    "/api/ai/summarize": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Text Summarizer",
-        "description": "Summarize long text via Pollinations.ai.",
-        "parameters": [
-          {
-            "name": "text",
-            "required": true,
-            "description": "Text to summarize",
-            "schema": { "type": "string", "example": "Long article text here..." }
-          }
-        ]
-      }
-    },
-    "/api/ai/roast": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Roast Generator",
-        "description": "Get a funny AI-generated roast via Pollinations.ai.",
-        "parameters": [
-          {
-            "name": "text",
-            "required": true,
-            "description": "Subject to roast",
-            "schema": { "type": "string", "example": "My terrible coding skills" }
-          }
-        ]
-      }
-    },
-    "/api/ai/eli5": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "ELI5 Explainer",
-        "description": "Explain complex topics simply via Pollinations.ai.",
-        "parameters": [
-          {
-            "name": "text",
-            "required": true,
-            "description": "Topic to explain",
-            "schema": { "type": "string", "example": "Quantum computing" }
-          }
-        ]
-      }
-    },
-    "/api/ai/detect-language": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Language Detection",
-        "description": "Detect language of text via Google Translate API.",
-        "parameters": [
-          {
-            "name": "text",
-            "required": true,
-            "description": "Text to detect language",
-            "schema": { "type": "string", "example": "Bonjour le monde" }
-          }
-        ]
-      }
-    },
-    "/api/ai/ask": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Ask AI Anything",
-        "description": "General AI question answering via Pollinations.ai.",
-        "parameters": [
-          {
-            "name": "q",
-            "required": true,
-            "description": "Your question",
-            "schema": { "type": "string", "example": "What is the capital of Japan?" }
-          }
-        ]
-      }
-    },
-    "/api/ai/random-image": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Random AI Image",
-        "description": "Get a random AI-generated image from preset topics.",
-        "parameters": []
-      }
-    },
-    "/api/ai/sentiment": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Sentiment Analysis",
-        "description": "Analyze text sentiment via TextProcessing API.",
-        "parameters": [
-          {
-            "name": "text",
-            "required": true,
-            "description": "Text to analyze",
-            "schema": { "type": "string", "example": "I love this product!" }
-          }
-        ]
-      }
-    },
-    "/api/ai/keywords": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Keyword Extractor",
-        "description": "Extract keywords from text via TextProcessing API.",
-        "parameters": [
-          {
-            "name": "text",
-            "required": true,
-            "description": "Text to extract keywords",
-            "schema": { "type": "string", "example": "Artificial intelligence is transforming technology" }
-          }
-        ]
-      }
-    },
-    "/api/ai/grammar": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Grammar Checker",
-        "description": "Check grammar via LanguageTool API (free).",
-        "parameters": [
-          {
-            "name": "text",
-            "required": true,
-            "description": "Text to check grammar",
-            "schema": { "type": "string", "example": "He go to school yesterday" }
-          },
-          {
-            "name": "lang",
-            "required": false,
-            "description": "Language code",
-            "schema": { "type": "string", "default": "en-US" }
-          }
-        ]
-      }
-    },
-    "/api/ai/paraphrase": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Text Paraphraser",
-        "description": "Paraphrase text via Pollinations.ai.",
-        "parameters": [
-          {
-            "name": "text",
-            "required": true,
-            "description": "Text to paraphrase",
-            "schema": { "type": "string", "example": "The quick brown fox jumps over the lazy dog" }
-          }
-        ]
-      }
-    },
-    "/api/ai/math": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Math Solver",
-        "description": "Solve math problems step-by-step via Pollinations.ai.",
-        "parameters": [
-          {
-            "name": "problem",
-            "required": true,
-            "description": "Math problem",
-            "schema": { "type": "string", "example": "Solve x^2 + 5x + 6 = 0" }
-          }
-        ]
-      }
-    },
-    "/api/ai/code": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Code Generator",
-        "description": "Generate code via Pollinations.ai.",
-        "parameters": [
-          {
-            "name": "prompt",
-            "required": true,
-            "description": "Code description",
-            "schema": { "type": "string", "example": "Python function to reverse a string" }
-          },
-          {
-            "name": "lang",
-            "required": false,
-            "description": "Programming language",
-            "schema": { "type": "string", "default": "python" }
-          }
-        ]
-      }
-    },
-    "/api/ai/poetry": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Poetry Generator",
-        "description": "Generate poetry via PoetryDB.",
-        "parameters": [
-          {
-            "name": "theme",
-            "required": false,
-            "description": "Poem theme",
-            "schema": { "type": "string", "example": "love" }
-          }
-        ]
-      }
-    },
-    "/api/ai/story": {
-      "get": {
-        "tags": ["AI"],
-        "summary": "Story Generator",
-        "description": "Generate short story via Pollinations.ai.",
-        "parameters": [
-          {
-            "name": "prompt",
-            "required": true,
-            "description": "Story premise",
-            "schema": { "type": "string", "example": "A detective solving a mystery in Tokyo" }
-          }
-        ]
-      }
-    },
-    "/api/anime/search": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Anime/Manga Search",
-        "description": "Search anime or manga via Jikan API v4.",
-        "parameters": [
-          {
-            "name": "query",
-            "required": true,
-            "description": "Title to search",
-            "schema": { "type": "string", "example": "Attack on Titan" }
-          },
-          {
-            "name": "type",
-            "required": false,
-            "description": "Search type",
-            "schema": { "type": "string", "default": "anime", "enum": ["anime", "manga"] }
-          }
-        ]
-      }
-    },
-    "/api/anime/anime": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Anime Details",
-        "description": "Get detailed anime information via Jikan API v4.",
-        "parameters": [
-          {
-            "name": "title",
-            "required": true,
-            "description": "Anime title",
-            "schema": { "type": "string", "example": "Demon Slayer" }
-          }
-        ]
-      }
-    },
-    "/api/anime/random": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Random Manga",
-        "description": "Get a random manga from MyAnimeList.",
-        "parameters": []
-      }
-    },
-    "/api/anime/waifu": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Waifu Image",
-        "description": "Random SFW anime images via Waifu.pics.",
-        "parameters": [
-          {
-            "name": "category",
-            "required": false,
-            "description": "Image category",
-            "schema": {
-              "type": "string",
-              "default": "waifu",
-              "enum": ["waifu", "neko", "shinobu", "megumin", "bully", "cuddle", "cry", "hug", "awoo", "kiss", "lick", "pat", "smug", "bonk", "yeet", "blush", "smile", "wave", "highfive", "handhold", "nom", "bite", "glomp", "slap", "kill", "kick", "happy", "wink", "poke", "dance", "cringe"]
-            }
-          }
-        ]
-      }
-    },
-    "/api/anime/character": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Character Search",
-        "description": "Search anime characters via Jikan API v4.",
-        "parameters": [
-          {
-            "name": "query",
-            "required": true,
-            "description": "Character name",
-            "schema": { "type": "string", "example": "Naruto Uzumaki" }
-          }
-        ]
-      }
-    },
-    "/api/anime/top": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Top Anime Ranking",
-        "description": "Get top anime/manga rankings.",
-        "parameters": [
-          {
-            "name": "type",
-            "required": false,
-            "description": "Ranking type",
-            "schema": { "type": "string", "default": "anime", "enum": ["anime", "manga"] }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "description": "Number of results",
-            "schema": { "type": "number", "default": 10, "maximum": 25 }
-          }
-        ]
-      }
-    },
-    "/api/anime/genre": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Anime by Genre",
-        "description": "Browse anime by genre via Jikan API.",
-        "parameters": [
-          {
-            "name": "id",
-            "required": false,
-            "description": "Genre ID (1=Action, 2=Adventure, etc)",
-            "schema": { "type": "string", "default": "1" }
-          }
-        ]
-      }
-    },
-    "/api/anime/schedule": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Anime Schedule",
-        "description": "Get anime airing schedule by day.",
-        "parameters": [
-          {
-            "name": "day",
-            "required": false,
-            "description": "Day of week",
-            "schema": { "type": "string", "enum": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] }
-          }
-        ]
-      }
-    },
-    "/api/anime/random-waifu": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Random Waifu",
-        "description": "Get random SFW waifu image from popular categories.",
-        "parameters": []
-      }
-    },
-    "/api/anime/news": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Anime News",
-        "description": "Latest anime/manga news via Jikan API.",
-        "parameters": []
-      }
-    },
-    "/api/anime/quotes": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Anime Quotes",
-        "description": "Get random anime quotes via AnimeChan API.",
-        "parameters": [
-          {
-            "name": "title",
-            "required": false,
-            "description": "Anime title filter",
-            "schema": { "type": "string", "example": "Naruto" }
-          }
-        ]
-      }
-    },
-    "/api/anime/recommendations": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Anime Recommendations",
-        "description": "Get anime recommendations based on MAL data.",
-        "parameters": [
-          {
-            "name": "genre",
-            "required": false,
-            "description": "Genre filter",
-            "schema": { "type": "string", "example": "Action" }
-          }
-        ]
-      }
-    },
-    "/api/anime/seasonal": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Current Season Anime",
-        "description": "Get anime from current season via Jikan API.",
-        "parameters": []
-      }
-    },
-    "/api/anime/reviews": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Anime Reviews",
-        "description": "Get recent anime reviews via Jikan API.",
-        "parameters": []
-      }
-    },
-    "/api/anime/studios": {
-      "get": {
-        "tags": ["Anime"],
-        "summary": "Anime Studio Info",
-        "description": "Get anime studio details via Jikan API.",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "description": "Studio ID",
-            "schema": { "type": "number", "example": 1 }
-          }
-        ]
-      }
-    },
-    "/api/news/cnn": {
-      "get": {
-        "tags": ["News"],
-        "summary": "CNN Indonesia",
-        "description": "Latest news from CNN Indonesia.",
-        "parameters": []
-      }
-    },
-    "/api/news/cnbc": {
-      "get": {
-        "tags": ["News"],
-        "summary": "CNBC Indonesia",
-        "description": "Latest news from CNBC Indonesia.",
-        "parameters": []
-      }
-    },
-    "/api/news/detik": {
-      "get": {
-        "tags": ["News"],
-        "summary": "Detik.com",
-        "description": "Latest news from Detik.com.",
-        "parameters": []
-      }
-    },
-    "/api/news/antara": {
-      "get": {
-        "tags": ["News"],
-        "summary": "Antara News",
-        "description": "Latest news from Antara News Indonesia.",
-        "parameters": []
-      }
-    },
-    "/api/news/kumparan": {
-      "get": {
-        "tags": ["News"],
-        "summary": "Kumparan",
-        "description": "Latest news from Kumparan.",
-        "parameters": []
-      }
-    },
-    "/api/news/republika": {
-      "get": {
-        "tags": ["News"],
-        "summary": "Republika",
-        "description": "Latest news from Republika.",
-        "parameters": []
-      }
-    },
-    "/api/news/tempo": {
-      "get": {
-        "tags": ["News"],
-        "summary": "Tempo",
-        "description": "Latest news from Tempo.",
-        "parameters": []
-      }
-    },
-    "/api/news/hackernews": {
-      "get": {
-        "tags": ["News"],
-        "summary": "Hacker News",
-        "description": "Top stories from Hacker News via official API.",
-        "parameters": [
-          {
-            "name": "type",
-            "required": false,
-            "description": "Story type",
-            "schema": { "type": "string", "default": "top", "enum": ["top", "new", "best", "ask", "show", "job"] }
-          }
-        ]
-      }
-    },
-    "/api/news/devto": {
-      "get": {
-        "tags": ["News"],
-        "summary": "Dev.to Articles",
-        "description": "Latest articles from Dev.to via official API.",
-        "parameters": [
-          {
-            "name": "tag",
-            "required": false,
-            "description": "Article tag",
-            "schema": { "type": "string", "example": "javascript" }
-          }
-        ]
-      }
-    },
-    "/api/internet/meta": {
-      "get": {
-        "tags": ["Internet"],
-        "summary": "Meta Tags Extractor",
-        "description": "Extract meta tags, title, description from any website.",
-        "parameters": [
-          {
-            "name": "url",
-            "required": true,
-            "description": "Website URL",
-            "schema": { "type": "string", "example": "https://example.com" }
-          }
-        ]
-      }
-    },
-    "/api/internet/headers": {
-      "get": {
-        "tags": ["Internet"],
-        "summary": "HTTP Headers Inspector",
-        "description": "Get HTTP response headers from any URL.",
-        "parameters": [
-          {
-            "name": "url",
-            "required": true,
-            "description": "Website URL",
-            "schema": { "type": "string", "example": "https://example.com" }
-          }
-        ]
-      }
-    },
-    "/api/internet/robots": {
-      "get": {
-        "tags": ["Internet"],
-        "summary": "Robots.txt Checker",
-        "description": "Fetch and parse robots.txt from any domain.",
-        "parameters": [
-          {
-            "name": "domain",
-            "required": true,
-            "description": "Domain name",
-            "schema": { "type": "string", "example": "google.com" }
-          }
-        ]
-      }
-    },
-    "/api/internet/sitemap": {
-      "get": {
-        "tags": ["Internet"],
-        "summary": "Sitemap Parser",
-        "description": "Fetch and parse sitemap.xml from any domain.",
-        "parameters": [
-          {
-            "name": "domain",
-            "required": true,
-            "description": "Domain name",
-            "schema": { "type": "string", "example": "example.com" }
-          }
-        ]
-      }
-    },
-    "/api/internet/unshorten": {
-      "get": {
-        "tags": ["Internet"],
-        "summary": "URL Unshortener",
-        "description": "Expand shortened URLs (bit.ly, t.co, etc).",
-        "parameters": [
-          {
-            "name": "url",
-            "required": true,
-            "description": "Shortened URL",
-            "schema": { "type": "string", "example": "https://bit.ly/example" }
-          }
-        ]
-      }
-    },
-    "/api/internet/email-check": {
-      "get": {
-        "tags": ["Internet"],
-        "summary": "Email Validator",
-        "description": "Check if email address is valid and exists.",
-        "parameters": [
-          {
-            "name": "email",
-            "required": true,
-            "description": "Email address",
-            "schema": { "type": "string", "example": "test@example.com" }
-          }
-        ]
-      }
-    },
-    "/api/games/list": {
-      "get": {
-        "tags": ["Games"],
-        "summary": "Free Games List",
-        "description": "List of free PC games via FreeToGame API.",
-        "parameters": []
-      }
-    },
-    "/api/games/detail": {
-      "get": {
-        "tags": ["Games"],
-        "summary": "Game Details",
-        "description": "Get detailed info about a specific free game.",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "description": "Game ID",
-            "schema": { "type": "number", "example": 452 }
-          }
-        ]
-      }
-    },
-    "/api/games/genre": {
-      "get": {
-        "tags": ["Games"],
-        "summary": "Games by Genre",
-        "description": "Filter free games by genre.",
-        "parameters": [
-          {
-            "name": "genre",
-            "required": false,
-            "description": "Game genre",
-            "schema": { "type": "string", "default": "shooter", "example": "mmorpg" }
-          }
-        ]
-      }
-    },
-    "/api/games/platform": {
-      "get": {
-        "tags": ["Games"],
-        "summary": "Games by Platform",
-        "description": "Filter free games by platform.",
-        "parameters": [
-          {
-            "name": "platform",
-            "required": false,
-            "description": "Gaming platform",
-            "schema": { "type": "string", "default": "pc", "enum": ["pc", "browser", "all"] }
-          }
-        ]
-      }
-    },
-    "/api/games/random": {
-      "get": {
-        "tags": ["Games"],
-        "summary": "Random Free Game",
-        "description": "Get a random free-to-play game.",
-        "parameters": []
-      }
-    },
-    "/api/games/top-rated": {
-      "get": {
-        "tags": ["Games"],
-        "summary": "Top Rated Games",
-        "description": "Get highest rated free games.",
-        "parameters": []
-      }
-    },
-    "/api/games/newest": {
-      "get": {
-        "tags": ["Games"],
-        "summary": "Newest Games",
-        "description": "Get newest free games added.",
-        "parameters": []
-      }
-    },
-    "/api/games/chess-puzzle": {
-      "get": {
-        "tags": ["Games"],
-        "summary": "Daily Chess Puzzle",
-        "description": "Get daily chess puzzle from Lichess.",
-        "parameters": []
-      }
-    },
-    "/api/games/pokedex": {
-      "get": {
-        "tags": ["Games"],
-        "summary": "Pokédex",
-        "description": "Get Pokémon info via PokeAPI.",
-        "parameters": [
-          {
-            "name": "name",
-            "required": false,
-            "description": "Pokémon name or ID",
-            "schema": { "type": "string", "example": "pikachu" }
-          }
-        ]
-      }
-    },
-    "/api/info/wikipedia": {
-      "get": {
-        "tags": ["Info"],
-        "summary": "Wikipedia Summary",
-        "description": "Get Wikipedia article summary.",
-        "parameters": [
-          {
-            "name": "title",
-            "required": true,
-            "description": "Article title",
-            "schema": { "type": "string", "example": "Indonesia" }
-          }
-        ]
-      }
-    },
-    "/api/info/dictionary": {
-      "get": {
-        "tags": ["Info"],
-        "summary": "Dictionary Lookup",
-        "description": "Get English word definitions via Free Dictionary API.",
-        "parameters": [
-          {
-            "name": "word",
-            "required": true,
-            "description": "English word",
-            "schema": { "type": "string", "example": "hello" }
-          }
-        ]
-      }
-    },
-    "/api/info/github": {
-      "get": {
-        "tags": ["Info"],
-        "summary": "GitHub User",
-        "description": "Get GitHub user profile info.",
-        "parameters": [
-          {
-            "name": "username",
-            "required": true,
-            "description": "GitHub username",
-            "schema": { "type": "string", "example": "torvalds" }
-          }
-        ]
-      }
-    },
-    "/api/info/github-repo": {
-      "get": {
-        "tags": ["Info"],
-        "summary": "GitHub Repository",
-        "description": "Get GitHub repository information.",
-        "parameters": [
-          {
-            "name": "repo",
-            "required": true,
-            "description": "Repository (owner/repo)",
-            "schema": { "type": "string", "example": "facebook/react" }
-          }
-        ]
-      }
-    },
-    "/api/info/npm": {
-      "get": {
-        "tags": ["Info"],
-        "summary": "NPM Package",
-        "description": "Get NPM package details.",
-        "parameters": [
-          {
-            "name": "package",
-            "required": true,
-            "description": "Package name",
-            "schema": { "type": "string", "example": "express" }
-          }
-        ]
-      }
-    },
-    "/api/info/country": {
-      "get": {
-        "tags": ["Info"],
-        "summary": "Country Information",
-        "description": "Get country data via REST Countries API.",
-        "parameters": [
-          {
-            "name": "name",
-            "required": true,
-            "description": "Country name",
-            "schema": { "type": "string", "example": "Japan" }
-          }
-        ]
-      }
-    },
-    "/api/info/holiday": {
-      "get": {
-        "tags": ["Info"],
-        "summary": "Public Holidays",
-        "description": "Get public holidays for a country.",
-        "parameters": [
-          {
-            "name": "year",
-            "required": false,
-            "description": "Year",
-            "schema": { "type": "number", "default": 2026 }
-          },
-          {
-            "name": "country",
-            "required": false,
-            "description": "Country code (ISO)",
-            "schema": { "type": "string", "default": "ID" }
-          }
-        ]
-      }
-    },
-    "/api/info/crypto": {
-      "get": {
-        "tags": ["Info"],
-        "summary": "Cryptocurrency Prices",
-        "description": "Get real-time crypto prices via CoinGecko free API.",
-        "parameters": [
-          {
-            "name": "coin",
-            "required": false,
-            "description": "Coin ID",
-            "schema": { "type": "string", "default": "bitcoin", "example": "ethereum" }
-          },
-          {
-            "name": "currency",
-            "required": false,
-            "description": "Fiat currency",
-            "schema": { "type": "string", "default": "usd" }
-          }
-        ]
-      }
-    },
-    "/api/info/movie": {
-      "get": {
-        "tags": ["Info"],
-        "summary": "Movie Info",
-        "description": "Search movie info via OMDB API.",
-        "parameters": [
-          {
-            "name": "title",
-            "required": true,
-            "description": "Movie title",
-            "schema": { "type": "string", "example": "Inception" }
-          }
-        ]
-      }
-    },
-    "/api/info/lyrics": {
-      "get": {
-        "tags": ["Info"],
-        "summary": "Song Lyrics",
-        "description": "Get song lyrics via Lyrics.ovh API.",
-        "parameters": [
-          {
-            "name": "artist",
-            "required": true,
-            "description": "Artist name",
-            "schema": { "type": "string", "example": "Coldplay" }
-          },
-          {
-            "name": "song",
-            "required": true,
-            "description": "Song title",
-            "schema": { "type": "string", "example": "Yellow" }
-          }
-        ]
-      }
-    },
-    "/api/info/universities": {
-      "get": {
-        "tags": ["Info"],
-        "summary": "University Search",
-        "description": "Search universities by country via Hipolabs API.",
-        "parameters": [
-          {
-            "name": "country",
-            "required": true,
-            "description": "Country name",
-            "schema": { "type": "string", "example": "Japan" }
-          }
-        ]
-      }
-    },
-    "/api/info/exchange": {
-      "get": {
-        "tags": ["Info"],
-        "summary": "Exchange Rates",
-        "description": "Get currency exchange rates via ExchangeRate-API.",
-        "parameters": [
-          {
-            "name": "base",
-            "required": false,
-            "description": "Base currency",
-            "schema": { "type": "string", "default": "USD" }
-          },
-          {
-            "name": "to",
-            "required": false,
-            "description": "Target currency (optional, returns all if empty)",
-            "schema": { "type": "string", "example": "EUR" }
-          }
-        ]
-      }
-    },
-    "/api/info/time": {
-      "get": {
-        "tags": ["Info"],
-        "summary": "World Time",
-        "description": "Get current time by timezone via WorldTimeAPI.",
-        "parameters": [
-          {
-            "name": "timezone",
-            "required": false,
-            "description": "Timezone name",
-            "schema": { "type": "string", "default": "Asia/Jakarta", "example": "America/New_York" }
-          }
-        ]
-      }
-    },
-    "/api/info/color": {
-      "get": {
-        "tags": ["Info"],
-        "summary": "Color Information",
-        "description": "Get color details by hex code via The Color API.",
-        "parameters": [
-          {
-            "name": "hex",
-            "required": false,
-            "description": "Hex color code",
-            "schema": { "type": "string", "default": "FF5733" }
-          }
-        ]
-      }
-    },
-    "/api/maker/canvas": {
-      "get": {
-        "tags": ["Maker"],
-        "summary": "Canvas Generator",
-        "description": "Generate custom canvas image with text via Pollinations.ai.",
-        "parameters": [
-          {
-            "name": "text",
-            "required": true,
-            "description": "Text/description for image",
-            "schema": { "type": "string", "example": "Beautiful sunset over mountains" }
-          }
-        ]
-      }
-    },
-    "/api/maker/meme": {
-      "get": {
-        "tags": ["Maker"],
-        "summary": "Meme Generator",
-        "description": "Generate meme image with top & bottom text.",
-        "parameters": [
-          {
-            "name": "top",
-            "required": false,
-            "description": "Top text",
-            "schema": { "type": "string", "example": "WHEN YOU FINALLY" }
-          },
-          {
-            "name": "bottom",
-            "required": false,
-            "description": "Bottom text",
-            "schema": { "type": "string", "example": "FIX THE BUG" }
-          }
-        ]
-      }
-    },
-    "/api/maker/quote-image": {
-      "get": {
-        "tags": ["Maker"],
-        "summary": "Quote Image Generator",
-        "description": "Generate inspirational quote image via Pollinations.ai.",
-        "parameters": [
-          {
-            "name": "text",
-            "required": false,
-            "description": "Quote text",
-            "schema": { "type": "string", "example": "The only way to do great work is to love what you do" }
-          },
-          {
-            "name": "author",
-            "required": false,
-            "description": "Quote author",
-            "schema": { "type": "string", "example": "Steve Jobs" }
-          }
-        ]
-      }
-    },
-    "/api/maker/password": {
-      "get": {
-        "tags": ["Maker"],
-        "summary": "Password Generator",
-        "description": "Generate secure random password.",
-        "parameters": [
-          {
-            "name": "length",
-            "required": false,
-            "description": "Password length",
-            "schema": { "type": "number", "default": 16, "minimum": 8, "maximum": 128 }
-          }
-        ]
-      }
-    },
-    "/api/maker/avatar": {
-      "get": {
-        "tags": ["Maker"],
-        "summary": "Avatar Generator",
-        "description": "Generate avatar via DiceBear API.",
-        "parameters": [
-          {
-            "name": "seed",
-            "required": false,
-            "description": "Unique seed for avatar",
-            "schema": { "type": "string", "example": "john-doe" }
-          },
-          {
-            "name": "style",
-            "required": false,
-            "description": "Avatar style",
-            "schema": { "type": "string", "default": "avataaars", "enum": ["avataaars", "bottts", "identicon", "pixel-art", "lorelei", "fun-emoji"] }
-          }
-        ]
-      }
-    },
-    "/api/maker/placeholder": {
-      "get": {
-        "tags": ["Maker"],
-        "summary": "Placeholder Image",
-        "description": "Generate placeholder image via placehold.co.",
-        "parameters": [
-          { "name": "width", "required": false, "schema": { "type": "string", "default": "400" } },
-          { "name": "height", "required": false, "schema": { "type": "string", "default": "300" } },
-          { "name": "text", "required": false, "schema": { "type": "string" } },
-          { "name": "bg", "required": false, "schema": { "type": "string", "default": "333" } },
-          { "name": "color", "required": false, "schema": { "type": "string", "default": "fff" } }
-        ]
-      }
-    },
-    "/api/maker/qr-styled": {
-      "get": {
-        "tags": ["Maker"],
-        "summary": "Styled QR Code",
-        "description": "Generate styled QR code with custom colors.",
-        "parameters": [
-          { "name": "text", "required": true, "description": "Text/URL to encode", "schema": { "type": "string" } },
-          { "name": "size", "required": false, "schema": { "type": "string", "default": "300x300" } },
-          { "name": "color", "required": false, "schema": { "type": "string", "default": "000000" } },
-          { "name": "bg", "required": false, "schema": { "type": "string", "default": "ffffff" } }
-        ]
-      }
-    },
-    "/api/maker/gradient": {
-      "get": {
-        "tags": ["Maker"],
-        "summary": "Gradient Image",
-        "description": "Generate gradient background image via Pollinations.ai.",
-        "parameters": [
-          { "name": "from", "required": false, "schema": { "type": "string", "default": "ff6b6b" } },
-          { "name": "to", "required": false, "schema": { "type": "string", "default": "4ecdc4" } },
-          { "name": "width", "required": false, "schema": { "type": "string", "default": "800" } },
-          { "name": "height", "required": false, "schema": { "type": "string", "default": "400" } }
-        ]
-      }
-    },
-    "/api/maker/namecard": {
-      "get": {
-        "tags": ["Maker"],
-        "summary": "Name Card Generator",
-        "description": "Generate professional name card image via Pollinations.ai.",
-        "parameters": [
-          { "name": "name", "required": false, "schema": { "type": "string", "default": "John Doe" } },
-          { "name": "title", "required": false, "schema": { "type": "string", "default": "Software Engineer" } }
-        ]
-      }
-    },
-    "/api/maker/color-palette": {
-      "get": {
-        "tags": ["Maker"],
-        "summary": "Color Palette Generator",
-        "description": "Generate color palette via Colormind API.",
-        "parameters": []
-      }
-    },
-    "/api/stalker/ip": {
-      "get": {
-        "tags": ["Stalker"],
-        "summary": "IP Lookup",
-        "description": "Lookup IP address information via ip-api.com.",
-        "parameters": [
-          { "name": "ip", "required": false, "description": "IP address (empty = your IP)", "schema": { "type": "string", "example": "8.8.8.8" } }
-        ]
-      }
-    },
-    "/api/stalker/my-ip": {
-      "get": {
-        "tags": ["Stalker"],
-        "summary": "My IP Info",
-        "description": "Get your current public IP information.",
-        "parameters": []
-      }
-    },
-    "/api/stalker/dns": {
-      "get": {
-        "tags": ["Stalker"],
-        "summary": "DNS Lookup",
-        "description": "DNS record lookup via Google DNS.",
-        "parameters": [
-          { "name": "domain", "required": true, "description": "Domain name", "schema": { "type": "string", "example": "google.com" } }
-        ]
-      }
-    },
-    "/api/stalker/whois": {
-      "get": {
-        "tags": ["Stalker"],
-        "summary": "WHOIS Lookup",
-        "description": "WHOIS domain information lookup.",
-        "parameters": [
-          { "name": "domain", "required": true, "description": "Domain name", "schema": { "type": "string", "example": "github.com" } }
-        ]
-      }
-    },
-    "/api/stalker/ssl": {
-      "get": {
-        "tags": ["Stalker"],
-        "summary": "SSL Certificate Check",
-        "description": "Check SSL certificate via SSL Labs API.",
-        "parameters": [
-          { "name": "domain", "required": true, "description": "Domain name", "schema": { "type": "string", "example": "google.com" } }
-        ]
-      }
-    },
-    "/api/stalker/website-status": {
-      "get": {
-        "tags": ["Stalker"],
-        "summary": "Website Status Check",
-        "description": "Check if website is online and response time.",
-        "parameters": [
-          { "name": "url", "required": true, "description": "Website URL", "schema": { "type": "string", "example": "https://example.com" } }
-        ]
-      }
-    },
-    "/api/stalker/github-activity": {
-      "get": {
-        "tags": ["Stalker"],
-        "summary": "GitHub User Activity",
-        "description": "Get recent GitHub activity via GitHub Events API.",
-        "parameters": [
-          { "name": "username", "required": true, "description": "GitHub username", "schema": { "type": "string", "example": "torvalds" } }
-        ]
-      }
-    },
-    "/api/tools/qr": {
-      "get": {
-        "tags": ["Tools"],
-        "summary": "QR Code Generator",
-        "description": "Generate QR code image via goQR.me.",
-        "parameters": [
-          { "name": "text", "required": true, "description": "Text/URL to encode", "schema": { "type": "string", "example": "https://example.com" } }
-        ]
-      }
-    },
-    "/api/tools/shortlink": {
-      "get": {
-        "tags": ["Tools"],
-        "summary": "URL Shortener",
-        "description": "Shorten long URLs via is.gd.",
-        "parameters": [
-          { "name": "url", "required": true, "description": "Long URL", "schema": { "type": "string", "example": "https://example.com/very/long/url" } }
-        ]
-      }
-    },
-    "/api/tools/cuaca": {
-      "get": {
-        "tags": ["Tools"],
-        "summary": "Weather Info",
-        "description": "Get current weather by city via Open-Meteo.",
-        "parameters": [
-          { "name": "city", "required": true, "description": "City name", "schema": { "type": "string", "example": "Tokyo" } }
-        ]
-      }
-    },
-    "/api/tools/calculator": {
-      "get": {
-        "tags": ["Tools"],
-        "summary": "Calculator",
-        "description": "Evaluate mathematical expressions.",
-        "parameters": [
-          { "name": "expr", "required": true, "description": "Math expression", "schema": { "type": "string", "example": "2+2*3" } }
-        ]
-      }
-    },
-    "/api/tools/ngl": {
-  "get": {
-    "tags": ["Tools"],
-    "summary": "NGL Message Spammer",
-    "description": "Send multiple anonymous messages to NGL.link profile. Max 25 messages per request to avoid timeout.",
-    "parameters": [
-      {
-        "name": "username",
-        "required": true,
-        "description": "NGL username (without @)",
-        "schema": { "type": "string", "example": "john_doe" }
-      },
-      {
-        "name": "message",
-        "required": false,
-        "description": "Message to send",
-        "schema": { "type": "string", "default": "Hello from Kyoto API 👋" }
-      },
-      {
-        "name": "count",
-        "required": false,
-        "description": "Number of messages (max 25)",
-        "schema": { "type": "number", "default": 1, "maximum": 25 }
-      }
-    ]
-  }
-},
-    "/api/tools/ssweb": {
-      "get": {
-        "tags": ["Tools"],
-        "summary": "Website Screenshot",
-        "description": "Take website screenshot via Microlink.",
-        "parameters": [
-          { "name": "url", "required": true, "description": "Website URL", "schema": { "type": "string", "example": "https://google.com" } }
-        ]
-      }
-    },
-    "/api/tools/barcode": {
-      "get": {
-        "tags": ["Tools"],
-        "summary": "Barcode Generator",
-        "description": "Generate barcode image.",
-        "parameters": [
-          { "name": "text", "required": true, "description": "Barcode text", "schema": { "type": "string", "example": "123456789" } },
-          { "name": "type", "required": false, "description": "Barcode type", "schema": { "type": "string", "default": "code128", "enum": ["code128", "ean13", "upca"] } }
-        ]
-      }
-    },
-    "/api/tools/hash": {
-      "get": {
-        "tags": ["Tools"],
-        "summary": "SHA-256 Hash",
-        "description": "Generate SHA-256 hash from text.",
-        "parameters": [
-          { "name": "text", "required": true, "description": "Text to hash", "schema": { "type": "string", "example": "hello world" } }
-        ]
-      }
-    },
-    "/api/tools/base64": {
-      "get": {
-        "tags": ["Tools"],
-        "summary": "Base64 Encoder/Decoder",
-        "description": "Encode or decode text to/from Base64.",
-        "parameters": [
-          { "name": "text", "required": true, "description": "Text to process", "schema": { "type": "string" } },
-          { "name": "action", "required": false, "description": "Action", "schema": { "type": "string", "default": "encode", "enum": ["encode", "decode"] } }
-        ]
-      }
-    },
-    "/api/tools/password": {
-      "get": {
-        "tags": ["Tools"],
-        "summary": "Password Generator",
-        "description": "Generate secure random password.",
-        "parameters": [
-          { "name": "length", "required": false, "description": "Password length", "schema": { "type": "number", "default": 16 } },
-          { "name": "symbols", "required": false, "description": "Include special symbols", "schema": { "type": "boolean", "default": true } }
-        ]
-      }
-    },
-    "/api/tools/meta": {
-      "get": {
-        "tags": ["Tools"],
-        "summary": "Website Metadata",
-        "description": "Extract website metadata via Microlink.",
-        "parameters": [
-          { "name": "url", "required": true, "description": "Website URL", "schema": { "type": "string", "example": "https://github.com" } }
-        ]
-      }
-    },
-    "/api/tools/ip": {
-      "get": {
-        "tags": ["Tools"],
-        "summary": "IP Information",
-        "description": "Get detailed IP address information.",
-        "parameters": [
-          { "name": "ip", "required": false, "description": "IP address", "schema": { "type": "string", "example": "1.1.1.1" } }
-        ]
-      }
-    },
-    "/api/tools/zodiak": {
-      "get": {
-        "tags": ["Tools"],
-        "summary": "Daily Horoscope",
-        "description": "Get daily horoscope by zodiac sign via Aztro API.",
-        "parameters": [
-          { "name": "sign", "required": true, "description": "Zodiac sign", "schema": { "type": "string", "example": "aries", "enum": ["aries", "taurus", "gemini", "cancer", "leo", "virgo", "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces"] } },
-          { "name": "day", "required": false, "description": "Day", "schema": { "type": "string", "default": "today", "enum": ["today", "tomorrow", "yesterday"] } }
-        ]
-      }
-    },
-    "/api/media/wallpaper": {
-      "get": {
-        "tags": ["Media"],
-        "summary": "Wallpaper Generator",
-        "description": "Generate HD wallpaper via Pollinations.ai.",
-        "parameters": [
-          { "name": "theme", "required": false, "schema": { "type": "string", "default": "nature landscape 4k ultra hd" } },
-          { "name": "width", "required": false, "schema": { "type": "string", "default": "1920" } },
-          { "name": "height", "required": false, "schema": { "type": "string", "default": "1080" } }
-        ]
-      }
-    },
-    "/api/media/art": {
-      "get": {
-        "tags": ["Media"],
-        "summary": "AI Art Generator",
-        "description": "Generate AI art in different styles via Pollinations.ai.",
-        "parameters": [
-          { "name": "subject", "required": false, "schema": { "type": "string", "default": "cat" } },
-          { "name": "style", "required": false, "schema": { "type": "string", "default": "oil painting" } }
-        ]
-      }
-    },
-    "/api/media/profile-pic": {
-      "get": {
-        "tags": ["Media"],
-        "summary": "AI Profile Picture",
-        "description": "Generate profile picture via Pollinations.ai.",
-        "parameters": [
-          { "name": "prompt", "required": false, "schema": { "type": "string", "default": "professional portrait, minimal background" } }
-        ]
-      }
-    },
-    "/api/media/banner": {
-      "get": {
-        "tags": ["Media"],
-        "summary": "Banner Generator",
-        "description": "Generate banner image for social media.",
-        "parameters": [
-          { "name": "text", "required": false, "schema": { "type": "string", "default": "Welcome" } },
-          { "name": "style", "required": false, "schema": { "type": "string", "default": "modern dark gradient" } }
-        ]
-      }
-    },
-    "/api/media/thumbnail": {
-      "get": {
-        "tags": ["Media"],
-        "summary": "YouTube Thumbnail",
-        "description": "Generate YouTube-style thumbnail via Pollinations.ai.",
-        "parameters": [
-          { "name": "title", "required": false, "schema": { "type": "string", "default": "My Video" } },
-          { "name": "bg", "required": false, "schema": { "type": "string", "default": "cyberpunk" } }
-        ]
-      }
-    },
-    "/api/media/youtube": {
-      "get": {
-        "tags": ["Media"],
-        "summary": "YouTube Info",
-        "description": "Get YouTube video info via Noembed.",
-        "parameters": [
-          { "name": "url", "required": true, "description": "YouTube URL", "schema": { "type": "string", "example": "https://youtube.com/watch?v=dQw4w9WgXcQ" } }
-        ]
-      }
-    },
-    "/api/media/unsplash": {
-      "get": {
-        "tags": ["Media"],
-        "summary": "Unsplash Photo",
-        "description": "Get random high-quality photo from Unsplash.",
-        "parameters": [
-          { "name": "query", "required": false, "description": "Search query", "schema": { "type": "string", "example": "nature" } }
-        ]
-      }
-    }
+    "/api/ai/chatgpt": { "get": { "tags": ["AI"], "summary": "ChatGPT Chat", "description": "AI chat via Pollinations.ai. Free, no key.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Your message", "schema": { "type": "string", "example": "What is the meaning of life?" } }] } },
+    "/api/ai/ask": { "get": { "tags": ["AI"], "summary": "Ask AI Anything", "description": "Alias for chatgpt. General Q&A via Pollinations.ai.", "parameters": [{ "name": "q", "in": "query", "required": true, "description": "Your question", "schema": { "type": "string", "example": "What is the capital of Japan?" } }] } },
+    "/api/ai/dalle": { "get": { "tags": ["AI"], "summary": "AI Image Generation", "description": "Generate AI images via Pollinations.ai.", "parameters": [{ "name": "prompt", "in": "query", "required": true, "description": "Image description", "schema": { "type": "string", "example": "A futuristic city at sunset" } }, { "name": "size", "in": "query", "required": false, "description": "WxH pixels (max 1280x1280)", "schema": { "type": "string", "default": "512x512" } }] } },
+    "/api/ai/imagine": { "get": { "tags": ["AI"], "summary": "AI Image (alias)", "description": "Alias for /api/ai/dalle.", "parameters": [{ "name": "prompt", "in": "query", "required": true, "description": "Image description", "schema": { "type": "string", "example": "A dragon flying over mountains" } }] } },
+    "/api/ai/translate": { "get": { "tags": ["AI"], "summary": "Translate Text", "description": "Google Translate with AI fallback. Auto-detects source language.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Text to translate", "schema": { "type": "string", "example": "Hello world" } }, { "name": "to", "in": "query", "required": false, "description": "Target language code", "schema": { "type": "string", "default": "en", "example": "id" } }, { "name": "from", "in": "query", "required": false, "description": "Source language (auto-detect if omitted)", "schema": { "type": "string", "default": "auto" } }] } },
+    "/api/ai/text-to-speech": { "get": { "tags": ["AI"], "summary": "Text to Speech", "description": "Convert text to audio URL via Pollinations.ai. 6 voices available.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Text to speak", "schema": { "type": "string", "example": "Hello, welcome to Kyoto API!" } }, { "name": "voice", "in": "query", "required": false, "description": "Voice name", "schema": { "type": "string", "default": "alloy", "enum": ["alloy", "echo", "fable", "onyx", "nova", "shimmer"] } }] } },
+    "/api/ai/summarize": { "get": { "tags": ["AI"], "summary": "Text Summarizer", "description": "Summarize long text via Pollinations.ai.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Text to summarize", "schema": { "type": "string", "example": "Long article text here..." } }, { "name": "sentences", "in": "query", "required": false, "description": "Number of sentences in summary", "schema": { "type": "integer", "default": 3 } }] } },
+    "/api/ai/roast": { "get": { "tags": ["AI"], "summary": "Roast Generator", "description": "Get a funny AI-generated roast.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Subject to roast", "schema": { "type": "string", "example": "My terrible coding skills" } }, { "name": "level", "in": "query", "required": false, "description": "Roast intensity", "schema": { "type": "string", "default": "mild", "enum": ["mild", "medium", "savage"] } }] } },
+    "/api/ai/eli5": { "get": { "tags": ["AI"], "summary": "ELI5 Explainer", "description": "Explain Like I'm 5 — simplify any complex topic.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Topic to explain simply", "schema": { "type": "string", "example": "Quantum computing" } }] } },
+    "/api/ai/sentiment": { "get": { "tags": ["AI"], "summary": "Sentiment Analysis", "description": "Analyze text sentiment. Returns positive/negative/neutral + confidence.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Text to analyze", "schema": { "type": "string", "example": "I love this product!" } }] } },
+    "/api/ai/keywords": { "get": { "tags": ["AI"], "summary": "Keyword Extractor", "description": "Extract main keywords from text via Pollinations.ai.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Text to extract keywords", "schema": { "type": "string", "example": "AI is transforming the tech industry rapidly" } }, { "name": "count", "in": "query", "required": false, "description": "Number of keywords (max 20)", "schema": { "type": "integer", "default": 8 } }] } },
+    "/api/ai/grammar": { "get": { "tags": ["AI"], "summary": "Grammar Checker", "description": "Check grammar via LanguageTool + AI fallback.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Text to check", "schema": { "type": "string", "example": "He go to school yesterday" } }, { "name": "lang", "in": "query", "required": false, "description": "Language code", "schema": { "type": "string", "default": "en-US" } }] } },
+    "/api/ai/paraphrase": { "get": { "tags": ["AI"], "summary": "Text Paraphraser", "description": "Paraphrase text with selectable tone via Pollinations.ai.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Text to paraphrase", "schema": { "type": "string", "example": "The quick brown fox jumps over the lazy dog" } }, { "name": "tone", "in": "query", "required": false, "description": "Output tone", "schema": { "type": "string", "default": "neutral", "enum": ["neutral", "formal", "casual"] } }] } },
+    "/api/ai/detect-language": { "get": { "tags": ["AI"], "summary": "Language Detection", "description": "Detect language of any text via Google Translate.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Text to detect", "schema": { "type": "string", "example": "Bonjour le monde" } }] } },
+    "/api/ai/math": { "get": { "tags": ["AI"], "summary": "Math Solver", "description": "Solve math problems step-by-step via Pollinations.ai.", "parameters": [{ "name": "problem", "in": "query", "required": true, "description": "Math problem", "schema": { "type": "string", "example": "Solve x^2 + 5x + 6 = 0" } }] } },
+    "/api/ai/code": { "get": { "tags": ["AI"], "summary": "Code Generator", "description": "Generate clean code in any language via Pollinations.ai.", "parameters": [{ "name": "prompt", "in": "query", "required": true, "description": "What the code should do", "schema": { "type": "string", "example": "Python function to reverse a string" } }, { "name": "lang", "in": "query", "required": false, "description": "Programming language", "schema": { "type": "string", "default": "python", "example": "javascript" } }] } },
+    "/api/ai/poetry": { "get": { "tags": ["AI"], "summary": "Poetry Generator", "description": "Fetch real poems via PoetryDB or generate via AI.", "parameters": [{ "name": "theme", "in": "query", "required": false, "description": "Poem theme", "schema": { "type": "string", "example": "love", "default": "nature" } }] } },
+    "/api/ai/story": { "get": { "tags": ["AI"], "summary": "Story Generator", "description": "Generate a short creative story via Pollinations.ai.", "parameters": [{ "name": "prompt", "in": "query", "required": true, "description": "Story premise", "schema": { "type": "string", "example": "A detective solving a mystery in Tokyo" } }, { "name": "genre", "in": "query", "required": false, "description": "Story genre", "schema": { "type": "string", "default": "fiction", "enum": ["fiction", "thriller", "romance", "horror", "fantasy", "sci-fi"] } }] } },
+    "/api/ai/image-variation": { "get": { "tags": ["AI"], "summary": "Image Variations", "description": "Generate 3 variations of an image from the same prompt.", "parameters": [{ "name": "prompt", "in": "query", "required": true, "description": "Image prompt", "schema": { "type": "string", "example": "A magical forest with glowing mushrooms" } }] } },
+    "/api/ai/tweet": { "get": { "tags": ["AI"], "summary": "Tweet Generator", "description": "Generate a tweet with hashtags for any topic.", "parameters": [{ "name": "topic", "in": "query", "required": true, "description": "Tweet topic", "schema": { "type": "string", "example": "Coffee and productivity" } }, { "name": "tone", "in": "query", "required": false, "description": "Tweet tone", "schema": { "type": "string", "default": "engaging", "enum": ["engaging", "funny", "professional", "motivational"] } }] } },
+    "/api/ai/caption": { "get": { "tags": ["AI"], "summary": "Social Caption Generator", "description": "Generate social media captions with hashtags.", "parameters": [{ "name": "topic", "in": "query", "required": true, "description": "Caption topic", "schema": { "type": "string", "example": "Sunset at the beach" } }, { "name": "platform", "in": "query", "required": false, "description": "Target platform", "schema": { "type": "string", "default": "instagram", "enum": ["instagram", "tiktok", "linkedin", "twitter"] } }] } },
+    "/api/ai/chat": { "get": { "tags": ["AI"], "summary": "Custom System Chat", "description": "Chat with a custom system prompt persona.", "parameters": [{ "name": "message", "in": "query", "required": true, "description": "User message", "schema": { "type": "string", "example": "Tell me a fun fact" } }, { "name": "system", "in": "query", "required": false, "description": "System prompt / persona", "schema": { "type": "string", "default": "You are a helpful assistant." } }] } },
+    "/api/ai/recipe": { "get": { "tags": ["AI"], "summary": "Recipe Generator", "description": "Generate a full recipe with ingredients and steps (JSON).", "parameters": [{ "name": "dish", "in": "query", "required": true, "description": "Dish name", "schema": { "type": "string", "example": "Nasi Goreng" } }] } },
+    "/api/ai/quiz": { "get": { "tags": ["AI"], "summary": "Quiz Generator", "description": "Generate multiple-choice quiz questions on any topic.", "parameters": [{ "name": "topic", "in": "query", "required": true, "description": "Quiz topic", "schema": { "type": "string", "example": "World History" } }, { "name": "difficulty", "in": "query", "required": false, "description": "Difficulty level", "schema": { "type": "string", "default": "medium", "enum": ["easy", "medium", "hard"] } }, { "name": "count", "in": "query", "required": false, "description": "Number of questions (max 10)", "schema": { "type": "integer", "default": 5 } }] } },
+
+    "/api/anime/search": { "get": { "tags": ["Anime"], "summary": "Search Anime/Manga", "description": "Search anime or manga via Jikan API v4.", "parameters": [{ "name": "query", "in": "query", "required": true, "description": "Title to search", "schema": { "type": "string", "example": "Attack on Titan" } }, { "name": "type", "in": "query", "required": false, "description": "Search type", "schema": { "type": "string", "default": "anime", "enum": ["anime", "manga"] } }, { "name": "limit", "in": "query", "required": false, "description": "Results limit (max 25)", "schema": { "type": "integer", "default": 10 } }] } },
+    "/api/anime/anime": { "get": { "tags": ["Anime"], "summary": "Anime Details", "description": "Get detailed anime info by title or MAL ID.", "parameters": [{ "name": "title", "in": "query", "required": false, "description": "Anime title", "schema": { "type": "string", "example": "Demon Slayer" } }, { "name": "id", "in": "query", "required": false, "description": "MAL ID (faster)", "schema": { "type": "integer", "example": 38000 } }] } },
+    "/api/anime/manga": { "get": { "tags": ["Anime"], "summary": "Manga Details", "description": "Get detailed manga info by title or MAL ID.", "parameters": [{ "name": "title", "in": "query", "required": false, "description": "Manga title", "schema": { "type": "string", "example": "One Piece" } }, { "name": "id", "in": "query", "required": false, "description": "MAL ID", "schema": { "type": "integer" } }] } },
+    "/api/anime/random": { "get": { "tags": ["Anime"], "summary": "Random Anime/Manga", "description": "Get a random anime or manga from MyAnimeList.", "parameters": [{ "name": "type", "in": "query", "required": false, "description": "Content type", "schema": { "type": "string", "default": "anime", "enum": ["anime", "manga"] } }] } },
+    "/api/anime/waifu": { "get": { "tags": ["Anime"], "summary": "Waifu Image", "description": "Random SFW anime image by category via Waifu.pics.", "parameters": [{ "name": "category", "in": "query", "required": false, "description": "Image category", "schema": { "type": "string", "default": "waifu", "example": "neko" } }] } },
+    "/api/anime/waifu-im": { "get": { "tags": ["Anime"], "summary": "Waifu.im Image", "description": "High quality waifu images via Waifu.im.", "parameters": [{ "name": "tag", "in": "query", "required": false, "description": "Image tag", "schema": { "type": "string", "default": "waifu", "enum": ["waifu", "maid", "marin-kitagawa", "mori-calliope", "raiden-shogun", "oppai", "selfies", "uniform"] } }] } },
+    "/api/anime/character": { "get": { "tags": ["Anime"], "summary": "Character Search", "description": "Search anime characters via Jikan API v4.", "parameters": [{ "name": "query", "in": "query", "required": true, "description": "Character name", "schema": { "type": "string", "example": "Naruto" } }] } },
+    "/api/anime/top": { "get": { "tags": ["Anime"], "summary": "Top Anime/Manga", "description": "Get top ranked anime, manga, characters or people.", "parameters": [{ "name": "type", "in": "query", "required": false, "description": "Content type", "schema": { "type": "string", "default": "anime", "enum": ["anime", "manga", "characters", "people"] } }, { "name": "filter", "in": "query", "required": false, "description": "Filter", "schema": { "type": "string", "enum": ["airing", "upcoming", "bypopularity", "favorite"] } }, { "name": "limit", "in": "query", "required": false, "description": "Results (max 25)", "schema": { "type": "integer", "default": 10 } }] } },
+    "/api/anime/seasonal": { "get": { "tags": ["Anime"], "summary": "Seasonal Anime", "description": "Get current or specific season anime.", "parameters": [{ "name": "year", "in": "query", "required": false, "description": "Year (omit for current)", "schema": { "type": "integer", "example": 2024 } }, { "name": "season", "in": "query", "required": false, "description": "Season", "schema": { "type": "string", "enum": ["winter", "spring", "summer", "fall"] } }] } },
+    "/api/anime/schedule": { "get": { "tags": ["Anime"], "summary": "Airing Schedule", "description": "Get anime airing schedule by day.", "parameters": [{ "name": "day", "in": "query", "required": false, "description": "Day of week (default: today)", "schema": { "type": "string", "enum": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] } }] } },
+    "/api/anime/genre": { "get": { "tags": ["Anime"], "summary": "Anime by Genre", "description": "Get anime by genre ID from MAL.", "parameters": [{ "name": "id", "in": "query", "required": false, "description": "Genre ID (1=Action, 2=Adventure, 4=Comedy...)", "schema": { "type": "integer", "default": 1 } }, { "name": "type", "in": "query", "required": false, "description": "Content type", "schema": { "type": "string", "default": "anime" } }] } },
+    "/api/anime/genres": { "get": { "tags": ["Anime"], "summary": "All Genres List", "description": "Get complete list of anime or manga genres with IDs.", "parameters": [{ "name": "type", "in": "query", "required": false, "description": "Content type", "schema": { "type": "string", "default": "anime", "enum": ["anime", "manga"] } }] } },
+    "/api/anime/quotes": { "get": { "tags": ["Anime"], "summary": "Anime Quotes", "description": "Random anime quotes via AnimeChan.", "parameters": [{ "name": "title", "in": "query", "required": false, "description": "Anime title (optional)", "schema": { "type": "string", "example": "Naruto" } }] } },
+    "/api/anime/news": { "get": { "tags": ["Anime"], "summary": "Currently Airing Anime", "description": "Latest airing anime list via Jikan API.", "parameters": [] } },
+    "/api/anime/recommendations": { "get": { "tags": ["Anime"], "summary": "Anime Recommendations", "description": "Community-voted anime recommendations.", "parameters": [] } },
+    "/api/anime/reviews": { "get": { "tags": ["Anime"], "summary": "Recent Reviews", "description": "Recent anime reviews from MyAnimeList.", "parameters": [] } },
+    "/api/anime/random-waifu": { "get": { "tags": ["Anime"], "summary": "Random Waifu", "description": "Random waifu from a random category.", "parameters": [] } },
+    "/api/anime/studios": { "get": { "tags": ["Anime"], "summary": "Studio Info", "description": "Get anime studio details by MAL producer ID.", "parameters": [{ "name": "id", "in": "query", "required": true, "description": "Studio/Producer MAL ID (e.g. 1=Studio Pierrot)", "schema": { "type": "integer", "example": 1 } }] } },
+    "/api/anime/episodes": { "get": { "tags": ["Anime"], "summary": "Anime Episodes", "description": "Get episode list for an anime by MAL ID.", "parameters": [{ "name": "id", "in": "query", "required": true, "description": "Anime MAL ID", "schema": { "type": "integer", "example": 20 } }, { "name": "page", "in": "query", "required": false, "description": "Page number", "schema": { "type": "integer", "default": 1 } }] } },
+
+    "/api/news/hackernews": { "get": { "tags": ["News"], "summary": "Hacker News", "description": "Top, new, best, ask, show or job stories from Hacker News.", "parameters": [{ "name": "type", "in": "query", "required": false, "description": "Story type", "schema": { "type": "string", "default": "top", "enum": ["top", "new", "best", "ask", "show", "job"] } }, { "name": "limit", "in": "query", "required": false, "description": "Number of stories (max 30)", "schema": { "type": "integer", "default": 10 } }] } },
+    "/api/news/devto": { "get": { "tags": ["News"], "summary": "Dev.to Articles", "description": "Developer articles from Dev.to.", "parameters": [{ "name": "tag", "in": "query", "required": false, "description": "Filter by tag", "schema": { "type": "string", "example": "javascript" } }, { "name": "sort", "in": "query", "required": false, "description": "Sort order", "schema": { "type": "string", "default": "hot", "enum": ["hot", "latest", "rising"] } }, { "name": "limit", "in": "query", "required": false, "description": "Results (max 30)", "schema": { "type": "integer", "default": 10 } }] } },
+    "/api/news/github-trending": { "get": { "tags": ["News"], "summary": "GitHub Trending", "description": "Trending GitHub repositories.", "parameters": [{ "name": "lang", "in": "query", "required": false, "description": "Programming language filter", "schema": { "type": "string", "example": "python" } }, { "name": "since", "in": "query", "required": false, "description": "Time range", "schema": { "type": "string", "default": "daily", "enum": ["daily", "weekly", "monthly"] } }] } },
+    "/api/news/bbc": { "get": { "tags": ["News"], "summary": "BBC World News", "description": "Latest world news from BBC via RSS.", "parameters": [] } },
+    "/api/news/reuters": { "get": { "tags": ["News"], "summary": "Reuters", "description": "Breaking news from Reuters via RSS.", "parameters": [] } },
+    "/api/news/guardian": { "get": { "tags": ["News"], "summary": "The Guardian", "description": "News from The Guardian by section.", "parameters": [{ "name": "section", "in": "query", "required": false, "description": "News section", "schema": { "type": "string", "default": "world", "enum": ["world", "technology", "science", "sport", "business", "culture"] } }] } },
+    "/api/news/cnn": { "get": { "tags": ["News"], "summary": "CNN", "description": "CNN top stories via RSS.", "parameters": [] } },
+    "/api/news/sports": { "get": { "tags": ["News"], "summary": "ESPN Sports", "description": "Latest sports news from ESPN via RSS.", "parameters": [] } },
+    "/api/news/science": { "get": { "tags": ["News"], "summary": "Science News", "description": "Science news from ScienceDaily via RSS.", "parameters": [] } },
+    "/api/news/tech": { "get": { "tags": ["News"], "summary": "Tech News", "description": "Tech news from TechCrunch via RSS.", "parameters": [] } },
+    "/api/news/crypto": { "get": { "tags": ["News"], "summary": "Crypto News", "description": "Cryptocurrency news from CoinTelegraph via RSS.", "parameters": [] } },
+    "/api/news/detik": { "get": { "tags": ["News"], "summary": "Detik.com", "description": "Indonesian news from Detik.com via RSS.", "parameters": [] } },
+    "/api/news/kompas": { "get": { "tags": ["News"], "summary": "Kompas.com", "description": "Indonesian news from Kompas.com via RSS.", "parameters": [] } },
+    "/api/news/tempo": { "get": { "tags": ["News"], "summary": "Tempo.co", "description": "Indonesian news from Tempo.co via RSS.", "parameters": [] } },
+    "/api/news/producthunt": { "get": { "tags": ["News"], "summary": "Product Hunt", "description": "Latest products from Product Hunt via RSS.", "parameters": [] } },
+    "/api/news/gaming": { "get": { "tags": ["News"], "summary": "Gaming News", "description": "Gaming news from Kotaku via RSS.", "parameters": [] } },
+    "/api/news/anime-news": { "get": { "tags": ["News"], "summary": "Anime News Network", "description": "Latest anime news from Anime News Network via RSS.", "parameters": [] } },
+
+    "/api/internet/meta": { "get": { "tags": ["Internet"], "summary": "Meta Tags Extractor", "description": "Extract title, description, OG tags, Twitter cards and favicon from any URL.", "parameters": [{ "name": "url", "in": "query", "required": true, "description": "Website URL", "schema": { "type": "string", "example": "https://github.com" } }] } },
+    "/api/internet/headers": { "get": { "tags": ["Internet"], "summary": "HTTP Headers", "description": "Inspect all HTTP response headers of a URL.", "parameters": [{ "name": "url", "in": "query", "required": true, "description": "Target URL", "schema": { "type": "string", "example": "https://google.com" } }] } },
+    "/api/internet/robots": { "get": { "tags": ["Internet"], "summary": "Robots.txt Parser", "description": "Fetch and parse robots.txt — disallowed, allowed, sitemaps.", "parameters": [{ "name": "domain", "in": "query", "required": true, "description": "Domain name", "schema": { "type": "string", "example": "google.com" } }] } },
+    "/api/internet/sitemap": { "get": { "tags": ["Internet"], "summary": "Sitemap Parser", "description": "Fetch and parse sitemap.xml — extract all URLs.", "parameters": [{ "name": "domain", "in": "query", "required": true, "description": "Domain name", "schema": { "type": "string", "example": "vercel.com" } }] } },
+    "/api/internet/unshorten": { "get": { "tags": ["Internet"], "summary": "URL Unshortener", "description": "Expand shortened URLs to their final destination.", "parameters": [{ "name": "url", "in": "query", "required": true, "description": "Short URL", "schema": { "type": "string", "example": "https://bit.ly/abc123" } }] } },
+    "/api/internet/email-check": { "get": { "tags": ["Internet"], "summary": "Email Validator", "description": "Validate email format, MX records and disposable detection.", "parameters": [{ "name": "email", "in": "query", "required": true, "description": "Email address", "schema": { "type": "string", "example": "test@gmail.com" } }] } },
+    "/api/internet/redirect": { "get": { "tags": ["Internet"], "summary": "Redirect Chain", "description": "Trace all redirect hops from a URL to its final destination.", "parameters": [{ "name": "url", "in": "query", "required": true, "description": "URL to trace", "schema": { "type": "string", "example": "https://t.co/example" } }] } },
+    "/api/internet/ssl": { "get": { "tags": ["Internet"], "summary": "SSL Info", "description": "Get SSL grade via SSL Labs. Falls back to basic HTTPS check.", "parameters": [{ "name": "domain", "in": "query", "required": true, "description": "Domain name", "schema": { "type": "string", "example": "github.com" } }] } },
+    "/api/internet/dns": { "get": { "tags": ["Internet"], "summary": "DNS Lookup", "description": "DNS lookup via Google DNS. Supports A, AAAA, MX, TXT, CNAME, NS.", "parameters": [{ "name": "domain", "in": "query", "required": true, "description": "Domain name", "schema": { "type": "string", "example": "google.com" } }, { "name": "type", "in": "query", "required": false, "description": "Record type", "schema": { "type": "string", "default": "A", "enum": ["A", "AAAA", "MX", "TXT", "CNAME", "NS"] } }] } },
+    "/api/internet/whois": { "get": { "tags": ["Internet"], "summary": "WHOIS Lookup", "description": "WHOIS domain info via RDAP protocol.", "parameters": [{ "name": "domain", "in": "query", "required": true, "description": "Domain name", "schema": { "type": "string", "example": "vercel.com" } }] } },
+    "/api/internet/ping": { "get": { "tags": ["Internet"], "summary": "Ping URL", "description": "Check if a URL is reachable and measure latency.", "parameters": [{ "name": "url", "in": "query", "required": true, "description": "URL to ping", "schema": { "type": "string", "example": "https://google.com" } }] } },
+
+    "/api/games/list": { "get": { "tags": ["Games"], "summary": "Free Games List", "description": "Browse free-to-play games via FreeToGame API.", "parameters": [{ "name": "platform", "in": "query", "required": false, "description": "Platform filter", "schema": { "type": "string", "default": "all", "enum": ["all", "pc", "browser"] } }, { "name": "sort", "in": "query", "required": false, "description": "Sort by", "schema": { "type": "string", "default": "relevance", "enum": ["relevance", "popularity", "release-date", "alphabetical", "rating"] } }, { "name": "limit", "in": "query", "required": false, "description": "Results (max 50)", "schema": { "type": "integer", "default": 20 } }] } },
+    "/api/games/detail": { "get": { "tags": ["Games"], "summary": "Game Detail", "description": "Get full details for a specific game by ID.", "parameters": [{ "name": "id", "in": "query", "required": true, "description": "Game ID from /api/games/list", "schema": { "type": "integer", "example": 452 } }] } },
+    "/api/games/genre": { "get": { "tags": ["Games"], "summary": "Games by Genre", "description": "Filter free games by genre.", "parameters": [{ "name": "genre", "in": "query", "required": false, "description": "Genre name", "schema": { "type": "string", "default": "shooter", "example": "mmorpg" } }] } },
+    "/api/games/platform": { "get": { "tags": ["Games"], "summary": "Games by Platform", "description": "Filter free games by platform.", "parameters": [{ "name": "platform", "in": "query", "required": false, "description": "Platform", "schema": { "type": "string", "default": "pc", "enum": ["pc", "browser"] } }] } },
+    "/api/games/random": { "get": { "tags": ["Games"], "summary": "Random Free Game", "description": "Get a random free-to-play game.", "parameters": [] } },
+    "/api/games/newest": { "get": { "tags": ["Games"], "summary": "Newest Free Games", "description": "Latest released free-to-play games.", "parameters": [] } },
+    "/api/games/pokedex": { "get": { "tags": ["Games"], "summary": "Pokédex", "description": "Get Pokémon info with stats, types, abilities, shiny and description.", "parameters": [{ "name": "name", "in": "query", "required": false, "description": "Pokémon name or ID", "schema": { "type": "string", "default": "pikachu", "example": "charizard" } }] } },
+    "/api/games/pokemon-list": { "get": { "tags": ["Games"], "summary": "Pokémon List", "description": "Browse all Pokémon with pagination.", "parameters": [{ "name": "limit", "in": "query", "required": false, "description": "Results (max 100)", "schema": { "type": "integer", "default": 20 } }, { "name": "offset", "in": "query", "required": false, "description": "Skip this many Pokémon", "schema": { "type": "integer", "default": 0 } }] } },
+    "/api/games/chess-puzzle": { "get": { "tags": ["Games"], "summary": "Daily Chess Puzzle", "description": "Today's chess puzzle from Lichess with FEN and solution.", "parameters": [] } },
+    "/api/games/minecraft": { "get": { "tags": ["Games"], "summary": "Minecraft Player Skin", "description": "Get Minecraft player UUID, skin, face and body renders.", "parameters": [{ "name": "username", "in": "query", "required": true, "description": "Minecraft username", "schema": { "type": "string", "example": "Notch" } }] } },
+    "/api/games/valorant": { "get": { "tags": ["Games"], "summary": "Valorant Agents", "description": "List all Valorant agents or get details for a specific agent.", "parameters": [{ "name": "agent", "in": "query", "required": false, "description": "Agent name (omit for all agents)", "schema": { "type": "string", "example": "Jett" } }] } },
+    "/api/games/brawlstars": { "get": { "tags": ["Games"], "summary": "Brawl Stars", "description": "Brawl Stars brawlers or maps data.", "parameters": [{ "name": "type", "in": "query", "required": false, "description": "Data type", "schema": { "type": "string", "default": "brawlers", "enum": ["brawlers", "maps"] } }] } },
+    "/api/games/steam": { "get": { "tags": ["Games"], "summary": "Steam Game Search", "description": "Search Steam store for games.", "parameters": [{ "name": "query", "in": "query", "required": true, "description": "Game name to search", "schema": { "type": "string", "example": "Counter-Strike" } }] } },
+    "/api/games/trivia": { "get": { "tags": ["Games"], "summary": "Trivia Questions", "description": "Multiple-choice trivia questions from Open Trivia DB.", "parameters": [{ "name": "amount", "in": "query", "required": false, "description": "Questions count (max 15)", "schema": { "type": "integer", "default": 5 } }, { "name": "difficulty", "in": "query", "required": false, "description": "Difficulty level", "schema": { "type": "string", "default": "medium", "enum": ["easy", "medium", "hard"] } }] } },
+
+    "/api/info/wikipedia": { "get": { "tags": ["Info"], "summary": "Wikipedia Summary", "description": "Get Wikipedia article summary by title.", "parameters": [{ "name": "title", "in": "query", "required": true, "description": "Article title", "schema": { "type": "string", "example": "Indonesia" } }, { "name": "lang", "in": "query", "required": false, "description": "Language code", "schema": { "type": "string", "default": "en", "example": "id" } }] } },
+    "/api/info/wikipedia-search": { "get": { "tags": ["Info"], "summary": "Wikipedia Search", "description": "Search Wikipedia articles.", "parameters": [{ "name": "query", "in": "query", "required": true, "description": "Search query", "schema": { "type": "string", "example": "Artificial Intelligence" } }, { "name": "lang", "in": "query", "required": false, "description": "Language code", "schema": { "type": "string", "default": "en" } }] } },
+    "/api/info/dictionary": { "get": { "tags": ["Info"], "summary": "English Dictionary", "description": "Get word definition, phonetics, examples and synonyms.", "parameters": [{ "name": "word", "in": "query", "required": true, "description": "English word", "schema": { "type": "string", "example": "serendipity" } }] } },
+    "/api/info/github": { "get": { "tags": ["Info"], "summary": "GitHub User", "description": "Get GitHub user profile + top repositories.", "parameters": [{ "name": "username", "in": "query", "required": true, "description": "GitHub username", "schema": { "type": "string", "example": "torvalds" } }] } },
+    "/api/info/github-repo": { "get": { "tags": ["Info"], "summary": "GitHub Repository", "description": "Get GitHub repository details.", "parameters": [{ "name": "repo", "in": "query", "required": true, "description": "owner/repo format", "schema": { "type": "string", "example": "vercel/next.js" } }] } },
+    "/api/info/npm": { "get": { "tags": ["Info"], "summary": "NPM Package", "description": "Get NPM package information.", "parameters": [{ "name": "package", "in": "query", "required": true, "description": "Package name", "schema": { "type": "string", "example": "express" } }] } },
+    "/api/info/country": { "get": { "tags": ["Info"], "summary": "Country Info", "description": "Get country details by name or ISO code.", "parameters": [{ "name": "name", "in": "query", "required": false, "description": "Country name", "schema": { "type": "string", "example": "Japan" } }, { "name": "code", "in": "query", "required": false, "description": "ISO 2-letter code", "schema": { "type": "string", "example": "JP" } }] } },
+    "/api/info/holiday": { "get": { "tags": ["Info"], "summary": "Public Holidays", "description": "Get public holidays for any country and year.", "parameters": [{ "name": "country", "in": "query", "required": false, "description": "ISO 2-letter country code", "schema": { "type": "string", "default": "ID", "example": "US" } }, { "name": "year", "in": "query", "required": false, "description": "Year", "schema": { "type": "integer", "example": 2025 } }] } },
+    "/api/info/exchange": { "get": { "tags": ["Info"], "summary": "Exchange Rates", "description": "Live currency exchange rates.", "parameters": [{ "name": "base", "in": "query", "required": false, "description": "Base currency", "schema": { "type": "string", "default": "USD", "example": "EUR" } }, { "name": "to", "in": "query", "required": false, "description": "Target currency (omit for all)", "schema": { "type": "string", "example": "IDR" } }] } },
+    "/api/info/time": { "get": { "tags": ["Info"], "summary": "World Time", "description": "Current time for any timezone.", "parameters": [{ "name": "timezone", "in": "query", "required": false, "description": "IANA timezone string", "schema": { "type": "string", "default": "Asia/Jakarta", "example": "America/New_York" } }] } },
+    "/api/info/timezones": { "get": { "tags": ["Info"], "summary": "All Timezones", "description": "List of all valid IANA timezone strings.", "parameters": [] } },
+    "/api/info/color": { "get": { "tags": ["Info"], "summary": "Color Info", "description": "Get color name, RGB, HSL, CMYK from a HEX code.", "parameters": [{ "name": "hex", "in": "query", "required": false, "description": "HEX color code (without #)", "schema": { "type": "string", "default": "FF5733", "example": "1a1a2e" } }] } },
+    "/api/info/uuid": { "get": { "tags": ["Info"], "summary": "UUID Generator", "description": "Generate one or multiple UUIDs.", "parameters": [{ "name": "count", "in": "query", "required": false, "description": "Number of UUIDs (max 20)", "schema": { "type": "integer", "default": 1 } }] } },
+    "/api/info/crypto": { "get": { "tags": ["Info"], "summary": "Crypto Price", "description": "Live crypto price, 24h change and market cap via CoinGecko.", "parameters": [{ "name": "coin", "in": "query", "required": false, "description": "Coin ID (CoinGecko ID)", "schema": { "type": "string", "default": "bitcoin", "example": "ethereum" } }, { "name": "currency", "in": "query", "required": false, "description": "Fiat currency", "schema": { "type": "string", "default": "usd", "example": "idr" } }] } },
+    "/api/info/movie": { "get": { "tags": ["Info"], "summary": "Movie Info", "description": "Get movie details via OMDB API.", "parameters": [{ "name": "title", "in": "query", "required": true, "description": "Movie title", "schema": { "type": "string", "example": "Inception" } }] } },
+    "/api/info/lyrics": { "get": { "tags": ["Info"], "summary": "Song Lyrics", "description": "Get song lyrics via Lyrics.ovh.", "parameters": [{ "name": "artist", "in": "query", "required": true, "description": "Artist name", "schema": { "type": "string", "example": "Coldplay" } }, { "name": "song", "in": "query", "required": true, "description": "Song title", "schema": { "type": "string", "example": "Yellow" } }] } },
+    "/api/info/universities": { "get": { "tags": ["Info"], "summary": "Universities", "description": "List universities by country.", "parameters": [{ "name": "country", "in": "query", "required": true, "description": "Country name", "schema": { "type": "string", "example": "Indonesia" } }] } },
+    "/api/info/ip-geo": { "get": { "tags": ["Info"], "summary": "IP Geolocation", "description": "Get location, ISP and timezone for any IP address.", "parameters": [{ "name": "ip", "in": "query", "required": false, "description": "IP address (omit for requester IP)", "schema": { "type": "string", "example": "8.8.8.8" } }] } },
+    "/api/info/quote": { "get": { "tags": ["Info"], "summary": "Random Quote", "description": "Random inspirational quote via Quotable.io.", "parameters": [] } },
+    "/api/info/fact": { "get": { "tags": ["Info"], "summary": "Random Fact", "description": "Random interesting fact via Useless Facts API.", "parameters": [] } },
+    "/api/info/joke": { "get": { "tags": ["Info"], "summary": "Random Joke", "description": "Random joke via JokeAPI (safe-filtered).", "parameters": [{ "name": "type", "in": "query", "required": false, "description": "Joke category", "schema": { "type": "string", "default": "any", "enum": ["any", "programming", "pun", "spooky", "christmas"] } }] } },
+    "/api/info/trivia": { "get": { "tags": ["Info"], "summary": "Trivia Questions", "description": "General knowledge trivia questions from Open Trivia DB.", "parameters": [{ "name": "amount", "in": "query", "required": false, "description": "Questions count (max 15)", "schema": { "type": "integer", "default": 5 } }, { "name": "difficulty", "in": "query", "required": false, "description": "Difficulty", "schema": { "type": "string", "enum": ["easy", "medium", "hard"] } }] } },
+    "/api/info/advice": { "get": { "tags": ["Info"], "summary": "Random Advice", "description": "Random life advice slip via Advice Slip API.", "parameters": [] } },
+
+    "/api/tools/qr": { "get": { "tags": ["Tools"], "summary": "QR Code Generator", "description": "Generate QR codes with custom color and size.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Content to encode", "schema": { "type": "string", "example": "https://kyoto-rest-api.vercel.app" } }, { "name": "size", "in": "query", "required": false, "description": "QR size (WxH)", "schema": { "type": "string", "default": "300x300" } }, { "name": "color", "in": "query", "required": false, "description": "Foreground color HEX", "schema": { "type": "string", "default": "000000" } }, { "name": "bg", "in": "query", "required": false, "description": "Background color HEX", "schema": { "type": "string", "default": "ffffff" } }] } },
+    "/api/tools/shortlink": { "get": { "tags": ["Tools"], "summary": "URL Shortener", "description": "Shorten any URL via is.gd with TinyURL fallback.", "parameters": [{ "name": "url", "in": "query", "required": true, "description": "URL to shorten", "schema": { "type": "string", "example": "https://github.com/vercel/next.js" } }] } },
+    "/api/tools/cuaca": { "get": { "tags": ["Tools"], "summary": "Weather", "description": "Current weather for 30+ cities (temperature, humidity, feels like, condition).", "parameters": [{ "name": "city", "in": "query", "required": false, "description": "City name", "schema": { "type": "string", "default": "jakarta", "example": "tokyo" } }] } },
+    "/api/tools/calculator": { "get": { "tags": ["Tools"], "summary": "Calculator", "description": "Safe math expression evaluator. Supports +, -, *, /, (), %, ^.", "parameters": [{ "name": "expr", "in": "query", "required": true, "description": "Math expression", "schema": { "type": "string", "example": "2^10 + 5 * 3" } }] } },
+    "/api/tools/base64": { "get": { "tags": ["Tools"], "summary": "Base64 Encode/Decode", "description": "Encode or decode Base64 strings.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Text to encode/decode", "schema": { "type": "string", "example": "Hello World" } }, { "name": "action", "in": "query", "required": false, "description": "Action", "schema": { "type": "string", "default": "encode", "enum": ["encode", "decode"] } }] } },
+    "/api/tools/hash": { "get": { "tags": ["Tools"], "summary": "Hash Generator", "description": "Hash text with SHA256, SHA512, SHA1 or MD5.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Text to hash", "schema": { "type": "string", "example": "Hello World" } }, { "name": "algo", "in": "query", "required": false, "description": "Hash algorithm", "schema": { "type": "string", "default": "sha256", "enum": ["sha256", "sha512", "sha1", "md5"] } }] } },
+    "/api/tools/password": { "get": { "tags": ["Tools"], "summary": "Password Generator", "description": "Generate secure random passwords with custom options.", "parameters": [{ "name": "length", "in": "query", "required": false, "description": "Password length (max 128)", "schema": { "type": "integer", "default": 16 } }, { "name": "symbols", "in": "query", "required": false, "description": "Include symbols", "schema": { "type": "boolean", "default": true } }, { "name": "numbers", "in": "query", "required": false, "description": "Include numbers", "schema": { "type": "boolean", "default": true } }, { "name": "uppercase", "in": "query", "required": false, "description": "Include uppercase", "schema": { "type": "boolean", "default": true } }] } },
+    "/api/tools/barcode": { "get": { "tags": ["Tools"], "summary": "Barcode Generator", "description": "Generate barcodes in various formats.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Barcode content", "schema": { "type": "string", "example": "123456789" } }, { "name": "type", "in": "query", "required": false, "description": "Barcode type", "schema": { "type": "string", "default": "code128", "enum": ["code128", "ean13", "qr", "upc"] } }] } },
+    "/api/tools/screenshot": { "get": { "tags": ["Tools"], "summary": "Website Screenshot", "description": "Capture a screenshot of any website.", "parameters": [{ "name": "url", "in": "query", "required": true, "description": "Website URL", "schema": { "type": "string", "example": "https://github.com" } }] } },
+    "/api/tools/meta": { "get": { "tags": ["Tools"], "summary": "Website Meta", "description": "Extract website metadata via Microlink.io.", "parameters": [{ "name": "url", "in": "query", "required": true, "description": "Website URL", "schema": { "type": "string", "example": "https://vercel.com" } }] } },
+    "/api/tools/zodiak": { "get": { "tags": ["Tools"], "summary": "Zodiac Horoscope", "description": "Daily horoscope, traits, lucky number and color for all zodiac signs.", "parameters": [{ "name": "sign", "in": "query", "required": true, "description": "Zodiac sign", "schema": { "type": "string", "example": "leo", "enum": ["aries","taurus","gemini","cancer","leo","virgo","libra","scorpio","sagittarius","capricorn","aquarius","pisces"] } }] } },
+    "/api/tools/ngl": { "get": { "tags": ["Tools"], "summary": "NGL Spammer", "description": "Send anonymous messages to NGL.link.", "parameters": [{ "name": "username", "in": "query", "required": true, "description": "NGL username", "schema": { "type": "string", "example": "john_doe" } }, { "name": "message", "in": "query", "required": false, "description": "Message to send", "schema": { "type": "string", "default": "Hello from Kyoto API 👋" } }, { "name": "count", "in": "query", "required": false, "description": "Times to send (max 50)", "schema": { "type": "integer", "default": 1 } }] } },
+    "/api/tools/convert": { "get": { "tags": ["Tools"], "summary": "Unit Converter", "description": "Convert between length, weight, temperature, speed, data and time units.", "parameters": [{ "name": "value", "in": "query", "required": true, "description": "Numeric value to convert", "schema": { "type": "number", "example": 100 } }, { "name": "from", "in": "query", "required": true, "description": "Source unit (m, km, kg, lb, c, f, kmh, mph, mb, gb, min, h...)", "schema": { "type": "string", "example": "km" } }, { "name": "to", "in": "query", "required": true, "description": "Target unit", "schema": { "type": "string", "example": "mi" } }] } },
+    "/api/tools/lorem": { "get": { "tags": ["Tools"], "summary": "Lorem Ipsum", "description": "Generate placeholder lorem ipsum text.", "parameters": [{ "name": "paragraphs", "in": "query", "required": false, "description": "Number of paragraphs (max 10)", "schema": { "type": "integer", "default": 1 } }] } },
+
+    "/api/stalker/ip": { "get": { "tags": ["Stalker"], "summary": "IP Lookup", "description": "Geolocate any IP — country, city, ISP, proxy detection.", "parameters": [{ "name": "ip", "in": "query", "required": false, "description": "IP address to lookup", "schema": { "type": "string", "example": "8.8.8.8" } }] } },
+    "/api/stalker/my-ip": { "get": { "tags": ["Stalker"], "summary": "My IP Info", "description": "Get requester's own IP geolocation.", "parameters": [] } },
+    "/api/stalker/dns": { "get": { "tags": ["Stalker"], "summary": "DNS Lookup", "description": "Lookup DNS records via Google DNS.", "parameters": [{ "name": "domain", "in": "query", "required": true, "description": "Domain name", "schema": { "type": "string", "example": "google.com" } }, { "name": "type", "in": "query", "required": false, "description": "Record type", "schema": { "type": "string", "default": "A", "enum": ["A", "AAAA", "MX", "TXT", "CNAME", "NS"] } }] } },
+    "/api/stalker/whois": { "get": { "tags": ["Stalker"], "summary": "WHOIS Lookup", "description": "WHOIS via RDAP — registration, expiry, nameservers.", "parameters": [{ "name": "domain", "in": "query", "required": true, "description": "Domain name", "schema": { "type": "string", "example": "github.com" } }] } },
+    "/api/stalker/github-activity": { "get": { "tags": ["Stalker"], "summary": "GitHub Activity", "description": "Get recent public GitHub activity for any user.", "parameters": [{ "name": "username", "in": "query", "required": true, "description": "GitHub username", "schema": { "type": "string", "example": "torvalds" } }] } },
+    "/api/stalker/website-status": { "get": { "tags": ["Stalker"], "summary": "Website Status", "description": "Check if a website is online and measure response latency.", "parameters": [{ "name": "url", "in": "query", "required": true, "description": "Website URL", "schema": { "type": "string", "example": "https://github.com" } }] } },
+    "/api/stalker/npm-stats": { "get": { "tags": ["Stalker"], "summary": "NPM Package Stats", "description": "NPM package info + monthly download count.", "parameters": [{ "name": "package", "in": "query", "required": true, "description": "Package name", "schema": { "type": "string", "example": "lodash" } }] } },
+    "/api/stalker/pypi": { "get": { "tags": ["Stalker"], "summary": "PyPI Package", "description": "Python package info from PyPI.", "parameters": [{ "name": "package", "in": "query", "required": true, "description": "Package name", "schema": { "type": "string", "example": "requests" } }] } },
+    "/api/stalker/crates": { "get": { "tags": ["Stalker"], "summary": "Crates.io Package", "description": "Rust crate info from Crates.io.", "parameters": [{ "name": "package", "in": "query", "required": true, "description": "Crate name", "schema": { "type": "string", "example": "serde" } }] } },
+    "/api/stalker/domain-check": { "get": { "tags": ["Stalker"], "summary": "Domain DNS Check", "description": "Check if a domain has DNS records (availability indicator).", "parameters": [{ "name": "domain", "in": "query", "required": true, "description": "Domain to check", "schema": { "type": "string", "example": "my-new-startup.com" } }] } },
+
+    "/api/maker/canvas": { "get": { "tags": ["Maker"], "summary": "AI Canvas", "description": "Generate AI image from any prompt.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Image prompt", "schema": { "type": "string", "example": "A neon-lit cyberpunk city at night" } }, { "name": "width", "in": "query", "required": false, "description": "Image width (max 1280)", "schema": { "type": "integer", "default": 800 } }, { "name": "height", "in": "query", "required": false, "description": "Image height (max 1280)", "schema": { "type": "integer", "default": 400 } }] } },
+    "/api/maker/meme": { "get": { "tags": ["Maker"], "summary": "Meme Generator", "description": "AI meme with top and bottom text.", "parameters": [{ "name": "top", "in": "query", "required": false, "description": "Top text", "schema": { "type": "string", "example": "When the code finally works" } }, { "name": "bottom", "in": "query", "required": false, "description": "Bottom text", "schema": { "type": "string", "example": "But you don't know why" } }] } },
+    "/api/maker/quote-image": { "get": { "tags": ["Maker"], "summary": "Quote Image", "description": "Generate a styled quote image.", "parameters": [{ "name": "text", "in": "query", "required": false, "description": "Quote text", "schema": { "type": "string", "example": "Stay hungry, stay foolish" } }, { "name": "author", "in": "query", "required": false, "description": "Quote author", "schema": { "type": "string", "example": "Steve Jobs" } }] } },
+    "/api/maker/qr-styled": { "get": { "tags": ["Maker"], "summary": "Styled QR Code", "description": "Generate a styled QR code with color options.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Content to encode", "schema": { "type": "string", "example": "https://kyoto-rest-api.vercel.app" } }, { "name": "color", "in": "query", "required": false, "description": "Foreground HEX", "schema": { "type": "string", "default": "000000" } }, { "name": "bg", "in": "query", "required": false, "description": "Background HEX", "schema": { "type": "string", "default": "ffffff" } }] } },
+    "/api/maker/avatar": { "get": { "tags": ["Maker"], "summary": "Avatar Generator", "description": "Generate SVG/PNG avatars via DiceBear — 12 styles.", "parameters": [{ "name": "seed", "in": "query", "required": false, "description": "Avatar seed (any string)", "schema": { "type": "string", "example": "john_doe" } }, { "name": "style", "in": "query", "required": false, "description": "Avatar style", "schema": { "type": "string", "default": "avataaars", "enum": ["avataaars", "bottts", "identicon", "pixel-art", "lorelei", "fun-emoji", "micah", "notionists", "open-peeps", "personas", "rings", "shapes"] } }] } },
+    "/api/maker/placeholder": { "get": { "tags": ["Maker"], "summary": "Placeholder Image", "description": "Generate placeholder images with custom size and color.", "parameters": [{ "name": "width", "in": "query", "required": false, "description": "Width in px", "schema": { "type": "integer", "default": 400 } }, { "name": "height", "in": "query", "required": false, "description": "Height in px", "schema": { "type": "integer", "default": 300 } }, { "name": "text", "in": "query", "required": false, "description": "Text overlay", "schema": { "type": "string" } }, { "name": "format", "in": "query", "required": false, "description": "Image format", "schema": { "type": "string", "default": "png", "enum": ["png", "webp", "svg"] } }] } },
+    "/api/maker/password": { "get": { "tags": ["Maker"], "summary": "Password Generator", "description": "Generate secure passwords with strength indicator.", "parameters": [{ "name": "length", "in": "query", "required": false, "description": "Password length", "schema": { "type": "integer", "default": 16 } }, { "name": "count", "in": "query", "required": false, "description": "Number of passwords (max 10)", "schema": { "type": "integer", "default": 1 } }] } },
+    "/api/maker/color-palette": { "get": { "tags": ["Maker"], "summary": "Color Palette", "description": "Generate harmonious color palettes. Modes: random, warm, cool, pastel, dark.", "parameters": [{ "name": "count", "in": "query", "required": false, "description": "Colors in palette (max 10)", "schema": { "type": "integer", "default": 5 } }, { "name": "mode", "in": "query", "required": false, "description": "Color mode", "schema": { "type": "string", "default": "random", "enum": ["random", "warm", "cool", "pastel", "dark"] } }] } },
+    "/api/maker/gradient": { "get": { "tags": ["Maker"], "summary": "Gradient Image", "description": "Generate gradient image + CSS gradient string.", "parameters": [{ "name": "from", "in": "query", "required": false, "description": "Start color HEX", "schema": { "type": "string", "default": "ff6b6b" } }, { "name": "to", "in": "query", "required": false, "description": "End color HEX", "schema": { "type": "string", "default": "4ecdc4" } }] } },
+    "/api/maker/namecard": { "get": { "tags": ["Maker"], "summary": "Name Card Generator", "description": "Generate AI business name card.", "parameters": [{ "name": "name", "in": "query", "required": false, "description": "Person name", "schema": { "type": "string", "example": "John Doe" } }, { "name": "title", "in": "query", "required": false, "description": "Job title", "schema": { "type": "string", "example": "Full Stack Developer" } }, { "name": "theme", "in": "query", "required": false, "description": "Card theme", "schema": { "type": "string", "default": "dark", "enum": ["dark", "light", "minimal", "colorful"] } }] } },
+    "/api/maker/thumbnail": { "get": { "tags": ["Maker"], "summary": "Thumbnail Generator", "description": "Generate YouTube-style thumbnail images.", "parameters": [{ "name": "title", "in": "query", "required": false, "description": "Video title", "schema": { "type": "string", "example": "Top 10 Life Hacks" } }, { "name": "bg", "in": "query", "required": false, "description": "Background style", "schema": { "type": "string", "default": "cinematic dark background" } }] } },
+    "/api/maker/banner": { "get": { "tags": ["Maker"], "summary": "Banner Generator", "description": "Generate website banners (1200x400).", "parameters": [{ "name": "text", "in": "query", "required": false, "description": "Banner text", "schema": { "type": "string", "example": "Welcome to My Website" } }, { "name": "style", "in": "query", "required": false, "description": "Design style", "schema": { "type": "string", "default": "modern dark gradient" } }] } },
+    "/api/maker/profile-pic": { "get": { "tags": ["Maker"], "summary": "Profile Picture", "description": "Generate AI profile pictures.", "parameters": [{ "name": "prompt", "in": "query", "required": false, "description": "Description prompt", "schema": { "type": "string", "example": "cartoon avatar, friendly smile" } }, { "name": "style", "in": "query", "required": false, "description": "Art style", "schema": { "type": "string", "default": "realistic" } }] } },
+    "/api/maker/lorem": { "get": { "tags": ["Maker"], "summary": "Lorem Ipsum", "description": "Generate lorem ipsum placeholder text.", "parameters": [{ "name": "paragraphs", "in": "query", "required": false, "description": "Paragraph count (max 10)", "schema": { "type": "integer", "default": 1 } }] } },
+    "/api/maker/uuid": { "get": { "tags": ["Maker"], "summary": "UUID Generator", "description": "Generate multiple UUIDs at once.", "parameters": [{ "name": "count", "in": "query", "required": false, "description": "Count (max 50)", "schema": { "type": "integer", "default": 1 } }] } },
+    "/api/maker/slug": { "get": { "tags": ["Maker"], "summary": "Slug Generator", "description": "Convert text to URL-friendly slug.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Text to slugify", "schema": { "type": "string", "example": "Hello World! This is a Test" } }] } },
+    "/api/maker/markdown": { "get": { "tags": ["Maker"], "summary": "Markdown to HTML", "description": "Convert Markdown text to HTML.", "parameters": [{ "name": "text", "in": "query", "required": true, "description": "Markdown text", "schema": { "type": "string", "example": "# Hello\n**Bold** and *italic*" } }] } },
+    "/api/maker/badge": { "get": { "tags": ["Maker"], "summary": "Badge Generator", "description": "Generate Shields.io badges for README files.", "parameters": [{ "name": "label", "in": "query", "required": false, "description": "Badge label", "schema": { "type": "string", "default": "build", "example": "version" } }, { "name": "message", "in": "query", "required": false, "description": "Badge message", "schema": { "type": "string", "default": "passing", "example": "3.1.0" } }, { "name": "color", "in": "query", "required": false, "description": "Color HEX", "schema": { "type": "string", "default": "4ade80" } }, { "name": "style", "in": "query", "required": false, "description": "Badge style", "schema": { "type": "string", "default": "flat", "enum": ["flat", "flat-square", "plastic", "for-the-badge", "social"] } }] } },
+    "/api/maker/og-image": { "get": { "tags": ["Maker"], "summary": "OG Image Generator", "description": "Generate Open Graph / social preview images (1200x630).", "parameters": [{ "name": "title", "in": "query", "required": false, "description": "Page title", "schema": { "type": "string", "example": "Kyoto API Documentation" } }, { "name": "description", "in": "query", "required": false, "description": "Page description", "schema": { "type": "string" } }, { "name": "brand", "in": "query", "required": false, "description": "Brand/site name", "schema": { "type": "string" } }] } },
+
+    "/api/media/wallpaper": { "get": { "tags": ["Media"], "summary": "Wallpaper Generator", "description": "Generate HD wallpapers in any theme and style.", "parameters": [{ "name": "theme", "in": "query", "required": false, "description": "Wallpaper theme", "schema": { "type": "string", "default": "nature landscape", "example": "space galaxy nebula" } }, { "name": "width", "in": "query", "required": false, "description": "Width (max 2560)", "schema": { "type": "integer", "default": 1920 } }, { "name": "height", "in": "query", "required": false, "description": "Height (max 1440)", "schema": { "type": "integer", "default": 1080 } }, { "name": "style", "in": "query", "required": false, "description": "Art style", "schema": { "type": "string", "default": "photorealistic" } }] } },
+    "/api/media/art": { "get": { "tags": ["Media"], "summary": "AI Art", "description": "Generate AI artwork in any style.", "parameters": [{ "name": "subject", "in": "query", "required": false, "description": "Art subject", "schema": { "type": "string", "default": "cat", "example": "dragon" } }, { "name": "style", "in": "query", "required": false, "description": "Art style", "schema": { "type": "string", "default": "oil painting", "example": "watercolor" } }, { "name": "mood", "in": "query", "required": false, "description": "Mood/atmosphere", "schema": { "type": "string", "example": "dramatic" } }] } },
+    "/api/media/profile-pic": { "get": { "tags": ["Media"], "summary": "Profile Picture", "description": "Generate AI profile pictures from description.", "parameters": [{ "name": "prompt", "in": "query", "required": false, "description": "Image description", "schema": { "type": "string", "default": "professional portrait, minimal background" } }, { "name": "style", "in": "query", "required": false, "description": "Art style", "schema": { "type": "string", "default": "photorealistic" } }] } },
+    "/api/media/banner": { "get": { "tags": ["Media"], "summary": "Banner Generator", "description": "Generate website/social media banners.", "parameters": [{ "name": "text", "in": "query", "required": false, "description": "Banner text", "schema": { "type": "string", "default": "Welcome" } }, { "name": "style", "in": "query", "required": false, "description": "Design style", "schema": { "type": "string", "default": "modern dark gradient" } }, { "name": "width", "in": "query", "required": false, "description": "Width (max 1920)", "schema": { "type": "integer", "default": 1200 } }, { "name": "height", "in": "query", "required": false, "description": "Height (max 600)", "schema": { "type": "integer", "default": 400 } }] } },
+    "/api/media/thumbnail": { "get": { "tags": ["Media"], "summary": "Thumbnail Generator", "description": "Generate video thumbnails (1280x720).", "parameters": [{ "name": "title", "in": "query", "required": false, "description": "Title text", "schema": { "type": "string", "default": "My Video" } }, { "name": "bg", "in": "query", "required": false, "description": "Background style", "schema": { "type": "string", "default": "cinematic dark gradient" } }] } },
+    "/api/media/youtube": { "get": { "tags": ["Media"], "summary": "YouTube Info", "description": "Get YouTube video title, author, thumbnails and embed URL.", "parameters": [{ "name": "url", "in": "query", "required": true, "description": "YouTube video URL", "schema": { "type": "string", "example": "https://youtu.be/dQw4w9WgXcQ" } }] } },
+    "/api/media/unsplash": { "get": { "tags": ["Media"], "summary": "Unsplash Photo", "description": "Random high-quality photo from Unsplash by query.", "parameters": [{ "name": "query", "in": "query", "required": false, "description": "Search query", "schema": { "type": "string", "default": "nature", "example": "city night" } }, { "name": "orientation", "in": "query", "required": false, "description": "Photo orientation", "schema": { "type": "string", "default": "landscape", "enum": ["landscape", "portrait", "squarish"] } }] } },
+    "/api/media/picsum": { "get": { "tags": ["Media"], "summary": "Lorem Picsum Photo", "description": "Random photos via Lorem Picsum. Supports blur, grayscale, specific ID.", "parameters": [{ "name": "width", "in": "query", "required": false, "description": "Width", "schema": { "type": "integer", "default": 800 } }, { "name": "height", "in": "query", "required": false, "description": "Height", "schema": { "type": "integer", "default": 600 } }, { "name": "id", "in": "query", "required": false, "description": "Specific photo ID", "schema": { "type": "integer" } }, { "name": "blur", "in": "query", "required": false, "description": "Blur level (0-10)", "schema": { "type": "integer", "default": 0 } }, { "name": "grayscale", "in": "query", "required": false, "description": "Grayscale mode", "schema": { "type": "boolean", "default": false } }] } },
+    "/api/media/picsum-list": { "get": { "tags": ["Media"], "summary": "Picsum Photo Library", "description": "Browse the Lorem Picsum photo library.", "parameters": [{ "name": "page", "in": "query", "required": false, "description": "Page number", "schema": { "type": "integer", "default": 1 } }, { "name": "limit", "in": "query", "required": false, "description": "Photos per page (max 30)", "schema": { "type": "integer", "default": 15 } }] } },
+    "/api/media/gif": { "get": { "tags": ["Media"], "summary": "GIF Search", "description": "Search GIFs via Tenor API.", "parameters": [{ "name": "query", "in": "query", "required": false, "description": "Search query", "schema": { "type": "string", "default": "funny", "example": "cat dancing" } }, { "name": "limit", "in": "query", "required": false, "description": "Results (max 20)", "schema": { "type": "integer", "default": 8 } }] } },
+    "/api/media/tiktok": { "get": { "tags": ["Media"], "summary": "TikTok Video Info", "description": "Get TikTok video title, author, thumbnail via oEmbed.", "parameters": [{ "name": "url", "in": "query", "required": true, "description": "TikTok video URL", "schema": { "type": "string", "example": "https://www.tiktok.com/@user/video/123" } }] } },
+    "/api/media/instagram": { "get": { "tags": ["Media"], "summary": "Instagram Post Info", "description": "Get Instagram post info via oEmbed.", "parameters": [{ "name": "url", "in": "query", "required": true, "description": "Instagram post URL", "schema": { "type": "string", "example": "https://www.instagram.com/p/ABC123/" } }] } },
+    "/api/media/twitch": { "get": { "tags": ["Media"], "summary": "Twitch Channel Info", "description": "Get Twitch channel embed, chat and live thumbnail URLs.", "parameters": [{ "name": "channel", "in": "query", "required": true, "description": "Twitch channel name", "schema": { "type": "string", "example": "shroud" } }] } },
+    "/api/media/spotify": { "get": { "tags": ["Media"], "summary": "Spotify oEmbed", "description": "Get Spotify track/album/playlist embed info.", "parameters": [{ "name": "url", "in": "query", "required": true, "description": "Spotify URL", "schema": { "type": "string", "example": "https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT" } }] } },
+    "/api/media/transform": { "get": { "tags": ["Media"], "summary": "Image Transform", "description": "Resize, convert format and transform any image URL via wsrv.nl.", "parameters": [{ "name": "url", "in": "query", "required": true, "description": "Source image URL", "schema": { "type": "string", "example": "https://picsum.photos/800/600" } }, { "name": "width", "in": "query", "required": false, "description": "Output width (max 2000)", "schema": { "type": "integer", "default": 400 } }, { "name": "height", "in": "query", "required": false, "description": "Output height", "schema": { "type": "integer" } }, { "name": "format", "in": "query", "required": false, "description": "Output format", "schema": { "type": "string", "default": "webp", "enum": ["webp", "jpg", "png"] } }, { "name": "fit", "in": "query", "required": false, "description": "Fit mode", "schema": { "type": "string", "default": "cover", "enum": ["cover", "contain", "fill"] } }] } }
   }
 }
